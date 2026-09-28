@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_claim_view_form" model="ir.ui.view">
+            <field name="name">finsetter.claim.form</field>
+            <field name="model">finsetter.claim</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_mark_under_review" type="object" string="Move to Review" invisible="status != 'submitted'"/>
+                        <button name="action_mark_approved" type="object" string="Approve" class="btn-primary" invisible="status not in ('submitted', 'under_review', 'additional_docs')"/>
+                        <button name="action_mark_settled" type="object" string="Mark Settled" class="btn-primary" invisible="status != 'approved'"/>
+                        <button name="action_mark_rejected" type="object" string="Reject" invisible="status in ('rejected', 'settled')"/>
+                        <field name="status" widget="statusbar" statusbar_visible="submitted,under_review,approved,settled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="claim_number"/>
+                            <h1><field name="claim_number" placeholder="Claim reference number"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="policy_id"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="advisor_id" readonly="1"/>
+                                <field name="product_line_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="claim_date"/>
+                                <field name="claim_amount"/>
+                                <field name="approved_amount"/>
+                                <field name="settled_date" readonly="1"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="Incident">
+                            <field name="incident_description" nolabel="1"/>
+                        </group>
+                        <group string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_claim_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.claim.tree</field>
+            <field name="model">finsetter.claim</field>
+            <field name="arch" type="xml">
+                <tree decoration-success="status == 'settled'" decoration-danger="status == 'rejected'">
+                    <field name="claim_number"/>
+                    <field name="partner_id"/>
+                    <field name="policy_id"/>
+                    <field name="claim_date"/>
+                    <field name="claim_amount"/>
+                    <field name="approved_amount"/>
+                    <field name="status" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_claim_view_kanban" model="ir.ui.view">
+            <field name="name">finsetter.claim.kanban</field>
+            <field name="model">finsetter.claim</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column fs_claim_kanban" default_group_by="status">
+                    <field name="claim_number"/>
+                    <field name="partner_id"/>
+                    <field name="policy_id"/>
+                    <field name="claim_date"/>
+                    <field name="claim_amount"/>
+                    <field name="approved_amount"/>
+                    <field name="currency_id"/>
+                    <field name="status"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click fs_claim_card fs_claim_#{record.status.raw_value}">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_title"><field name="claim_number"/></div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div><field name="partner_id"/></div>
+                                    <div class="text-muted"><field name="policy_id"/></div>
+                                    <div class="text-muted"><field name="claim_date"/></div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <strong><field name="claim_amount" widget="monetary"/></strong>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="status" widget="label_selection"
+                                               options="{'classes': {'submitted': 'info', 'under_review': 'warning', 'additional_docs': 'warning', 'approved': 'success', 'settled': 'success', 'rejected': 'danger'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="finsetter_claim_view_graph" model="ir.ui.view">
+            <field name="name">finsetter.claim.graph</field>
+            <field name="model">finsetter.claim</field>
+            <field name="arch" type="xml">
+                <graph string="Claims Analysis" type="bar">
+                    <field name="product_line_id" type="row"/>
+                    <field name="status" type="col"/>
+                    <field name="claim_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="finsetter_claim_view_pivot" model="ir.ui.view">
+            <field name="name">finsetter.claim.pivot</field>
+            <field name="model">finsetter.claim</field>
+            <field name="arch" type="xml">
+                <pivot string="Claims Analysis">
+                    <field name="product_line_id" type="row"/>
+                    <field name="status" type="col"/>
+                    <field name="claim_amount" type="measure"/>
+                    <field name="approved_amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="finsetter_claim_view_search" model="ir.ui.view">
+            <field name="name">finsetter.claim.search</field>
+            <field name="model">finsetter.claim</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="claim_number"/>
+                    <field name="partner_id"/>
+                    <field name="policy_id"/>
+                    <filter string="Open" name="open_claims" domain="[('status', 'not in', ('settled', 'rejected'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="Product Line" name="group_line" context="{'group_by': 'product_line_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="finsetter_action_claims" model="ir.actions.act_window">
+            <field name="name">Claims</field>
+            <field name="res_model">finsetter.claim</field>
+            <field name="view_mode">kanban,graph,pivot,list,form</field>
+            <field name="context">{'search_default_open_claims': 1}</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <!-- Real client testimonials published on thefinsetter.com, kept
+             here so advisors have proven proof-points on hand during calls. -->
+
+        <record id="testimonial_venkat_reddy" model="finsetter.testimonial">
+            <field name="name">Venkat Reddy</field>
+            <field name="role_location">Government Employee, Hyderabad</field>
+            <field name="quote">I had no idea about insurance until Finsetter explained everything so simply. My daughter is 4 years old and now has a plan protecting her future. Best decision I ever made as a father.</field>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="testimonial_anitha_rao" model="finsetter.testimonial">
+            <field name="name">Anitha Rao</field>
+            <field name="role_location">Software Engineer, Hyderabad</field>
+            <field name="quote">My husband and I both work in IT and never had time to plan our finances properly. Finsetter sorted out our health cover, life cover and tax planning — all in one meeting.</field>
+            <field name="product_line_id" ref="product_line_planning"/>
+            <field name="sequence">20</field>
+        </record>
+        <record id="testimonial_suresh_babu" model="finsetter.testimonial">
+            <field name="name">Suresh Babu</field>
+            <field name="role_location">Pharma Professional, Vizag</field>
+            <field name="quote">I kept saying "I will start planning next year" for years. Finsetter finally got me to act, and now my family is fully covered.</field>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="sequence">30</field>
+        </record>
+        <record id="testimonial_ravi_teja" model="finsetter.testimonial">
+            <field name="name">Ravi Teja</field>
+            <field name="role_location">NRI Professional, Abu Dhabi</field>
+            <field name="quote">I am an NRI in Abu Dhabi and was worried about managing insurance and investments back home. Finsetter handled everything online — I never had to visit any office.</field>
+            <field name="product_line_id" ref="product_line_nri"/>
+            <field name="sequence">40</field>
+        </record>
+        <record id="testimonial_rajesh_kumar" model="finsetter.testimonial">
+            <field name="name">Rajesh Kumar</field>
+            <field name="role_location">Business Owner, Hyderabad</field>
+            <field name="quote">Best financial advisor in India! Zero jargon, zero sales pressure. Highly recommend Finsetter.</field>
+            <field name="product_line_id" ref="product_line_planning"/>
+            <field name="sequence">50</field>
+        </record>
+        <record id="testimonial_priya_subramaniam" model="finsetter.testimonial">
+            <field name="name">Priya Subramaniam</field>
+            <field name="role_location">IT Professional, Hyderabad</field>
+            <field name="quote">I was looking for the best term life insurance and Finsetter compared every option for me honestly — zero hidden charges.</field>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="sequence">60</field>
+        </record>
+        <record id="testimonial_mahesh_reddy" model="finsetter.testimonial">
+            <field name="name">Mahesh Reddy</field>
+            <field name="role_location">Govt. Employee, Guntur</field>
+            <field name="quote">Got my car insurance renewed at the best rate, very professional service throughout.</field>
+            <field name="product_line_id" ref="product_line_motor"/>
+            <field name="sequence">70</field>
+        </record>
+        <record id="testimonial_sunita_lakshmi" model="finsetter.testimonial">
+            <field name="name">Sunita Lakshmi</field>
+            <field name="role_location">Homemaker, Chennai</field>
+            <field name="quote">Finsetter is the most trusted insurance consultant — our claim was settled in 2 days, fully cashless.</field>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="sequence">80</field>
+        </record>
+        <record id="testimonial_anil_prasad" model="finsetter.testimonial">
+            <field name="name">Anil Prasad</field>
+            <field name="role_location">Doctor, Hyderabad</field>
+            <field name="quote">Excellent financial advisor in Hyderabad — they handled all our financial needs under one roof.</field>
+            <field name="product_line_id" ref="product_line_planning"/>
+            <field name="sequence">90</field>
+        </record>
+        <record id="testimonial_venkat_krishna" model="finsetter.testimonial">
+            <field name="name">Venkat Krishna</field>
+            <field name="role_location">Entrepreneur, Pune</field>
+            <field name="quote">Best insurance advisor in India — the entire process was completely hassle-free.</field>
+            <field name="sequence">100</field>
+        </record>
+    </data>
+</odoo>

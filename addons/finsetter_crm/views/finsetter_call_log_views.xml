@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_call_log_view_form" model="ir.ui.view">
+            <field name="name">finsetter.call.log.form</field>
+            <field name="model">finsetter.call.log</field>
+            <field name="arch" type="xml">
+                <form string="Call Log">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="partner_id" placeholder="Customer" options="{'no_create': True}"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="lead_id" options="{'no_create': True}"/>
+                                <field name="advisor_id"/>
+                                <field name="product_line_id"/>
+                                <field name="call_datetime"/>
+                                <field name="direction"/>
+                                <field name="duration_minutes"/>
+                            </group>
+                            <group>
+                                <field name="outcome"/>
+                                <field name="consent_confirmed"/>
+                                <field name="follow_up_needed"/>
+                                <field name="follow_up_date" invisible="not follow_up_needed"/>
+                            </group>
+                        </group>
+                        <group string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_call_log_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.call.log.tree</field>
+            <field name="model">finsetter.call.log</field>
+            <field name="arch" type="xml">
+                <tree string="Call Logs">
+                    <field name="call_datetime"/>
+                    <field name="partner_id"/>
+                    <field name="advisor_id"/>
+                    <field name="product_line_id"/>
+                    <field name="direction"/>
+                    <field name="duration_minutes" sum="Total Minutes"/>
+                    <field name="outcome" widget="badge"
+                           decoration-success="outcome in ('connected', 'converted')"
+                           decoration-warning="outcome in ('no_answer', 'call_back')"
+                           decoration-danger="outcome in ('not_interested', 'wrong_number')"/>
+                    <field name="consent_confirmed" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_call_log_view_graph" model="ir.ui.view">
+            <field name="name">finsetter.call.log.graph</field>
+            <field name="model">finsetter.call.log</field>
+            <field name="arch" type="xml">
+                <graph string="Call Activity" type="bar">
+                    <field name="outcome" type="row"/>
+                    <field name="duration_minutes" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="finsetter_call_log_view_pivot" model="ir.ui.view">
+            <field name="name">finsetter.call.log.pivot</field>
+            <field name="model">finsetter.call.log</field>
+            <field name="arch" type="xml">
+                <pivot string="Call Activity">
+                    <field name="advisor_id" type="row"/>
+                    <field name="outcome" type="col"/>
+                    <field name="duration_minutes" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="finsetter_call_log_view_search" model="ir.ui.view">
+            <field name="name">finsetter.call.log.search</field>
+            <field name="model">finsetter.call.log</field>
+            <field name="arch" type="xml">
+                <search string="Search Calls">
+                    <field name="partner_id"/>
+                    <field name="advisor_id"/>
+                    <filter string="Follow-up Needed" name="follow_up_needed" domain="[('follow_up_needed', '=', True)]"/>
+                    <filter string="Consent Not Confirmed" name="consent_missing" domain="[('consent_confirmed', '=', False)]"/>
+                    <separator/>
+                    <filter string="Advisor" name="groupby_advisor" context="{'group_by': 'advisor_id'}"/>
+                    <filter string="Outcome" name="groupby_outcome" context="{'group_by': 'outcome'}"/>
+                    <filter string="Call Date" name="groupby_date" context="{'group_by': 'call_datetime:day'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="finsetter_call_log_action" model="ir.actions.act_window">
+            <field name="name">Call Logs</field>
+            <field name="res_model">finsetter.call.log</field>
+            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="search_view_id" ref="finsetter_call_log_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No calls logged yet — every customer call should be logged here.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <data>
+
+        <!-- Enrich two existing demo leads with Customer 360 fields so the
+             lead-product matching engine has something real to score. -->
+        <record id="demo_lead_1" model="crm.lead">
+            <field name="finsetter_age">34</field>
+            <field name="finsetter_occupation">Software Engineer</field>
+            <field name="finsetter_financial_goals">Adequate family health cover before their second child arrives.</field>
+        </record>
+        <record id="demo_lead_2" model="crm.lead">
+            <field name="finsetter_age">41</field>
+            <field name="finsetter_occupation">Small Business Owner</field>
+            <field name="finsetter_financial_goals">₹1 crore term cover to protect the family if something happens to the sole earner.</field>
+        </record>
+
+        <!-- ============ Demo lead-product matches ============ -->
+        <record id="demo_match_1" model="finsetter.lead.product.match">
+            <field name="lead_id" ref="demo_lead_1"/>
+            <field name="product_id" ref="finsetter_crm.fp_demo_health_family"/>
+            <field name="score">80</field>
+            <field name="reason">Matches the lead's selected product line; age fits the eligibility band.</field>
+            <field name="status">interested</field>
+            <field name="advisor_id" ref="demo_user_priya"/>
+        </record>
+        <record id="demo_match_2" model="finsetter.lead.product.match">
+            <field name="lead_id" ref="demo_lead_2"/>
+            <field name="product_id" ref="finsetter_crm.fp_demo_term_secure"/>
+            <field name="score">85</field>
+            <field name="reason">Matches the lead's selected product line; age fits the eligibility band.</field>
+            <field name="status">recommended</field>
+            <field name="advisor_id" ref="demo_user_priya"/>
+        </record>
+
+        <!-- ============ Demo appointment ============ -->
+        <record id="demo_appointment_1" model="finsetter.appointment">
+            <field name="partner_id" ref="demo_partner_lakshmi"/>
+            <field name="lead_id" ref="demo_lead_2"/>
+            <field name="advisor_id" ref="demo_user_priya"/>
+            <field name="product_line_id" ref="finsetter_crm.product_line_life"/>
+            <field name="appointment_datetime" eval="(DateTime.today() + relativedelta(days=2, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="duration">0.5</field>
+            <field name="mode">virtual</field>
+            <field name="status">confirmed</field>
+        </record>
+
+        <!-- ============ Demo claim ============ -->
+        <record id="demo_claim_1" model="finsetter.claim">
+            <field name="claim_number">CLM-2025-00042</field>
+            <field name="policy_id" ref="demo_policy_1"/>
+            <field name="claim_date" eval="(DateTime.today() - relativedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="incident_description">Minor collision, front bumper damage.</field>
+            <field name="claim_amount">45000</field>
+            <field name="approved_amount">42000</field>
+            <field name="status">approved</field>
+        </record>
+
+        <!-- ============ Demo document ============ -->
+        <record id="demo_document_1" model="finsetter.document">
+            <field name="partner_id" ref="demo_partner_ravi"/>
+            <field name="lead_id" ref="demo_lead_1"/>
+            <field name="document_type">pan</field>
+            <field name="verification_status">verified</field>
+        </record>
+
+        <!-- ============ Demo campaign (kept in draft — no Twilio config in
+             demo, so it's shown as a worked example rather than auto-sent) ============ -->
+        <record id="demo_campaign_1" model="finsetter.campaign">
+            <field name="name">Term Insurance — New Year Push</field>
+            <field name="product_line_id" ref="finsetter_crm.product_line_life"/>
+            <field name="channel">whatsapp</field>
+            <field name="message_template">Hi {{name}}, secure your family's future with a ₹1 crore Finsetter term plan for under ₹1,000/month. Reply YES for a free 30-minute consult.</field>
+            <field name="target_domain">[["product_line_id.code","=","LIFE"]]</field>
+            <field name="cost_amount">2000</field>
+            <field name="state">draft</field>
+        </record>
+        <record id="demo_campaign_recipient_1" model="finsetter.campaign.recipient">
+            <field name="campaign_id" ref="demo_campaign_1"/>
+            <field name="lead_id" ref="demo_lead_2"/>
+            <field name="partner_id" ref="demo_partner_lakshmi"/>
+        </record>
+
+    </data>
+</odoo>

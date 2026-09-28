@@ -1,0 +1,106 @@
+// Finsetter CRM — Financial Calculators styling
+
+.o_finsetter_calculators {
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+
+    .fs_calc_header {
+        margin-bottom: 20px;
+        h1 { font-weight: 700; font-size: 24px; margin-bottom: 4px; }
+    }
+
+    .fs_calc_tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+
+        .fs_calc_tab {
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 6px 16px;
+        }
+    }
+
+    .fs_calc_body {
+        background: #fff;
+        border: 1px solid #e6e9ef;
+        border-radius: 12px;
+        padding: 24px;
+    }
+
+    .fs_calc_panel {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+    }
+
+    .fs_calc_inputs {
+        flex: 1 1 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        input[type="number"], select {
+            font-weight: 400;
+            font-size: 14px;
+            padding: 8px 10px;
+            border: 1px solid #d7dbe3;
+            border-radius: 8px;
+        }
+
+        .fs_calc_checkbox {
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+
+            input[type="checkbox"] { width: auto; }
+        }
+    }
+
+    .fs_calc_results {
+        flex: 1 1 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .fs_calc_result_card {
+            background: #f9fafc;
+            border: 1px solid #eef0f4;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            &.fs_calc_result_highlight {
+                background: linear-gradient(135deg, #0b2447 0%, #19376d 100%);
+                color: #fff;
+                border: none;
+            }
+
+            .fs_calc_result_label { font-size: 12px; text-transform: uppercase; letter-spacing: .3px; opacity: .8; }
+            .fs_calc_result_value { font-size: 22px; font-weight: 700; }
+        }
+    }
+
+    .fs_calc_note { font-size: 12px; margin-top: 8px; }
+
+    .fs_calc_footer {
+        flex-basis: 100%;
+        margin-top: 12px;
+        padding-top: 16px;
+        border-top: 1px solid #eef0f4;
+    }
+}

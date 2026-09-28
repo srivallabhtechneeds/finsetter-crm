@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Brand the shared login/signup/reset-password layout with the
+         Finsetter navy/gold background and a softer, elevated card,
+         instead of the stock plain-white Odoo login page. -->
+    <template id="finsetter_login_layout" inherit_id="web.login_layout" name="Finsetter Branded Login">
+        <xpath expr="//div[hasclass('container')][1]" position="attributes">
+            <attribute name="class" add="fs_login_page" separator=" "/>
+        </xpath>
+    </template>
+</odoo>

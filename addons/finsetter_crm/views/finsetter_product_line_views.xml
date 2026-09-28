@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_product_line_view_form" model="ir.ui.view">
+            <field name="name">finsetter.policy.product.line.form</field>
+            <field name="model">finsetter.policy.product.line</field>
+            <field name="arch" type="xml">
+                <form string="Product Line">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="e.g. Health Insurance"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="sequence"/>
+                                <field name="renewal_cycle_months"/>
+                                <field name="icon"/>
+                                <field name="color"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="website_url" widget="url"/>
+                                <field name="marketing_note"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Testimonials" name="testimonials">
+                                <field name="testimonial_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="role_location"/>
+                                        <field name="quote"/>
+                                        <field name="rating"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_product_line_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.policy.product.line.tree</field>
+            <field name="model">finsetter.policy.product.line</field>
+            <field name="arch" type="xml">
+                <tree string="Product Lines">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="renewal_cycle_months"/>
+                    <field name="marketing_note"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

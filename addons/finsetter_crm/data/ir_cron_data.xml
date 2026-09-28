@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <!-- Data pipeline, step 1: assign every unassigned lead round-robin
+             to the right product-line team, every 15 minutes. -->
+        <record id="ir_cron_assign_leads" model="ir.cron">
+            <field name="name">Finsetter CRM: Auto-assign New Leads</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_assign_leads_round_robin()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Data pipeline, step 2: scan policies daily and raise renewal
+             reminders at 30/15/7/1 days before expiry. -->
+        <record id="ir_cron_flag_renewals" model="ir.cron">
+            <field name="name">Finsetter CRM: Flag Policy Renewals Due</field>
+            <field name="model_id" ref="model_finsetter_policy"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_flag_renewals_due()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Data pipeline, step 5: catch any lead that blew past Finsetter's
+             published 4-business-hour first-response promise. -->
+        <record id="ir_cron_check_response_sla" model="ir.cron">
+            <field name="name">Finsetter CRM: Check 4-Hour Response SLA</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_response_sla()</field>
+            <field name="interval_number">30</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Data pipeline, step 6: remind advisors/customers of appointments
+             coming up in the next 24 hours. -->
+        <record id="ir_cron_appointment_reminders" model="ir.cron">
+            <field name="name">Finsetter CRM: Send Appointment Reminders</field>
+            <field name="model_id" ref="model_finsetter_appointment"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_reminders()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Data pipeline, step 7: send any campaign that was scheduled for
+             a future date/time once that moment arrives. -->
+        <record id="ir_cron_send_scheduled_campaigns" model="ir.cron">
+            <field name="name">Finsetter CRM: Send Scheduled Campaigns</field>
+            <field name="model_id" ref="model_finsetter_campaign"/>
+            <field name="state">code</field>
+            <field name="code">model.search([('state', '=', 'scheduled'), ('scheduled_date', '&lt;=', datetime.datetime.now())]).action_send()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

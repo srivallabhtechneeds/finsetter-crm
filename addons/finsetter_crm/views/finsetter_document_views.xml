@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_document_view_form" model="ir.ui.view">
+            <field name="name">finsetter.document.form</field>
+            <field name="model">finsetter.document</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_verify" type="object" string="Verify" class="btn-primary" invisible="verification_status == 'verified'"/>
+                        <button name="action_reject" type="object" string="Reject" invisible="verification_status == 'rejected'"/>
+                        <field name="verification_status" widget="statusbar" statusbar_visible="pending,verified"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="lead_id"/>
+                                <field name="policy_id"/>
+                                <field name="document_type"/>
+                            </group>
+                            <group>
+                                <field name="expiry_date"/>
+                                <field name="verified_by" readonly="1"/>
+                                <field name="verified_date" readonly="1"/>
+                                <field name="rejection_reason" invisible="verification_status != 'rejected'"/>
+                            </group>
+                        </group>
+                        <group string="File">
+                            <field name="attachment" filename="attachment_name" nolabel="1"/>
+                            <field name="attachment_name" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_document_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.document.tree</field>
+            <field name="model">finsetter.document</field>
+            <field name="arch" type="xml">
+                <tree decoration-success="verification_status == 'verified'" decoration-danger="verification_status == 'rejected'">
+                    <field name="partner_id"/>
+                    <field name="document_type"/>
+                    <field name="verification_status" widget="badge"/>
+                    <field name="expiry_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_action_documents" model="ir.actions.act_window">
+            <field name="name">Documents &amp; KYC</field>
+            <field name="res_model">finsetter.document</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_policy_view_form" model="ir.ui.view">
+            <field name="name">finsetter.policy.form</field>
+            <field name="model">finsetter.policy</field>
+            <field name="arch" type="xml">
+                <form string="Policy">
+                    <header>
+                        <button name="action_mark_renewed" type="object" string="Mark Renewed"
+                                class="btn-primary" invisible="state in ('renewed', 'cancelled')"/>
+                        <button name="action_mark_lapsed" type="object" string="Mark Lapsed"
+                                invisible="state in ('lapsed', 'cancelled')"/>
+                        <button name="action_file_claim" type="object" string="File Claim"
+                                class="btn-secondary"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="active,renewal_due,renewed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_claims" type="object" class="oe_stat_button" icon="fa-medkit">
+                                <field name="claim_count" widget="statinfo" string="Claims"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="display_name" readonly="1" invisible="1"/>
+                                <field name="partner_id" placeholder="Customer" options="{'no_create': True}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Product">
+                                <field name="product_line_id"/>
+                                <field name="insurer_name"/>
+                                <field name="policy_number"/>
+                                <field name="lead_id" options="{'no_create': True}"/>
+                            </group>
+                            <group string="Coverage">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="sum_insured"/>
+                                <field name="premium_amount"/>
+                                <field name="advisor_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Dates">
+                                <field name="start_date"/>
+                                <field name="renewal_date"/>
+                                <field name="days_to_renewal" readonly="1"/>
+                            </group>
+                            <group string="Consent">
+                                <field name="consent_id" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes" name="notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_policy_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.policy.tree</field>
+            <field name="model">finsetter.policy</field>
+            <field name="arch" type="xml">
+                <tree string="Policies" decoration-danger="state == 'lapsed'"
+                      decoration-warning="state == 'renewal_due'" decoration-success="state == 'renewed'">
+                    <field name="partner_id"/>
+                    <field name="product_line_id"/>
+                    <field name="insurer_name"/>
+                    <field name="policy_number"/>
+                    <field name="advisor_id"/>
+                    <field name="premium_amount" sum="Total Premium"/>
+                    <field name="renewal_date"/>
+                    <field name="days_to_renewal"/>
+                    <field name="state" widget="badge"
+                           decoration-success="state == 'active'"
+                           decoration-warning="state == 'renewal_due'"
+                           decoration-danger="state == 'lapsed'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_policy_view_kanban" model="ir.ui.view">
+            <field name="name">finsetter.policy.kanban</field>
+            <field name="model">finsetter.policy</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="display_name"/>
+                    <field name="renewal_date"/>
+                    <field name="days_to_renewal"/>
+                    <field name="state"/>
+                    <field name="premium_amount"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click p-2">
+                                <strong><field name="display_name"/></strong>
+                                <div>Renewal: <field name="renewal_date"/> (<field name="days_to_renewal"/> days)</div>
+                                <div>Premium: <field name="premium_amount" widget="monetary"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="finsetter_policy_view_search" model="ir.ui.view">
+            <field name="name">finsetter.policy.search</field>
+            <field name="model">finsetter.policy</field>
+            <field name="arch" type="xml">
+                <search string="Search Policies">
+                    <field name="partner_id"/>
+                    <field name="policy_number"/>
+                    <field name="insurer_name"/>
+                    <field name="product_line_id"/>
+                    <filter string="Renewal Due" name="renewal_due" domain="[('state', '=', 'renewal_due')]"/>
+                    <filter string="Lapsed" name="lapsed" domain="[('state', '=', 'lapsed')]"/>
+                    <filter string="Renewing in 30 Days" name="renewing_30"
+                            domain="[('days_to_renewal', '&lt;=', 30), ('days_to_renewal', '&gt;=', 0), ('state', '!=', 'lapsed')]"/>
+                    <separator/>
+                    <filter string="Renewal Date" name="groupby_renewal_date" context="{'group_by': 'renewal_date'}"/>
+                    <filter string="Product Line" name="groupby_product_line" context="{'group_by': 'product_line_id'}"/>
+                    <filter string="Advisor" name="groupby_advisor" context="{'group_by': 'advisor_id'}"/>
+                    <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="finsetter_policy_action" model="ir.actions.act_window">
+            <field name="name">Policies</field>
+            <field name="res_model">finsetter.policy</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="finsetter_policy_view_search"/>
+            <field name="context">{'search_default_renewal_due': 0}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No policies yet — record a customer's policy to start tracking its renewal.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

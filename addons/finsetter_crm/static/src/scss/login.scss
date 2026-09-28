@@ -1,0 +1,72 @@
+// Finsetter CRM — branded login page
+// Reuses the same navy/gold palette as the dashboard so the very first
+// screen a user sees matches the rest of the app.
+
+.fs_login_page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(126, 219, 208, .16), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(248, 201, 91, .14), transparent 45%),
+        linear-gradient(135deg, #0b1f33 0%, #102a43 55%, #0b3b38 100%);
+    padding: 40px 16px !important;
+
+    .fs_login_card,
+    &.card,
+    .card {
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 24px 60px rgba(6, 16, 28, .45);
+        overflow: hidden;
+        background: #ffffff;
+
+        .card-body {
+            padding: 40px 36px !important;
+        }
+    }
+
+    // Company logo shown above the form
+    img.img.rounded {
+        max-height: 72px;
+        width: auto;
+        border-radius: 10px !important;
+        box-shadow: 0 6px 18px rgba(16, 42, 67, .25);
+    }
+
+    h1, h2, h3, h4, h5, .card-title {
+        color: #102a43;
+    }
+
+    .btn-primary {
+        background-color: #102a43;
+        border-color: #102a43;
+        font-weight: 700;
+
+        &:hover, &:focus {
+            background-color: #0b7a75;
+            border-color: #0b7a75;
+        }
+    }
+
+    a {
+        color: #0b7a75;
+    }
+}
+
+// A quiet brand strip under the card, so the page never reads as a bare
+// white sheet floating on the gradient.
+.fs_login_page::after {
+    content: "Finsetter Financial Services  ·  Your Money. Simplified.";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    text-align: center;
+    color: rgba(226, 237, 243, .75);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    pointer-events: none;
+}

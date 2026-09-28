@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <data>
+        <!-- Illustrative product catalog entries — one or two per category
+             so the Financial Products screen and the lead-matching engine
+             have something to work with out of the box. These are
+             EXAMPLES: replace with Finsetter's real, current products
+             (rates, eligibility, commission) before going live. -->
+
+        <record id="fp_demo_term_secure" model="finsetter.financial.product">
+            <field name="name">SecureLife Term Plan</field>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="provider">Sample Life Insurance Co.</field>
+            <field name="eligibility_criteria">Indian resident, age 18-65, non-smoker preferred.</field>
+            <field name="min_age">18</field>
+            <field name="max_age">65</field>
+            <field name="amount_type">sum_assured</field>
+            <field name="min_amount">2500000</field>
+            <field name="max_amount">20000000</field>
+            <field name="tenure_months_min">120</field>
+            <field name="tenure_months_max">480</field>
+            <field name="commission_rate">15.0</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="fp_demo_health_family" model="finsetter.financial.product">
+            <field name="name">Family Health Shield</field>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="provider">Sample Health Insurance Co.</field>
+            <field name="eligibility_criteria">Family floater, entry age 91 days - 65 years.</field>
+            <field name="min_age">0</field>
+            <field name="max_age">65</field>
+            <field name="amount_type">sum_assured</field>
+            <field name="min_amount">500000</field>
+            <field name="max_amount">10000000</field>
+            <field name="tenure_months_min">12</field>
+            <field name="tenure_months_max">12</field>
+            <field name="commission_rate">12.5</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="fp_demo_invest_bluechip" model="finsetter.financial.product">
+            <field name="name">BlueChip Equity Fund - Growth</field>
+            <field name="product_line_id" ref="product_line_investment"/>
+            <field name="provider">Sample Asset Management Co.</field>
+            <field name="eligibility_criteria">Any Indian resident investor with valid KYC.</field>
+            <field name="min_age">18</field>
+            <field name="max_age">80</field>
+            <field name="amount_type">investment</field>
+            <field name="min_amount">500</field>
+            <field name="max_amount">10000000</field>
+            <field name="commission_rate">1.0</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="fp_demo_tax_elss" model="finsetter.financial.product">
+            <field name="name">Tax Saver ELSS Fund</field>
+            <field name="product_line_id" ref="product_line_tax"/>
+            <field name="provider">Sample Asset Management Co.</field>
+            <field name="eligibility_criteria">Section 80C eligible, 3-year lock-in.</field>
+            <field name="amount_type">investment</field>
+            <field name="min_amount">500</field>
+            <field name="max_amount">150000</field>
+            <field name="tenure_months_min">36</field>
+            <field name="commission_rate">1.0</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="fp_demo_retire_nps" model="finsetter.financial.product">
+            <field name="name">National Pension System (NPS)</field>
+            <field name="product_line_id" ref="product_line_retirement"/>
+            <field name="provider">PFRDA-Registered Pension Fund</field>
+            <field name="eligibility_criteria">Indian citizen, age 18-70.</field>
+            <field name="min_age">18</field>
+            <field name="max_age">70</field>
+            <field name="amount_type">investment</field>
+            <field name="min_amount">1000</field>
+            <field name="commission_rate">0.5</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="fp_demo_estate_trust" model="finsetter.financial.product">
+            <field name="name">Family Trust Structuring</field>
+            <field name="product_line_id" ref="product_line_estate"/>
+            <field name="provider">Finsetter Legal Partners</field>
+            <field name="eligibility_criteria">High-net-worth individuals and NRIs with multi-jurisdiction assets.</field>
+            <field name="amount_type">investment</field>
+            <field name="commission_flat">25000</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="fp_demo_family_consolidated" model="finsetter.financial.product">
+            <field name="name">Complete Family Plan</field>
+            <field name="product_line_id" ref="product_line_family"/>
+            <field name="provider">Finsetter Advisory</field>
+            <field name="eligibility_criteria">Households with 2+ members wanting a single consolidated plan.</field>
+            <field name="amount_type">investment</field>
+            <field name="commission_flat">10000</field>
+            <field name="status">active</field>
+        </record>
+    </data>
+</odoo>

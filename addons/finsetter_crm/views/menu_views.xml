@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_finsetter_root" name="Finsetter CRM" sequence="1"
+              web_icon="finsetter_crm,static/description/icon.png"
+              groups="finsetter_crm.group_finsetter_advisor,finsetter_crm.group_finsetter_compliance,finsetter_crm.group_finsetter_sales_executive,finsetter_crm.group_finsetter_business_manager"/>
+
+        <menuitem id="menu_finsetter_dashboard" name="Dashboard" parent="menu_finsetter_root"
+                  action="finsetter_dashboard_action" sequence="1"/>
+
+        <menuitem id="menu_finsetter_sales" name="Sales" parent="menu_finsetter_root" sequence="10"/>
+        <menuitem id="menu_finsetter_pipeline" name="Pipeline" parent="menu_finsetter_sales"
+                  action="finsetter_action_pipeline" sequence="1"/>
+        <menuitem id="menu_finsetter_leads" name="Leads" parent="menu_finsetter_sales"
+                  action="finsetter_action_leads" sequence="2"/>
+        <menuitem id="menu_finsetter_product_matches" name="Product Matches" parent="menu_finsetter_sales"
+                  action="finsetter_action_lead_product_matches" sequence="3"/>
+        <menuitem id="menu_finsetter_appointments" name="Appointments" parent="menu_finsetter_sales"
+                  action="finsetter_action_appointments" sequence="4"/>
+
+        <menuitem id="menu_finsetter_customers" name="Customers" parent="menu_finsetter_root" sequence="20"/>
+        <menuitem id="menu_finsetter_policies" name="Policies" parent="menu_finsetter_customers"
+                  action="finsetter_policy_action" sequence="1"/>
+        <menuitem id="menu_finsetter_claims" name="Claims" parent="menu_finsetter_customers"
+                  action="finsetter_action_claims" sequence="2"/>
+        <menuitem id="menu_finsetter_calls" name="Call Logs" parent="menu_finsetter_customers"
+                  action="finsetter_call_log_action" sequence="3"/>
+        <menuitem id="menu_finsetter_consent" name="Consent Register" parent="menu_finsetter_customers"
+                  action="finsetter_consent_action" sequence="4"/>
+        <menuitem id="menu_finsetter_documents" name="Documents &amp; KYC" parent="menu_finsetter_customers"
+                  action="finsetter_action_documents" sequence="5"/>
+
+        <menuitem id="menu_finsetter_marketing" name="Marketing" parent="menu_finsetter_root" sequence="25"/>
+        <menuitem id="menu_finsetter_campaigns" name="Campaigns" parent="menu_finsetter_marketing"
+                  action="finsetter_action_campaigns" sequence="1"/>
+        <menuitem id="menu_finsetter_testimonials" name="Client Testimonials" parent="menu_finsetter_marketing"
+                  action="finsetter_testimonial_action" sequence="2"/>
+
+        <menuitem id="menu_finsetter_tools" name="Tools" parent="menu_finsetter_root" sequence="27"/>
+        <menuitem id="menu_finsetter_calculators" name="Financial Calculators" parent="menu_finsetter_tools"
+                  action="finsetter_action_calculators" sequence="1"/>
+
+        <menuitem id="menu_finsetter_reporting" name="Reporting" parent="menu_finsetter_root" sequence="30"
+                  groups="finsetter_crm.group_finsetter_business_manager"/>
+        <menuitem id="menu_finsetter_reporting_pipeline" name="Pipeline Analysis" parent="menu_finsetter_reporting"
+                  action="finsetter_action_reporting_pipeline" sequence="1"/>
+        <menuitem id="menu_finsetter_reporting_policies" name="Policy &amp; Renewal Analysis" parent="menu_finsetter_reporting"
+                  action="finsetter_action_reporting_policies" sequence="2"/>
+        <menuitem id="menu_finsetter_reporting_campaigns" name="Campaign Analysis" parent="menu_finsetter_reporting"
+                  action="finsetter_action_campaigns" sequence="3"/>
+        <menuitem id="menu_finsetter_reporting_claims" name="Claims Analysis" parent="menu_finsetter_reporting"
+                  action="finsetter_action_claims" sequence="4"/>
+
+        <menuitem id="menu_finsetter_config" name="Configuration" parent="menu_finsetter_root" sequence="90"
+                  groups="finsetter_crm.group_finsetter_manager"/>
+        <menuitem id="menu_finsetter_config_product_lines" name="Product Line Categories" parent="menu_finsetter_config"
+                  action="finsetter_action_product_lines" sequence="1"/>
+        <menuitem id="menu_finsetter_config_products" name="Financial Products" parent="menu_finsetter_config"
+                  action="finsetter_action_financial_products" sequence="2"/>
+
+    </data>
+</odoo>

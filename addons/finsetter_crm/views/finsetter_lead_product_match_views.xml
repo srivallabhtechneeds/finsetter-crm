@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_lead_product_match_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.lead.product.match.tree</field>
+            <field name="model">finsetter.lead.product.match</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" decoration-success="status == 'converted'" decoration-muted="status == 'rejected'">
+                    <field name="lead_id" invisible="context.get('default_lead_id')"/>
+                    <field name="product_id"/>
+                    <field name="product_line_id"/>
+                    <field name="score" widget="progressbar"/>
+                    <field name="status" widget="badge"/>
+                    <field name="advisor_id"/>
+                    <button name="action_mark_interested" type="object" string="Interested" class="btn-link" invisible="status != 'recommended'"/>
+                    <button name="action_mark_rejected" type="object" string="Reject" class="btn-link" invisible="status in ('rejected', 'converted')"/>
+                    <button name="action_mark_converted" type="object" string="Converted" class="btn-link" invisible="status == 'converted'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_lead_product_match_view_form" model="ir.ui.view">
+            <field name="name">finsetter.lead.product.match.form</field>
+            <field name="model">finsetter.lead.product.match</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="status" widget="statusbar" statusbar_visible="recommended,interested,pending,converted"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="lead_id"/>
+                                <field name="partner_id"/>
+                                <field name="product_id"/>
+                                <field name="product_line_id"/>
+                            </group>
+                            <group>
+                                <field name="score"/>
+                                <field name="advisor_id"/>
+                            </group>
+                        </group>
+                        <field name="reason" placeholder="Why this product was recommended..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_action_lead_product_matches" model="ir.actions.act_window">
+            <field name="name">Lead / Product Matches</field>
+            <field name="res_model">finsetter.lead.product.match</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+    </data>
+</odoo>

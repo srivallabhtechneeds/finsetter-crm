@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_consent_view_form" model="ir.ui.view">
+            <field name="name">finsetter.consent.form</field>
+            <field name="model">finsetter.consent</field>
+            <field name="arch" type="xml">
+                <form string="Consent Record">
+                    <header>
+                        <field name="status" widget="statusbar" statusbar_visible="granted,withdrawn,expired"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="partner_id" placeholder="Customer" options="{'no_create': True}"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="lead_id" options="{'no_create': True}"/>
+                                <field name="advisor_id"/>
+                                <field name="consent_type"/>
+                                <field name="channel"/>
+                            </group>
+                            <group>
+                                <field name="date_obtained"/>
+                                <field name="valid_until"/>
+                                <field name="proof_reference"/>
+                            </group>
+                        </group>
+                        <group string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_consent_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.consent.tree</field>
+            <field name="model">finsetter.consent</field>
+            <field name="arch" type="xml">
+                <tree string="Consent Records" decoration-danger="status in ('declined', 'withdrawn')"
+                      decoration-success="status == 'granted'">
+                    <field name="partner_id"/>
+                    <field name="consent_type"/>
+                    <field name="channel"/>
+                    <field name="date_obtained"/>
+                    <field name="advisor_id"/>
+                    <field name="status" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_consent_view_kanban" model="ir.ui.view">
+            <field name="name">finsetter.consent.kanban</field>
+            <field name="model">finsetter.consent</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column fs_consent_kanban" default_group_by="status">
+                    <field name="partner_id"/>
+                    <field name="consent_type"/>
+                    <field name="channel"/>
+                    <field name="date_obtained"/>
+                    <field name="advisor_id"/>
+                    <field name="status"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click fs_consent_card fs_consent_#{record.status.raw_value}">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_title"><field name="partner_id"/></div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div><field name="consent_type"/> · <field name="channel"/></div>
+                                    <div class="text-muted"><field name="date_obtained"/></div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left"><field name="advisor_id"/></div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="status" widget="label_selection"
+                                               options="{'classes': {'granted': 'success', 'declined': 'danger', 'withdrawn': 'danger', 'expired': 'warning'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="finsetter_consent_view_search" model="ir.ui.view">
+            <field name="name">finsetter.consent.search</field>
+            <field name="model">finsetter.consent</field>
+            <field name="arch" type="xml">
+                <search string="Search Consent">
+                    <field name="partner_id"/>
+                    <filter string="Granted" name="granted" domain="[('status', '=', 'granted')]"/>
+                    <filter string="Declined / Withdrawn" name="declined_withdrawn"
+                            domain="[('status', 'in', ('declined', 'withdrawn'))]"/>
+                    <separator/>
+                    <filter string="Consent Type" name="groupby_type" context="{'group_by': 'consent_type'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'status'}"/>
+                    <filter string="Advisor" name="groupby_advisor" context="{'group_by': 'advisor_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="finsetter_consent_action" model="ir.actions.act_window">
+            <field name="name">Consent Register</field>
+            <field name="res_model">finsetter.consent</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="finsetter_consent_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No consent records yet — capture consent before every call, WhatsApp or marketing
+                    message, for SEBI/IRDAI audit readiness.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

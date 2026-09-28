@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="finsetter_crm.Dashboard">
+        <div class="o_finsetter_dashboard">
+
+            <div class="fs_hero">
+                <div class="fs_hero_copy">
+                    <div class="fs_eyebrow">FINSETTER FINANCIAL SERVICES · HYDERABAD</div>
+                    <div class="fs_hero_brand">
+                    <h1>Finsetter CRM</h1>
+                    <p class="fs_tagline">Your Money. Simplified.</p>
+                    </div>
+                    <p class="fs_hero_intro">Protect today. Build tomorrow. Keep every family conversation, policy and opportunity moving in one place.</p>
+                </div>
+                <div class="fs_hero_badges">
+                    <span class="fs_badge">Since 2012 · Hyderabad</span>
+                    <span class="fs_badge">98% Claim Settlement</span>
+                    <span class="fs_badge">5,000+ Families Served</span>
+                    <span class="fs_badge">SEBI · IRDAI Regulated</span>
+                </div>
+                <div class="fs_hero_actions">
+                    <button class="btn btn-light" t-on-click="onNewLead">
+                        <i class="fa fa-plus"/> New Lead
+                    </button>
+                    <button class="btn btn-light" t-on-click="onLogCall">
+                        <i class="fa fa-phone"/> Log Call
+                    </button>
+                    <button class="btn btn-light" t-on-click="onRecordConsent">
+                        <i class="fa fa-check-square-o"/> Record Consent
+                    </button>
+                    <button class="btn btn-light" t-on-click="onNewPolicy">
+                        <i class="fa fa-file-text-o"/> New Policy
+                    </button>
+                    <button class="btn btn-outline-light" t-on-click="onOpenProducts">
+                        <i class="fa fa-briefcase"/> Product Catalog
+                    </button>
+                    <button class="btn btn-outline-light" t-on-click="onOpenAppointments">
+                        <i class="fa fa-calendar"/> Appointments
+                    </button>
+                </div>
+            </div>
+
+            <div class="fs_kpi_row">
+                <div class="fs_kpi_card" t-on-click="onOpenPipeline">
+                    <div class="fs_kpi_icon fs_icon_blue"><i class="fa fa-filter"/></div>
+                    <div class="fs_kpi_body">
+                        <div class="fs_kpi_value"><t t-esc="state.pipelineCount"/></div>
+                        <div class="fs_kpi_label">Open Opportunities</div>
+                        <div class="fs_kpi_sub"><t t-esc="formatMoney(state.pipelineValue)"/> in pipeline</div>
+                    </div>
+                </div>
+                <div class="fs_kpi_card">
+                    <div class="fs_kpi_icon fs_icon_green"><i class="fa fa-trophy"/></div>
+                    <div class="fs_kpi_body">
+                        <div class="fs_kpi_value"><t t-esc="state.wonMonthCount"/></div>
+                        <div class="fs_kpi_label">Won This Month</div>
+                        <div class="fs_kpi_sub"><t t-esc="formatMoney(state.wonMonthValue)"/> revenue</div>
+                    </div>
+                </div>
+                <div class="fs_kpi_card" t-on-click="onOpenRenewals">
+                    <div class="fs_kpi_icon fs_icon_amber"><i class="fa fa-refresh"/></div>
+                    <div class="fs_kpi_body">
+                        <div class="fs_kpi_value"><t t-esc="state.renewalsSoonCount"/></div>
+                        <div class="fs_kpi_label">Renewals Due (30d)</div>
+                        <div class="fs_kpi_sub">Act before they lapse</div>
+                    </div>
+                </div>
+                <div class="fs_kpi_card" t-on-click="onOpenConsentPending">
+                    <div class="fs_kpi_icon fs_icon_red"><i class="fa fa-exclamation-triangle"/></div>
+                    <div class="fs_kpi_body">
+                        <div class="fs_kpi_value"><t t-esc="state.consentPendingCount"/></div>
+                        <div class="fs_kpi_label">Consent Not Captured</div>
+                        <div class="fs_kpi_sub">Compliance risk</div>
+                    </div>
+                </div>
+                <div class="fs_kpi_card">
+                    <div class="fs_kpi_icon fs_icon_purple"><i class="fa fa-phone"/></div>
+                    <div class="fs_kpi_body">
+                        <div class="fs_kpi_value"><t t-esc="state.callsTodayCount"/></div>
+                        <div class="fs_kpi_label">Calls Logged Today</div>
+                    </div>
+                </div>
+                <div class="fs_kpi_card" t-on-click="onOpenSlaBreaches">
+                    <div class="fs_kpi_icon fs_icon_red"><i class="fa fa-clock-o"/></div>
+                    <div class="fs_kpi_body">
+                        <div class="fs_kpi_value"><t t-esc="state.slaBreachedCount"/></div>
+                        <div class="fs_kpi_label">4-Hr SLA Breached</div>
+                        <div class="fs_kpi_sub">Published response promise missed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fs_insurance_section">
+                <div class="fs_panel_header">
+                    <h3>Insurances</h3>
+                    <span class="fs_panel_subtitle">Every product line, at a glance</span>
+                </div>
+                <div class="fs_insurance_grid">
+                    <div class="fs_insurance_card" t-foreach="state.insurances" t-as="line" t-key="line.id"
+                         t-on-click="() => this.onOpenInsuranceLine(line.id)">
+                        <div class="fs_insurance_icon" t-attf-style="background: {{ line.color }}22; color: {{ line.color }};">
+                            <i t-attf-class="fa {{ line.icon }}"/>
+                        </div>
+                        <div class="fs_insurance_body">
+                            <div class="fs_insurance_name"><t t-esc="line.name"/></div>
+                            <div class="fs_insurance_meta">
+                                <t t-esc="line.count"/> policies · <t t-esc="formatMoney(line.premium)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fs_main_grid">
+
+                <div class="fs_panel fs_panel_wide">
+                    <div class="fs_panel_header">
+                        <h3>Renewals Due Soon</h3>
+                        <button class="btn btn-link" t-on-click="onOpenRenewals">View All</button>
+                    </div>
+                    <table class="fs_table" t-if="state.renewals.length">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Renewal Date</th>
+                                <th>Days Left</th>
+                                <th>Advisor</th>
+                                <th>Premium</th>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="state.renewals" t-as="policy" t-key="policy.id">
+                                <td><t t-esc="policy.partner_id and policy.partner_id[1]"/></td>
+                                <td><t t-esc="policy.product_line_id and policy.product_line_id[1]"/></td>
+                                <td><t t-esc="policy.renewal_date"/></td>
+                                <td>
+                                    <span t-attf-class="fs_pill {{ policy.days_to_renewal &lt;= 7 ? 'fs_pill_red' : 'fs_pill_amber' }}">
+                                        <t t-esc="policy.days_to_renewal"/> d
+                                    </span>
+                                </td>
+                                <td><t t-esc="policy.advisor_id and policy.advisor_id[1]"/></td>
+                                <td><t t-esc="formatMoney(policy.premium_amount)"/></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-success"
+                                            t-on-click="(ev) => this.onMarkRenewed(policy.id, ev)">
+                                        Mark Renewed
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fs_empty" t-else="">No renewals due in the next 30 days. 🎉</div>
+                </div>
+
+                <div class="fs_panel">
+                    <div class="fs_panel_header">
+                        <h3>Pipeline by Product Line</h3>
+                    </div>
+                    <div class="fs_donut_wrap" t-if="state.donutSegments.length">
+                        <svg viewBox="0 0 100 100" class="fs_donut">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#eef0f4" stroke-width="16"/>
+                            <circle t-foreach="state.donutSegments" t-as="seg" t-key="seg.name"
+                                    cx="50" cy="50" r="40" fill="none"
+                                    stroke-width="16"
+                                    t-attf-stroke="{{ seg.color }}"
+                                    t-attf-stroke-dasharray="{{ seg.dasharray }}"
+                                    t-attf-stroke-dashoffset="{{ seg.dashoffset }}"
+                                    transform="rotate(-90 50 50)"/>
+                        </svg>
+                        <div class="fs_donut_center">
+                            <div class="fs_donut_total"><t t-esc="formatMoney(state.pipelineValue)"/></div>
+                            <div class="fs_donut_sub">Total Pipeline</div>
+                        </div>
+                    </div>
+                    <div class="fs_bar_row" t-foreach="state.productLines" t-as="line" t-key="line.name">
+                        <div class="fs_bar_label">
+                            <span><span class="fs_bar_dot" t-attf-style="background: {{ line.color }};"/><t t-esc="line.name"/></span>
+                            <span><t t-esc="formatMoney(line.value)"/> (<t t-esc="line.count"/>)</span>
+                        </div>
+                        <div class="fs_bar_track">
+                            <div class="fs_bar_fill" t-attf-style="width: {{ line.pct }}%; background: {{ line.color }};"/>
+                        </div>
+                    </div>
+                    <div class="fs_empty" t-if="!state.productLines.length">No pipeline data yet.</div>
+                </div>
+
+                <div class="fs_panel">
+                    <div class="fs_panel_header">
+                        <h3>Advisor Leaderboard (This Month)</h3>
+                    </div>
+                    <div class="fs_bar_row" t-foreach="state.leaderboard" t-as="row" t-key="row.name">
+                        <div class="fs_bar_label">
+                            <span><t t-esc="row.name"/></span>
+                            <span><t t-esc="formatMoney(row.value)"/> (<t t-esc="row.count"/>)</span>
+                        </div>
+                        <div class="fs_bar_track">
+                            <div class="fs_bar_fill fs_bar_fill_green" t-attf-style="width: {{ row.pct }}%"/>
+                        </div>
+                    </div>
+                    <div class="fs_empty" t-if="!state.leaderboard.length">No deals won yet this month.</div>
+                </div>
+
+                <div class="fs_panel fs_panel_wide" t-if="state.testimonial">
+                    <div class="fs_panel_header">
+                        <h3>Client Proof Point</h3>
+                        <button class="btn btn-link" t-on-click="onNewTestimonial">Add Testimonial</button>
+                    </div>
+                    <blockquote class="fs_testimonial">
+                        <p>"<t t-esc="state.testimonial.quote"/>"</p>
+                        <footer>
+                            — <strong><t t-esc="state.testimonial.name"/></strong>,
+                            <t t-esc="state.testimonial.role_location"/>
+                            <t t-if="state.testimonial.product_line_id">
+                                · <t t-esc="state.testimonial.product_line_id[1]"/>
+                            </t>
+                        </footer>
+                    </blockquote>
+                </div>
+
+            </div>
+
+        </div>
+    </t>
+
+</templates>

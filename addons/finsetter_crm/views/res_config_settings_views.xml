@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form_finsetter" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.finsetter</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Finsetter CRM" string="Finsetter CRM" name="finsetter_crm"
+                         groups="finsetter_crm.group_finsetter_manager">
+                        <block title="WhatsApp / SMS Gateway (Twilio)">
+                            <setting help="Real campaign WhatsApp/SMS sends go out through Twilio's REST API.">
+                                <field name="finsetter_twilio_account_sid" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+                            </setting>
+                            <setting>
+                                <field name="finsetter_twilio_auth_token" password="True"/>
+                            </setting>
+                            <setting help="Twilio WhatsApp-enabled sender, e.g. whatsapp:+14155238886 (sandbox) or your approved Business sender.">
+                                <field name="finsetter_twilio_whatsapp_from" placeholder="whatsapp:+14155238886"/>
+                            </setting>
+                            <setting help="Twilio SMS-capable phone number, in E.164 format.">
+                                <field name="finsetter_twilio_sms_from" placeholder="+14155551234"/>
+                            </setting>
+                        </block>
+                        <block title="Google Calendar">
+                            <setting help="Every Finsetter appointment creates a linked calendar event automatically.">
+                                <div class="text-muted">
+                                    Install the "Google Calendar" app (Apps menu, Odoo Community) and connect your
+                                    Google account under Settings &gt; General Settings &gt; Integrations. Once
+                                    connected, every appointment booked in Finsetter CRM syncs to that advisor's
+                                    Google Calendar with no further setup here.
+                                </div>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="base.main_company" model="res.company">
+            <field name="name">Finsetter Financial Services Pvt. Ltd.</field>
+            <field name="phone">+91 91822 49287</field>
+            <field name="email">info@thefinsetter.com</field>
+            <field name="website">https://www.thefinsetter.com</field>
+            <field name="street">Plot 245, Part Road No. 6</field>
+            <field name="street2">Meenakshi Estates Colony</field>
+            <field name="city">Hyderabad</field>
+            <field name="zip">500067</field>
+            <field name="state_id" ref="base.state_in_ts"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="resource_calendar_id" ref="resource_calendar_finsetter"/>
+            <field name="logo" type="base64" file="finsetter_crm/static/description/icon.png"/>
+            <field name="finsetter_tagline">Learn. Plan. Grow.</field>
+            <field name="finsetter_positioning">Master Finance. Secure Your Family's Future. Helping parents secure their children's financial journey through insurance, investments and estate planning.</field>
+            <field name="finsetter_mission">Educate parents across Telangana, Andhra Pradesh and the Telugu NRI community about starting early, protecting family savings and building generational wealth in plain language without commission-driven bias.</field>
+            <field name="finsetter_vision">Every Telugu household has a family health floater and a term plan that protects the child's future, wherever the family lives.</field>
+            <field name="finsetter_founder">Mahipal Katha</field>
+            <field name="finsetter_founder_title">Founder &amp; Financial Adviser</field>
+            <field name="finsetter_founded_year">2012</field>
+            <field name="finsetter_sebi_registration">E667968</field>
+            <field name="finsetter_irdai_license">5854206</field>
+            <field name="finsetter_years_experience">12+ years in Hyderabad</field>
+            <field name="finsetter_families_served">5,000+ families educated</field>
+            <field name="finsetter_claim_settlement_rate">98% claim settlement (site headline)</field>
+            <field name="finsetter_google_rating">4.9 / 5</field>
+            <field name="finsetter_google_reviews">500+ Google reviews</field>
+            <field name="finsetter_languages">Telugu and English</field>
+            <field name="finsetter_service_areas">Hyderabad, Guntur, Visakhapatnam, Warangal, Nellore, Kurnool, Tirupati, Karimnagar, Rajahmundry, Telangana, Andhra Pradesh and Telugu NRI communities worldwide.</field>
+            <field name="finsetter_consultation_offer">Free 30-minute consultation. Education first, zero jargon, no commitment. Virtual, phone and in-person consultations available.</field>
+            <field name="finsetter_trust_principles">Start with the child, not the product. Educate before advising. Policies are held directly with regulated insurers; Finsetter does not custody customer money.</field>
+            <field name="finsetter_social_links">Website: https://www.thefinsetter.com
+WhatsApp: https://wa.me/919490374717?text=Hello%20Finsetter%20Team
+LinkedIn, X/Twitter, Facebook and YouTube: linked from the public website.</field>
+            <field name="finsetter_legal_links">Privacy Policy | Terms &amp; Conditions | Disclaimer | SEBI Disclosures</field>
+            <field name="finsetter_source_url">https://www.thefinsetter.com/</field>
+        </record>
+        <record id="base.main_partner" model="res.partner">
+            <field name="name">Finsetter Financial Services Pvt. Ltd.</field>
+            <field name="phone">+91 91822 49287</field>
+            <field name="email">info@thefinsetter.com</field>
+            <field name="website">https://www.thefinsetter.com</field>
+            <field name="street">Plot 245, Part Road No. 6</field>
+            <field name="street2">Meenakshi Estates Colony</field>
+            <field name="city">Hyderabad</field>
+            <field name="zip">500067</field>
+            <field name="state_id" ref="base.state_in_ts"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="comment">SEBI Reg. E667968 · IRDAI Lic. 5854206 · Founded 2012 · 12+ Years · Zero Jargon · 5,000+ families served. Mon-Fri 9am-7pm, Sat 10am-4pm.</field>
+        </record>
+        <record id="seed_customer_arjun_mehta" model="res.partner">
+            <field name="name">Arjun Mehta</field>
+            <field name="phone">+91 98765 43210</field>
+            <field name="email">arjun.mehta@example.com</field>
+            <field name="city">Hyderabad</field>
+            <field name="state_id" ref="base.state_in_ts"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="finsetter_age">36</field>
+            <field name="finsetter_occupation">IT Professional</field>
+            <field name="finsetter_financial_goals">Protect family income, fund daughter's education and build a long-term retirement corpus.</field>
+        </record>
+        <record id="seed_customer_sneha_reddy" model="res.partner">
+            <field name="name">Sneha Reddy</field>
+            <field name="phone">+91 99887 66554</field>
+            <field name="email">sneha.reddy@example.com</field>
+            <field name="city">Guntur</field>
+            <field name="state_id" ref="base.state_in_ap"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="finsetter_age">42</field>
+            <field name="finsetter_occupation">Business Owner</field>
+            <field name="finsetter_financial_goals">Cover parents and children, protect the home and keep emergency savings intact.</field>
+        </record>
+        <record id="seed_customer_vikram_nair" model="res.partner">
+            <field name="name">Vikram Nair</field>
+            <field name="phone">+971 50123 4567</field>
+            <field name="email">vikram.nair@example.com</field>
+            <field name="city">Dubai</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="finsetter_age">39</field>
+            <field name="finsetter_occupation">NRI Consultant</field>
+            <field name="finsetter_financial_goals">Manage Indian investments, family insurance and a compliant estate plan remotely.</field>
+        </record>
+
+        <record id="seed_lead_arjun" model="crm.lead">
+            <field name="name">Family protection plan - Arjun Mehta</field>
+            <field name="type">opportunity</field>
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="contact_name">Arjun Mehta</field>
+            <field name="phone">+91 98765 43210</field>
+            <field name="email_from">arjun.mehta@example.com</field>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="stage_id" ref="crm_stage_plan"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="expected_revenue">180000</field>
+            <field name="probability">55</field>
+            <field name="preferred_language">both</field>
+            <field name="finsetter_age">36</field>
+            <field name="finsetter_occupation">IT Professional</field>
+            <field name="finsetter_annual_income">2400000</field>
+            <field name="finsetter_financial_goals">₹1 crore term cover and daughter's education protection.</field>
+            <field name="finsetter_requirements">Compare 3 term plans with critical illness and premium waiver riders.</field>
+            <field name="call_consent_status">granted</field>
+            <field name="consultation_type">virtual</field>
+        </record>
+        <record id="seed_lead_sneha" model="crm.lead">
+            <field name="name">Family health and home cover - Sneha Reddy</field>
+            <field name="type">opportunity</field>
+            <field name="partner_id" ref="seed_customer_sneha_reddy"/>
+            <field name="contact_name">Sneha Reddy</field>
+            <field name="phone">+91 99887 66554</field>
+            <field name="email_from">sneha.reddy@example.com</field>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="stage_id" ref="crm_stage_proposal"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="expected_revenue">95000</field>
+            <field name="probability">70</field>
+            <field name="preferred_language">both</field>
+            <field name="finsetter_age">42</field>
+            <field name="finsetter_occupation">Business Owner</field>
+            <field name="finsetter_annual_income">1800000</field>
+            <field name="finsetter_financial_goals">Protect parents and children from a large medical emergency.</field>
+            <field name="finsetter_requirements">₹10 lakh family floater, senior citizen cover and home insurance.</field>
+            <field name="call_consent_status">granted</field>
+            <field name="consultation_type">phone</field>
+        </record>
+        <record id="seed_lead_vikram" model="crm.lead">
+            <field name="name">NRI India investment and estate plan - Vikram Nair</field>
+            <field name="type">lead</field>
+            <field name="partner_id" ref="seed_customer_vikram_nair"/>
+            <field name="contact_name">Vikram Nair</field>
+            <field name="phone">+971 50123 4567</field>
+            <field name="email_from">vikram.nair@example.com</field>
+            <field name="product_line_id" ref="product_line_nri"/>
+            <field name="stage_id" ref="crm_stage_learn"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="expected_revenue">240000</field>
+            <field name="probability">25</field>
+            <field name="preferred_language">en</field>
+            <field name="is_nri">True</field>
+            <field name="finsetter_age">39</field>
+            <field name="finsetter_occupation">NRI Consultant</field>
+            <field name="finsetter_annual_income">5200000</field>
+            <field name="finsetter_financial_goals">Build India investments, insure parents and draft a multi-jurisdiction Will.</field>
+            <field name="finsetter_requirements">Remote video consultation with NRE/NRO, insurance and estate planning review.</field>
+            <field name="call_consent_status">unknown</field>
+            <field name="consultation_type">virtual</field>
+        </record>
+
+        <record id="seed_policy_arjun_life" model="finsetter.policy">
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="lead_id" ref="seed_lead_arjun"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="policy_number">FS-LIFE-2026-001</field>
+            <field name="insurer_name">Max Life Insurance</field>
+            <field name="sum_insured">10000000</field>
+            <field name="premium_amount">12000</field>
+            <field name="start_date">2026-01-15</field>
+            <field name="renewal_date">2027-01-15</field>
+            <field name="state">active</field>
+            <field name="notes">Term cover with education goal and annual renewal review.</field>
+        </record>
+        <record id="seed_policy_sneha_health" model="finsetter.policy">
+            <field name="partner_id" ref="seed_customer_sneha_reddy"/>
+            <field name="lead_id" ref="seed_lead_sneha"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="policy_number">FS-HEALTH-2026-014</field>
+            <field name="insurer_name">Care Health Insurance</field>
+            <field name="sum_insured">1000000</field>
+            <field name="premium_amount">18500</field>
+            <field name="start_date">2026-04-01</field>
+            <field name="renewal_date">2027-04-01</field>
+            <field name="state">active</field>
+            <field name="notes">Family floater including dependent parents.</field>
+        </record>
+        <record id="seed_policy_sneha_home" model="finsetter.policy">
+            <field name="partner_id" ref="seed_customer_sneha_reddy"/>
+            <field name="lead_id" ref="seed_lead_sneha"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="product_line_id" ref="product_line_home"/>
+            <field name="policy_number">FS-HOME-2026-022</field>
+            <field name="insurer_name">HDFC ERGO</field>
+            <field name="sum_insured">5000000</field>
+            <field name="premium_amount">5500</field>
+            <field name="start_date">2026-05-20</field>
+            <field name="renewal_date">2027-05-20</field>
+            <field name="state">active</field>
+        </record>
+
+        <record id="seed_claim_sneha_health" model="finsetter.claim">
+            <field name="claim_number">CLM-2026-0042</field>
+            <field name="policy_id" ref="seed_policy_sneha_health"/>
+            <field name="claim_date">2026-08-12</field>
+            <field name="incident_description">Hospitalization for planned cardiac diagnostic procedure.</field>
+            <field name="claim_amount">145000</field>
+            <field name="approved_amount">132500</field>
+            <field name="status">under_review</field>
+            <field name="notes">Hospital bills and discharge summary received; insurer assessment pending.</field>
+        </record>
+        <record id="seed_claim_sneha_home" model="finsetter.claim">
+            <field name="claim_number">CLM-2026-0051</field>
+            <field name="policy_id" ref="seed_policy_sneha_home"/>
+            <field name="claim_date">2026-09-02</field>
+            <field name="incident_description">Water damage to home contents after heavy monsoon rain.</field>
+            <field name="claim_amount">68000</field>
+            <field name="status">submitted</field>
+            <field name="notes">Surveyor visit scheduled; photographs uploaded.</field>
+        </record>
+
+        <record id="seed_call_arjun" model="finsetter.call.log">
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="lead_id" ref="seed_lead_arjun"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="call_datetime">2026-09-10 10:30:00</field>
+            <field name="direction">outbound</field>
+            <field name="duration_minutes">28</field>
+            <field name="outcome">converted</field>
+            <field name="consent_confirmed">True</field>
+            <field name="notes">Compared term plans; customer requested proposal with critical illness rider.</field>
+            <field name="follow_up_needed">True</field>
+            <field name="follow_up_date">2026-09-16</field>
+        </record>
+        <record id="seed_call_sneha" model="finsetter.call.log">
+            <field name="partner_id" ref="seed_customer_sneha_reddy"/>
+            <field name="lead_id" ref="seed_lead_sneha"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="call_datetime">2026-09-11 15:15:00</field>
+            <field name="direction">inbound</field>
+            <field name="duration_minutes">34</field>
+            <field name="outcome">connected</field>
+            <field name="consent_confirmed">True</field>
+            <field name="notes">Reviewed family floater proposal and pending home claim documents.</field>
+        </record>
+        <record id="seed_call_vikram" model="finsetter.call.log">
+            <field name="partner_id" ref="seed_customer_vikram_nair"/>
+            <field name="lead_id" ref="seed_lead_vikram"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="product_line_id" ref="product_line_nri"/>
+            <field name="call_datetime">2026-09-12 18:00:00</field>
+            <field name="direction">outbound</field>
+            <field name="duration_minutes">12</field>
+            <field name="outcome">call_back</field>
+            <field name="notes">Requested a Dubai evening slot for video consultation.</field>
+            <field name="follow_up_needed">True</field>
+            <field name="follow_up_date">2026-09-18</field>
+        </record>
+
+        <record id="seed_consent_arjun_call" model="finsetter.consent">
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="lead_id" ref="seed_lead_arjun"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="consent_type">call</field>
+            <field name="status">granted</field>
+            <field name="channel">call</field>
+            <field name="date_obtained">2026-09-10 10:58:00</field>
+            <field name="proof_reference">CALL-20260910-ARJUN</field>
+        </record>
+        <record id="seed_consent_arjun_data" model="finsetter.consent">
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="lead_id" ref="seed_lead_arjun"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="consent_type">data_processing</field>
+            <field name="status">granted</field>
+            <field name="channel">web_form</field>
+            <field name="date_obtained">2026-09-10 11:05:00</field>
+            <field name="proof_reference">FORM-ARJUN-KYC-001</field>
+        </record>
+        <record id="seed_consent_sneha_whatsapp" model="finsetter.consent">
+            <field name="partner_id" ref="seed_customer_sneha_reddy"/>
+            <field name="lead_id" ref="seed_lead_sneha"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="consent_type">whatsapp</field>
+            <field name="status">granted</field>
+            <field name="channel">whatsapp</field>
+            <field name="date_obtained">2026-09-11 15:52:00</field>
+            <field name="proof_reference">WA-SNEHA-20260911</field>
+        </record>
+        <record id="seed_consent_vikram_pending" model="finsetter.consent">
+            <field name="partner_id" ref="seed_customer_vikram_nair"/>
+            <field name="lead_id" ref="seed_lead_vikram"/>
+            <field name="advisor_id" ref="base.user_admin"/>
+            <field name="consent_type">marketing</field>
+            <field name="status">declined</field>
+            <field name="channel">email</field>
+            <field name="date_obtained">2026-09-09 09:15:00</field>
+            <field name="proof_reference">EMAIL-VIKRAM-20260909</field>
+        </record>
+
+        <record id="seed_doc_arjun_pan" model="finsetter.document">
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="lead_id" ref="seed_lead_arjun"/>
+            <field name="policy_id" ref="seed_policy_arjun_life"/>
+            <field name="document_type">pan</field>
+            <field name="attachment_name">arjun_mehta_pan.pdf</field>
+            <field name="verification_status">verified</field>
+        </record>
+        <record id="seed_doc_arjun_income" model="finsetter.document">
+            <field name="partner_id" ref="seed_customer_arjun_mehta"/>
+            <field name="lead_id" ref="seed_lead_arjun"/>
+            <field name="document_type">income_proof</field>
+            <field name="attachment_name">arjun_mehta_income_proof.pdf</field>
+            <field name="verification_status">pending</field>
+        </record>
+        <record id="seed_doc_sneha_policy" model="finsetter.document">
+            <field name="partner_id" ref="seed_customer_sneha_reddy"/>
+            <field name="policy_id" ref="seed_policy_sneha_health"/>
+            <field name="document_type">policy_document</field>
+            <field name="attachment_name">sneha_health_policy.pdf</field>
+            <field name="verification_status">verified</field>
+        </record>
+        <record id="seed_doc_vikram_passport" model="finsetter.document">
+            <field name="partner_id" ref="seed_customer_vikram_nair"/>
+            <field name="lead_id" ref="seed_lead_vikram"/>
+            <field name="document_type">passport</field>
+            <field name="attachment_name">vikram_nair_passport.pdf</field>
+            <field name="verification_status">pending</field>
+        </record>
+    </data>
+</odoo>

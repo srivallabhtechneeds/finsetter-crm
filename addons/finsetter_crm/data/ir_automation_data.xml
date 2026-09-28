@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+
+        <!-- Data pipeline, step 3: when a lead enters "KYC & Consent Pending",
+             automatically create a follow-up activity so consent capture
+             never falls through the cracks. -->
+        <record id="automation_consent_followup" model="base.automation">
+            <field name="name">Finsetter: Request Consent on KYC Stage</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="trigger_field_ids" eval="[(4, ref('crm.field_crm_lead__stage_id'))]"/>
+            <field name="filter_domain" eval="str([('stage_id', '=', ref('crm_stage_kyc'))])"/>
+        </record>
+        <record id="action_server_consent_followup" model="ir.actions.server">
+            <field name="name">Finsetter: Request Consent - Action</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="base_automation_id" ref="automation_consent_followup"/>
+            <field name="state">code</field>
+            <field name="code">
+for lead in records:
+    if lead.call_consent_status != 'granted':
+        lead.activity_schedule(
+            'finsetter_crm.mail_activity_type_consent_followup',
+            summary='Capture KYC / call consent before issuing policy',
+            user_id=lead.user_id.id or env.uid,
+        )
+</field>
+        </record>
+
+        <!-- Data pipeline, step 4: when a lead reaches "Grow (Policy Issued)",
+             nudge the advisor to record the policy so it enters the renewal
+             pipeline. -->
+        <record id="automation_policy_issued_nudge" model="base.automation">
+            <field name="name">Finsetter: Prompt Policy Record on Won</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="trigger_field_ids" eval="[(4, ref('crm.field_crm_lead__stage_id'))]"/>
+            <field name="filter_domain" eval="str([('stage_id', '=', ref('crm_stage_grow'))])"/>
+        </record>
+        <record id="action_server_policy_issued_nudge" model="ir.actions.server">
+            <field name="name">Finsetter: Prompt Policy Record - Action</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="base_automation_id" ref="automation_policy_issued_nudge"/>
+            <field name="state">code</field>
+            <field name="code">
+for lead in records:
+    if not lead.policy_ids:
+        lead.activity_schedule(
+            'mail.mail_activity_data_todo',
+            summary='Record the issued policy (insurer, sum insured, renewal date) in Finsetter CRM',
+            user_id=lead.user_id.id or env.uid,
+        )
+        lead.message_post(body="Deal marked as Grow (Policy Issued) — please create the Policy record so renewal reminders start.")
+</field>
+        </record>
+
+    </data>
+</odoo>

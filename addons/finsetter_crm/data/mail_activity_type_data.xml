@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="mail_activity_type_renewal_call" model="mail.activity.type">
+            <field name="name">Renewal Reminder Call</field>
+            <field name="icon">fa-refresh</field>
+            <field name="category">phonecall</field>
+            <field name="delay_count">1</field>
+            <field name="delay_unit">days</field>
+            <field name="summary">Call customer about upcoming policy renewal</field>
+        </record>
+        <record id="mail_activity_type_consent_followup" model="mail.activity.type">
+            <field name="name">Consent Follow-up</field>
+            <field name="icon">fa-check-square-o</field>
+            <field name="category">default</field>
+            <field name="delay_count">2</field>
+            <field name="delay_unit">days</field>
+            <field name="summary">Follow up to obtain outstanding customer consent</field>
+        </record>
+    </data>
+</odoo>

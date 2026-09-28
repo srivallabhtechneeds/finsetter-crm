@@ -1,0 +1,344 @@
+// Finsetter CRM — Dashboard styling
+// Brand palette: midnight navy, saffron, emerald and a cool paper canvas.
+
+.o_finsetter_dashboard {
+    --fs-ink: #102a43;
+    --fs-muted: #526579;
+    --fs-line: #d9e3ea;
+    --fs-paper: #eef4f7;
+    --fs-card: #ffffff;
+    --fs-teal: #0b7a75;
+    --fs-gold: #e3a62f;
+    padding: 28px clamp(18px, 3vw, 42px);
+    max-width: 1500px;
+    margin: 0 auto;
+    min-height: 100%;
+    background: var(--fs-paper);
+    color: var(--fs-ink);
+
+    .btn { border-radius: 6px; font-weight: 700; }
+
+    .fs_hero {
+        background: #102a43;
+        border-radius: 8px;
+        padding: 30px clamp(22px, 4vw, 46px);
+        color: #fff;
+        margin-bottom: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px 32px;
+        box-shadow: 0 12px 30px rgba(16, 42, 67, .18);
+
+        .fs_hero_copy { flex: 1 1 360px; }
+
+        .fs_eyebrow {
+            color: #e7c47e;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            margin-bottom: 9px;
+        }
+
+        .fs_hero_brand {
+            h1 { margin: 0; color: #ffffff; font-weight: 800; font-size: clamp(28px, 3vw, 38px); letter-spacing: 0; }
+            .fs_tagline { margin: 3px 0 0; color: #7edbd0; font-weight: 700; }
+        }
+
+        .fs_hero_intro {
+            max-width: 560px;
+            margin: 15px 0 0;
+            color: #e2edf3;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .fs_hero_badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .fs_badge {
+                background: rgba(126, 219, 208, .12);
+                border: 1px solid rgba(126, 219, 208, .34);
+                border-radius: 4px;
+                padding: 4px 12px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .2px;
+            }
+        }
+
+        .fs_hero_actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .btn-light, .btn-outline-light {
+                font-weight: 600;
+                border-radius: 6px;
+            }
+
+            .btn-light {
+                color: #102a43;
+                background: #f8c95b;
+                border-color: #f8c95b;
+            }
+
+            .btn-outline-light:hover,
+            .btn-outline-light:focus {
+                color: #102a43;
+                background: #ffffff;
+            }
+        }
+    }
+
+    .fs_kpi_row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 12px;
+        margin-bottom: 22px;
+
+        @media (max-width: 1100px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .fs_kpi_card {
+            background: var(--fs-card);
+            border: 1px solid var(--fs-line);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: box-shadow .15s ease, transform .15s ease;
+
+            &:hover {
+                box-shadow: 0 7px 18px rgba(18, 37, 63, .1);
+                transform: translateY(-2px);
+            }
+
+            .fs_kpi_icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 7px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                color: #fff;
+                flex: 0 0 auto;
+            }
+            .fs_icon_blue { background: #2868a8; }
+            .fs_icon_green { background: var(--fs-teal); }
+            .fs_icon_amber { background: var(--fs-gold); }
+            .fs_icon_red { background: #c55a4e; }
+            .fs_icon_purple { background: #58658b; }
+
+            .fs_kpi_value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+            .fs_kpi_label { font-size: 10px; color: var(--fs-muted); font-weight: 800; text-transform: uppercase; letter-spacing: .6px; }
+            .fs_kpi_sub { font-size: 12px; color: #3f4b5c; margin-top: 3px; }
+        }
+    }
+
+    .fs_insurance_section {
+        background: var(--fs-card);
+        border: 1px solid var(--fs-line);
+        border-radius: 8px;
+        padding: 18px;
+        margin-bottom: 22px;
+        box-shadow: 0 3px 12px rgba(18, 37, 63, .04);
+
+        .fs_panel_header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 14px;
+
+            h3 { margin: 0; font-size: 14px; font-weight: 800; }
+            .fs_panel_subtitle { font-size: 12px; color: var(--fs-muted); }
+        }
+
+        .fs_insurance_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 10px;
+        }
+
+        .fs_insurance_card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--fs-line);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: box-shadow .15s ease, transform .15s ease;
+
+            &:hover {
+                box-shadow: 0 7px 18px rgba(18, 37, 63, .1);
+                transform: translateY(-2px);
+            }
+
+            .fs_insurance_icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 17px;
+                flex: 0 0 auto;
+            }
+
+            .fs_insurance_name { font-weight: 700; font-size: 13px; color: var(--fs-ink); }
+            .fs_insurance_meta { font-size: 11px; color: var(--fs-muted); margin-top: 2px; }
+        }
+    }
+
+    .fs_main_grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 16px;
+
+        @media (max-width: 1100px) {
+            grid-template-columns: 1fr;
+        }
+
+        .fs_panel_wide { grid-column: span 1; }
+
+        .fs_panel {
+            background: var(--fs-card);
+            border: 1px solid var(--fs-line);
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 3px 12px rgba(18, 37, 63, .04);
+
+            .fs_panel_header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 12px;
+
+                h3 { margin: 0; font-size: 14px; font-weight: 800; letter-spacing: .1px; }
+            }
+
+            .fs_table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+
+                th {
+                    text-align: left;
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    color: #6b7280;
+                    padding: 6px 8px;
+                    border-bottom: 2px solid #e8edf0;
+                }
+                td {
+                    padding: 8px;
+                    border-bottom: 1px solid #f1f2f6;
+                }
+                tr:hover td { background: #f2f7f6; }
+            }
+
+            .fs_pill {
+                display: inline-block;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-weight: 700;
+                font-size: 12px;
+            }
+            .fs_pill_amber { background: #fdf1dc; color: #a56a1a; }
+            .fs_pill_red { background: #fbe4e3; color: #b3231f; }
+
+            .fs_donut_wrap {
+                position: relative;
+                width: 160px;
+                height: 160px;
+                margin: 4px auto 18px;
+
+                .fs_donut {
+                    width: 100%;
+                    height: 100%;
+
+                    circle {
+                        transition: stroke-dasharray .3s ease;
+                    }
+                }
+
+                .fs_donut_center {
+                    position: absolute;
+                    inset: 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+
+                    .fs_donut_total { font-size: 15px; font-weight: 800; color: var(--fs-ink); }
+                    .fs_donut_sub { font-size: 10px; color: var(--fs-muted); text-transform: uppercase; letter-spacing: .4px; }
+                }
+            }
+
+            .fs_bar_row {
+                margin-bottom: 12px;
+
+                .fs_bar_dot {
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    margin-right: 6px;
+                }
+
+                .fs_bar_label {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 12px;
+                    margin-bottom: 4px;
+                    color: #374151;
+                }
+                .fs_bar_track {
+                    background: #eef0f4;
+                    border-radius: 6px;
+                    height: 8px;
+                    overflow: hidden;
+                }
+                .fs_bar_fill {
+                    background: #2868a8;
+                    height: 100%;
+                    border-radius: 6px;
+                }
+                .fs_bar_fill_green { background: var(--fs-teal); }
+            }
+
+            .fs_empty {
+                color: #9aa1ae;
+                font-size: 13px;
+                padding: 12px 0;
+                text-align: center;
+            }
+
+            .fs_testimonial {
+                margin: 0;
+                padding: 4px 0 0 16px;
+                border-left: 3px solid #e2a13a;
+
+                p {
+                    font-size: 15px;
+                    font-style: italic;
+                    color: #1f2937;
+                    margin: 0 0 8px;
+                }
+                footer {
+                    font-size: 12px;
+                    color: #6b7280;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Home page entries (spec: "Add customer portal") -->
+        <template id="portal_my_home_finsetter" name="Show Policies / Appointments / Documents / Claims"
+                  customize_show="True" inherit_id="portal.portal_my_home" priority="30">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+                <t t-set="portal_client_category_enable" t-value="True"/>
+            </xpath>
+            <div id="portal_client_category" position="inside">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="icon" t-value="'/finsetter_crm/static/description/icon.png'"/>
+                    <t t-set="title">Your Policies</t>
+                    <t t-set="url" t-value="'/my/policies'"/>
+                    <t t-set="text">Track cover, premium and renewal dates</t>
+                    <t t-set="placeholder_count" t-value="'finsetter_policy_count'"/>
+                </t>
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="icon" t-value="'/finsetter_crm/static/description/icon.png'"/>
+                    <t t-set="title">Your Appointments</t>
+                    <t t-set="url" t-value="'/my/appointments'"/>
+                    <t t-set="text">Upcoming and past consultations</t>
+                    <t t-set="placeholder_count" t-value="'finsetter_appointment_count'"/>
+                </t>
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="icon" t-value="'/finsetter_crm/static/description/icon.png'"/>
+                    <t t-set="title">Your Documents</t>
+                    <t t-set="url" t-value="'/my/documents'"/>
+                    <t t-set="text">KYC and policy documents on file</t>
+                    <t t-set="placeholder_count" t-value="'finsetter_document_count'"/>
+                </t>
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="icon" t-value="'/finsetter_crm/static/description/icon.png'"/>
+                    <t t-set="title">Your Claims</t>
+                    <t t-set="url" t-value="'/my/claims'"/>
+                    <t t-set="text">Track claim status end to end</t>
+                    <t t-set="placeholder_count" t-value="'finsetter_claim_count'"/>
+                </t>
+            </div>
+        </template>
+
+        <!-- Breadcrumb entries -->
+        <template id="portal_my_home_menu_finsetter" name="Portal layout: Finsetter menu entries"
+                  inherit_id="portal.portal_breadcrumbs" priority="30">
+            <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+                <li t-if="page_name == 'finsetter_policy'" t-attf-class="breadcrumb-item #{'active ' if not policy else ''}">
+                    <a t-if="policy" t-attf-href="/my/policies?{{ keep_query() }}">Policies</a>
+                    <t t-else="">Policies</t>
+                </li>
+                <li t-if="page_name == 'finsetter_appointment'" class="breadcrumb-item active">Appointments</li>
+                <li t-if="page_name == 'finsetter_document'" class="breadcrumb-item active">Documents</li>
+                <li t-if="page_name == 'finsetter_claim'" class="breadcrumb-item active">Claims</li>
+            </xpath>
+        </template>
+
+        <!-- Policies: list -->
+        <template id="portal_my_policies" name="My Policies">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Policies</t>
+                </t>
+                <div t-if="not policies" class="alert alert-warning" role="alert">
+                    You don't have any policies on file yet.
+                </div>
+                <t t-if="policies" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Product</th>
+                            <th>Insurer</th>
+                            <th class="text-end">Renewal Date</th>
+                            <th class="text-end">Premium</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="policies" t-as="p">
+                        <tr>
+                            <td><a t-attf-href="/my/policies/#{p.id}"><t t-out="p.product_line_id.name"/></a></td>
+                            <td><t t-out="p.insurer_name"/></td>
+                            <td class="text-end"><span t-field="p.renewal_date"/></td>
+                            <td class="text-end"><span t-field="p.premium_amount"/></td>
+                            <td class="text-center">
+                                <span t-attf-class="badge rounded-pill #{'text-bg-danger' if p.state == 'lapsed' else 'text-bg-warning' if p.state == 'renewal_due' else 'text-bg-success'}">
+                                    <t t-out="p.state"/>
+                                </span>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Policies: detail -->
+        <template id="portal_policy_page" name="Policy">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 t-out="policy.display_name"/>
+                        <table class="table table-borderless table-sm">
+                            <tr><th>Insurer</th><td t-out="policy.insurer_name"/></tr>
+                            <tr><th>Policy Number</th><td t-out="policy.policy_number"/></tr>
+                            <tr><th>Sum Insured</th><td><span t-field="policy.sum_insured"/></td></tr>
+                            <tr><th>Premium</th><td><span t-field="policy.premium_amount"/></td></tr>
+                            <tr><th>Start Date</th><td><span t-field="policy.start_date"/></td></tr>
+                            <tr><th>Renewal Date</th><td><span t-field="policy.renewal_date"/></td></tr>
+                            <tr><th>Status</th><td t-out="policy.state"/></tr>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Appointments: list -->
+        <template id="portal_my_appointments" name="My Appointments">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Appointments</t>
+                </t>
+                <div t-if="not appointments" class="alert alert-warning" role="alert">
+                    You don't have any appointments booked.
+                </div>
+                <t t-if="appointments" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Date / Time</th>
+                            <th>Advisor</th>
+                            <th>Mode</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="appointments" t-as="a">
+                        <tr>
+                            <td><span t-field="a.appointment_datetime"/></td>
+                            <td t-out="a.advisor_id.name"/>
+                            <td t-out="a.mode"/>
+                            <td class="text-center"><span class="badge rounded-pill text-bg-info" t-out="a.status"/></td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Documents: list -->
+        <template id="portal_my_documents" name="My Documents">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Documents</t>
+                </t>
+                <div t-if="not documents" class="alert alert-warning" role="alert">
+                    No documents on file yet.
+                </div>
+                <t t-if="documents" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Type</th>
+                            <th class="text-center">Verification</th>
+                            <th class="text-end">Expiry</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="documents" t-as="d">
+                        <tr>
+                            <td t-out="d.document_type"/>
+                            <td class="text-center">
+                                <span t-attf-class="badge rounded-pill #{'text-bg-success' if d.verification_status == 'verified' else 'text-bg-warning'}">
+                                    <t t-out="d.verification_status"/>
+                                </span>
+                            </td>
+                            <td class="text-end"><span t-field="d.expiry_date"/></td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Claims: list -->
+        <template id="portal_my_claims" name="My Claims">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Claims</t>
+                </t>
+                <div t-if="not claims" class="alert alert-warning" role="alert">
+                    You have no claims on file.
+                </div>
+                <t t-if="claims" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Claim #</th>
+                            <th>Policy</th>
+                            <th class="text-end">Claim Date</th>
+                            <th class="text-end">Amount</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="claims" t-as="c">
+                        <tr>
+                            <td t-out="c.claim_number"/>
+                            <td t-out="c.policy_id.display_name"/>
+                            <td class="text-end"><span t-field="c.claim_date"/></td>
+                            <td class="text-end"><span t-field="c.claim_amount"/></td>
+                            <td class="text-center">
+                                <span t-attf-class="badge rounded-pill #{'text-bg-success' if c.status == 'settled' else 'text-bg-danger' if c.status == 'rejected' else 'text-bg-info'}">
+                                    <t t-out="c.status"/>
+                                </span>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="crm_team_health_life" model="crm.team">
+            <field name="name">Health &amp; Life Advisory</field>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="use_leads">True</field>
+            <field name="use_opportunities">True</field>
+        </record>
+        <record id="crm_team_motor_home" model="crm.team">
+            <field name="name">Motor &amp; Home Insurance</field>
+            <field name="product_line_id" ref="product_line_motor"/>
+            <field name="use_leads">True</field>
+            <field name="use_opportunities">True</field>
+        </record>
+        <record id="crm_team_travel_nri" model="crm.team">
+            <field name="name">Travel &amp; NRI Desk</field>
+            <field name="product_line_id" ref="product_line_travel"/>
+            <field name="use_leads">True</field>
+            <field name="use_opportunities">True</field>
+        </record>
+        <record id="crm_team_will_planning" model="crm.team">
+            <field name="name">Will &amp; Financial Planning</field>
+            <field name="product_line_id" ref="product_line_will"/>
+            <field name="use_leads">True</field>
+            <field name="use_opportunities">True</field>
+        </record>
+
+        <!-- Team membership goes through crm.team.member (crm.team's own
+             member_ids is a computed/readonly-in-practice field), one record
+             per (team, salesperson) pair. -->
+        <record id="crm_team_member_health_admin" model="crm.team.member">
+            <field name="crm_team_id" ref="crm_team_health_life"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="crm_team_member_motor_admin" model="crm.team.member">
+            <field name="crm_team_id" ref="crm_team_motor_home"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="crm_team_member_travel_admin" model="crm.team.member">
+            <field name="crm_team_id" ref="crm_team_travel_nri"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="crm_team_member_will_admin" model="crm.team.member">
+            <field name="crm_team_id" ref="crm_team_will_planning"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+    </data>
+</odoo>

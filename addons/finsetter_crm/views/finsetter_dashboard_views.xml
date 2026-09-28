@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_dashboard_action" model="ir.actions.client">
+            <field name="name">Finsetter Dashboard</field>
+            <field name="tag">finsetter_crm_dashboard</field>
+        </record>
+
+        <record id="finsetter_action_calculators" model="ir.actions.client">
+            <field name="name">Financial Calculators</field>
+            <field name="tag">finsetter_crm_calculators</field>
+        </record>
+
+        <record id="finsetter_action_pipeline" model="ir.actions.act_window">
+            <field name="name">Pipeline</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
+            <field name="domain">[('type', '=', 'opportunity')]</field>
+            <field name="context">{'default_type': 'opportunity', 'search_default_my_pipeline': 0}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No opportunities yet — add one to start the pipeline.</p>
+            </field>
+        </record>
+
+        <record id="finsetter_action_leads" model="ir.actions.act_window">
+            <field name="name">Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="domain">[('type', '=', 'lead')]</field>
+            <field name="context">{'default_type': 'lead'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No leads yet — new website/WhatsApp inquiries land here.</p>
+            </field>
+        </record>
+
+        <record id="finsetter_action_reporting_pipeline" model="ir.actions.act_window">
+            <field name="name">Pipeline Analysis</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="domain">[('type', '=', 'opportunity')]</field>
+            <field name="context">{'group_by': ['product_line_id']}</field>
+        </record>
+
+        <record id="finsetter_action_reporting_policies" model="ir.actions.act_window">
+            <field name="name">Policy &amp; Renewal Analysis</field>
+            <field name="res_model">finsetter.policy</field>
+            <field name="view_mode">pivot,graph,tree</field>
+        </record>
+
+        <record id="finsetter_action_product_lines" model="ir.actions.act_window">
+            <field name="name">Product Lines</field>
+            <field name="res_model">finsetter.policy.product.line</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

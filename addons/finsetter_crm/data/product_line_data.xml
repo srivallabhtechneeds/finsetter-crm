@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="product_line_health" model="finsetter.policy.product.line">
+            <field name="name">Health Insurance</field>
+            <field name="code">HEALTH</field>
+            <field name="sequence">10</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">1</field>
+            <field name="icon">fa-heartbeat</field>
+            <field name="website_url">https://www.thefinsetter.com/services/health-insurance.html</field>
+            <field name="marketing_note">Family floaters, newborn to grandparent — minimum recommended cover ₹10 lakh.</field>
+        </record>
+        <record id="product_line_life" model="finsetter.policy.product.line">
+            <field name="name">Life Insurance (Term)</field>
+            <field name="code">LIFE</field>
+            <field name="sequence">20</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">4</field>
+            <field name="icon">fa-shield</field>
+            <field name="website_url">https://www.thefinsetter.com/services/life-insurance.html</field>
+            <field name="marketing_note">₹1 crore term cover for under ₹1,000/month.</field>
+        </record>
+        <record id="product_line_motor" model="finsetter.policy.product.line">
+            <field name="name">Motor / Car Insurance</field>
+            <field name="code">MOTOR</field>
+            <field name="sequence">30</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">2</field>
+            <field name="icon">fa-car</field>
+            <field name="website_url">https://www.thefinsetter.com/services/motor-insurance.html</field>
+            <field name="marketing_note">Comprehensive cover with zero-depreciation add-on and 24/7 roadside assistance.</field>
+        </record>
+        <record id="product_line_home" model="finsetter.policy.product.line">
+            <field name="name">Home Insurance</field>
+            <field name="code">HOME</field>
+            <field name="sequence">40</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">3</field>
+            <field name="icon">fa-home</field>
+            <field name="website_url">https://www.thefinsetter.com/services/home-insurance.html</field>
+            <field name="marketing_note">Covers fire, theft, natural disasters and third-party liability.</field>
+        </record>
+        <record id="product_line_travel" model="finsetter.policy.product.line">
+            <field name="name">Travel Insurance</field>
+            <field name="code">TRAVEL</field>
+            <field name="sequence">50</field>
+            <field name="renewal_cycle_months">1</field>
+            <field name="color">5</field>
+            <field name="icon">fa-plane</field>
+            <field name="website_url">https://www.thefinsetter.com/services/travel-insurance.html</field>
+            <field name="marketing_note">Medical emergencies, trip cancellation, baggage loss and delays — worldwide.</field>
+        </record>
+        <record id="product_line_nri" model="finsetter.policy.product.line">
+            <field name="name">NRI Services (FD / Estate Planning)</field>
+            <field name="code">NRI</field>
+            <field name="sequence">60</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">6</field>
+            <field name="icon">fa-globe</field>
+            <field name="website_url">https://www.thefinsetter.com/services/nri-services.html</field>
+            <field name="marketing_note">FDs, insurance and estate planning — 100% online, zero branch visits.</field>
+        </record>
+        <record id="product_line_will" model="finsetter.policy.product.line">
+            <field name="name">Will Writing</field>
+            <field name="code">WILL</field>
+            <field name="sequence">70</field>
+            <field name="renewal_cycle_months">0</field>
+            <field name="color">7</field>
+            <field name="icon">fa-file-text</field>
+            <field name="website_url">https://www.thefinsetter.com/services/will-writing.html</field>
+            <field name="marketing_note">48-hour turnaround, including multi-jurisdictional NRI estates.</field>
+        </record>
+        <record id="product_line_planning" model="finsetter.policy.product.line">
+            <field name="name">Financial Planning &amp; Advisory</field>
+            <field name="code">PLANNING</field>
+            <field name="sequence">80</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">8</field>
+            <field name="icon">fa-line-chart</field>
+            <field name="website_url">https://www.thefinsetter.com/calculators.html</field>
+            <field name="marketing_note">One-adviser model — insurance, tax and estate planning in a single meeting.</field>
+        </record>
+
+        <!-- The 5 lines below extend Finsetter's catalog beyond what is
+             published on thefinsetter.com today (per the "full requested
+             catalog" build decision) — no website_url is set for these
+             since there is no live service page to link to yet. Configure
+             real providers/products for these under Finsetter CRM >
+             Configuration > Financial Products before going live. -->
+        <record id="product_line_investment" model="finsetter.policy.product.line">
+            <field name="name">Investment Plans / Mutual Funds</field>
+            <field name="code">INVEST</field>
+            <field name="sequence">90</field>
+            <field name="renewal_cycle_months">0</field>
+            <field name="color">9</field>
+            <field name="icon">fa-bar-chart</field>
+            <field name="marketing_note">SIP and lump-sum mutual fund investing across equity, debt and hybrid funds.</field>
+        </record>
+        <record id="product_line_tax" model="finsetter.policy.product.line">
+            <field name="name">Tax-Saving Products</field>
+            <field name="code">TAX</field>
+            <field name="sequence">100</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">10</field>
+            <field name="icon">fa-percent</field>
+            <field name="marketing_note">ELSS, PPF, NSC and 80C-eligible plans to maximize this year's tax savings.</field>
+        </record>
+        <record id="product_line_retirement" model="finsetter.policy.product.line">
+            <field name="name">Retirement / Pension Plans</field>
+            <field name="code">RETIRE</field>
+            <field name="sequence">110</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">11</field>
+            <field name="icon">fa-umbrella</field>
+            <field name="marketing_note">NPS, annuities and pension plans to build a retirement corpus.</field>
+        </record>
+        <record id="product_line_estate" model="finsetter.policy.product.line">
+            <field name="name">Estate Planning</field>
+            <field name="code">ESTATE</field>
+            <field name="sequence">120</field>
+            <field name="renewal_cycle_months">0</field>
+            <field name="color">7</field>
+            <field name="icon">fa-balance-scale</field>
+            <field name="marketing_note">Trusts, succession and multi-jurisdiction estate structuring, including for NRIs.</field>
+        </record>
+        <record id="product_line_family" model="finsetter.policy.product.line">
+            <field name="name">Family Financial Planning</field>
+            <field name="code">FAMILY</field>
+            <field name="sequence">130</field>
+            <field name="renewal_cycle_months">12</field>
+            <field name="color">3</field>
+            <field name="icon">fa-users</field>
+            <field name="marketing_note">A single consolidated plan across every family member's insurance, savings and goals.</field>
+        </record>
+
+        <record id="website_product_family_health" model="finsetter.financial.product">
+            <field name="name">Family Health Insurance</field>
+            <field name="product_line_id" ref="product_line_health"/>
+            <field name="provider">Compare 20+ health insurers</field>
+            <field name="eligibility_criteria">Individuals, families, dependent parents and senior citizens. Family floater, individual, senior citizen and critical illness options.</field>
+            <field name="min_age">18</field>
+            <field name="max_age">80</field>
+            <field name="amount_type">premium</field>
+            <field name="min_amount">4500</field>
+            <field name="max_amount">23000</field>
+            <field name="tenure_months_min">12</field>
+            <field name="tenure_months_max">12</field>
+            <field name="benefits">10,000+ network hospitals; cashless hospitalization; day-care procedures; Section 80D tax benefit; 24/7 claims support.</field>
+            <field name="documents_required">Identity proof, address proof, PAN, age proof, medical history and proposal form.</field>
+            <field name="website_url">https://www.thefinsetter.com/services/health-insurance.html</field>
+            <field name="status">active</field>
+        </record>
+        <record id="website_product_life_insurance" model="finsetter.financial.product">
+            <field name="name">Life Insurance and Term Cover</field>
+            <field name="product_line_id" ref="product_line_life"/>
+            <field name="provider">Compare 30+ life insurers</field>
+            <field name="eligibility_criteria">Parents, professionals, self-employed people, homemakers and NRIs subject to insurer underwriting.</field>
+            <field name="min_age">18</field>
+            <field name="max_age">65</field>
+            <field name="amount_type">sum_assured</field>
+            <field name="min_amount">1000000</field>
+            <field name="max_amount">100000000</field>
+            <field name="benefits">Term, ULIP, endowment and whole-life options; rider choices; Section 80C tax treatment; renewal and claim support.</field>
+            <field name="documents_required">PAN, identity and address proof, income proof, photographs, medical history and proposal form.</field>
+            <field name="website_url">https://www.thefinsetter.com/services/life-insurance.html</field>
+            <field name="status">active</field>
+        </record>
+        <record id="website_product_home_insurance" model="finsetter.financial.product">
+            <field name="name">Home Insurance</field>
+            <field name="product_line_id" ref="product_line_home"/>
+            <field name="provider">Compare home insurance plans</field>
+            <field name="eligibility_criteria">Homeowners, apartment owners, independent-home owners and renters.</field>
+            <field name="amount_type">premium</field>
+            <field name="min_amount">2500</field>
+            <field name="max_amount">9500</field>
+            <field name="tenure_months_min">12</field>
+            <field name="tenure_months_max">12</field>
+            <field name="benefits">Building, contents, fire, theft, natural disasters, jewellery and third-party liability protection.</field>
+            <field name="documents_required">Identity proof, address proof, property or rental proof, property details and contents inventory.</field>
+            <field name="website_url">https://www.thefinsetter.com/services/home-insurance.html</field>
+            <field name="status">active</field>
+        </record>
+        <record id="website_product_motor_insurance" model="finsetter.financial.product">
+            <field name="name">Motor Insurance</field>
+            <field name="product_line_id" ref="product_line_motor"/>
+            <field name="provider">Compare 20+ motor insurers</field>
+            <field name="eligibility_criteria">Cars and two-wheelers requiring third-party or comprehensive coverage.</field>
+            <field name="amount_type">premium</field>
+            <field name="min_amount">2000</field>
+            <field name="max_amount">20000</field>
+            <field name="tenure_months_min">12</field>
+            <field name="tenure_months_max">12</field>
+            <field name="benefits">5,000+ cashless garages; zero depreciation; engine protection; roadside assistance; NCB protection; claim support.</field>
+            <field name="documents_required">Vehicle registration certificate, previous policy, driving licence, identity proof and vehicle photographs.</field>
+            <field name="website_url">https://www.thefinsetter.com/services/motor-insurance.html</field>
+            <field name="status">active</field>
+        </record>
+        <record id="website_product_travel_insurance" model="finsetter.financial.product">
+            <field name="name">Travel Insurance</field>
+            <field name="product_line_id" ref="product_line_travel"/>
+            <field name="provider">International and domestic travel insurers</field>
+            <field name="eligibility_criteria">Indian residents, students abroad, senior travellers and frequent international travellers.</field>
+            <field name="amount_type">premium</field>
+            <field name="min_amount">499</field>
+            <field name="max_amount">9500</field>
+            <field name="tenure_months_min">1</field>
+            <field name="tenure_months_max">12</field>
+            <field name="benefits">150+ countries; medical emergency; trip cancellation; baggage and passport loss; evacuation; 24/7 assistance.</field>
+            <field name="documents_required">Passport, visa or booking details, identity proof, destination and trip dates.</field>
+            <field name="website_url">https://www.thefinsetter.com/services/travel-insurance.html</field>
+            <field name="status">active</field>
+        </record>
+        <record id="website_product_nri_services" model="finsetter.financial.product">
+            <field name="name">NRI Services: Insurance, Investments and Estate Planning</field>
+            <field name="product_line_id" ref="product_line_nri"/>
+            <field name="provider">Finsetter NRI Advisory</field>
+            <field name="eligibility_criteria">NRIs and returning residents with Indian assets or family obligations.</field>
+            <field name="amount_type">investment</field>
+            <field name="min_amount">10000</field>
+            <field name="max_amount">100000000</field>
+            <field name="benefits">100% digital process; NRE/NRO/FCNR guidance; insurance, FD, equity, NPS, FEMA, RBI, DTAA and estate planning support.</field>
+            <field name="documents_required">Passport, residence proof, PAN, NRE/NRO/FCNR details, Indian asset details and KYC documents.</field>
+            <field name="website_url">https://www.thefinsetter.com/services/nri-services.html</field>
+            <field name="status">active</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,8 @@
+# Extra Python packages for finsetter_crm (Odoo core already ships most of
+# what's needed).
+#
+# requests: used by models/finsetter_messaging.py to call the real Twilio
+# REST API for WhatsApp/SMS campaign sends. Odoo's own base image already
+# ships `requests` as a core dependency, but it's pinned here explicitly so
+# the integration doesn't silently break if that ever changes.
+requests>=2.25

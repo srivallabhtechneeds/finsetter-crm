@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <data>
+        <!-- Business hours as published on thefinsetter.com/contact.html:
+             Mon-Fri 9:00-19:00, Sat 10:00-16:00, Sun closed. Used by the
+             4-hour first-response SLA to compute a working-hours-aware
+             deadline instead of a naive +4h. -->
+        <record id="resource_calendar_finsetter" model="resource.calendar">
+            <field name="name">Finsetter Business Hours</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="attendance_ids" eval="[
+                (0, 0, {'name': 'Mon morning', 'dayofweek': '0', 'hour_from': 9, 'hour_to': 13}),
+                (0, 0, {'name': 'Mon afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 19}),
+                (0, 0, {'name': 'Tue morning', 'dayofweek': '1', 'hour_from': 9, 'hour_to': 13}),
+                (0, 0, {'name': 'Tue afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 19}),
+                (0, 0, {'name': 'Wed morning', 'dayofweek': '2', 'hour_from': 9, 'hour_to': 13}),
+                (0, 0, {'name': 'Wed afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 19}),
+                (0, 0, {'name': 'Thu morning', 'dayofweek': '3', 'hour_from': 9, 'hour_to': 13}),
+                (0, 0, {'name': 'Thu afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 19}),
+                (0, 0, {'name': 'Fri morning', 'dayofweek': '4', 'hour_from': 9, 'hour_to': 13}),
+                (0, 0, {'name': 'Fri afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 19}),
+                (0, 0, {'name': 'Sat morning', 'dayofweek': '5', 'hour_from': 10, 'hour_to': 13}),
+                (0, 0, {'name': 'Sat afternoon', 'dayofweek': '5', 'hour_from': 13, 'hour_to': 16}),
+            ]"/>
+        </record>
+    </data>
+</odoo>

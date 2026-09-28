@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="mail_template_renewal_reminder" model="mail.template">
+            <field name="name">Finsetter: Policy Renewal Reminder</field>
+            <field name="model_id" ref="model_finsetter_policy"/>
+            <field name="subject">Your {{ object.product_line_id.name }} policy renews on {{ format_date(object.renewal_date) }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; font-size: 14px; color: #2b2b2b;">
+    <p>Hi {{ object.partner_id.name }},</p>
+    <p>
+        This is a reminder from <strong>Finsetter Financial Services</strong> — your
+        <strong>{{ object.product_line_id.name }}</strong> policy
+        (<em>{{ object.insurer_name or '' }}</em>{% if object.policy_number %}, No. {{ object.policy_number }}{% endif %})
+        is due for renewal on <strong>{{ format_date(object.renewal_date) }}</strong>.
+    </p>
+    <p>Reply to this email or call us and we'll take care of the renewal for you — zero jargon, zero commission games.</p>
+    <p style="margin-top: 24px;">
+        Warm regards,<br/>
+        {{ object.advisor_id.name or user.name }}<br/>
+        Finsetter Financial Services · +91 91822 49287 · info@thefinsetter.com
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

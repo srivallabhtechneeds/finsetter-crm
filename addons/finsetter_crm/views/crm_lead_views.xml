@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Form view: Finsetter fields + smart buttons -->
+        <record id="crm_lead_view_form_finsetter" model="ir.ui.view">
+            <field name="name">crm.lead.form.finsetter</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="action_view_calls" type="object" class="oe_stat_button" icon="fa-phone">
+                        <field name="call_log_count" widget="statinfo" string="Calls"/>
+                    </button>
+                    <button name="action_view_consent" type="object" class="oe_stat_button" icon="fa-check-square-o">
+                        <field name="consent_count" widget="statinfo" string="Consent"/>
+                    </button>
+                    <button name="action_view_policies" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                        <field name="policy_count" widget="statinfo" string="Policies"/>
+                    </button>
+                    <button name="action_view_product_matches" type="object" class="oe_stat_button" icon="fa-bullseye">
+                        <field name="product_match_count" widget="statinfo" string="Matches"/>
+                    </button>
+                    <button name="action_view_appointments" type="object" class="oe_stat_button" icon="fa-calendar">
+                        <field name="appointment_count" widget="statinfo" string="Appointments"/>
+                    </button>
+                    <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-folder-open">
+                        <field name="document_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </xpath>
+
+                <xpath expr="//div[hasclass('oe_title')]" position="before">
+                    <widget name="web_ribbon" title="SLA Breached" bg_color="text-bg-danger"
+                            invisible="sla_status != 'breached'"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="product_line_id" options="{'no_create': True}"/>
+                    <field name="call_consent_status" widget="badge"
+                           decoration-success="call_consent_status == 'granted'"
+                           decoration-danger="call_consent_status in ('declined', 'withdrawn')"
+                           decoration-warning="call_consent_status == 'unknown'"/>
+                    <field name="preferred_language"/>
+                    <field name="is_nri"/>
+                    <field name="consultation_type"/>
+                    <field name="sla_deadline"/>
+                    <field name="sla_status" widget="badge"
+                           decoration-success="sla_status == 'met'"
+                           decoration-danger="sla_status == 'breached'"
+                           decoration-warning="sla_status == 'pending'"/>
+                    <field name="product_line_talking_point" invisible="not product_line_talking_point"/>
+                    <field name="product_line_website_url" widget="url" string="Service Page"
+                           invisible="not product_line_website_url"/>
+                    <field name="campaign_source_id"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_view_calls']" position="after">
+                    <button name="action_log_call" type="object" string="Log Call"
+                            class="btn-secondary" icon="fa-phone"/>
+                    <button name="action_find_matching_products" type="object" string="Find Matching Products"
+                            class="btn-secondary" icon="fa-bullseye"/>
+                    <button name="action_open_calculators" type="object" string="Calculators"
+                            class="btn-secondary" icon="fa-calculator"/>
+                </xpath>
+
+                <xpath expr="//page[@name='internal_notes']" position="before">
+                    <page string="Customer 360" name="finsetter_customer_360">
+                        <group>
+                            <group string="Profile">
+                                <field name="finsetter_age"/>
+                                <field name="finsetter_occupation"/>
+                                <field name="finsetter_annual_income"/>
+                                <field name="company_currency" invisible="1"/>
+                            </group>
+                            <group string="Goals &amp; Requirements">
+                                <field name="finsetter_financial_goals"/>
+                                <field name="finsetter_requirements"/>
+                            </group>
+                        </group>
+                        <group string="Product Matches">
+                            <field name="product_match_ids" nolabel="1">
+                                <tree editable="bottom" decoration-success="status == 'converted'" decoration-muted="status == 'rejected'">
+                                    <field name="product_id"/>
+                                    <field name="product_line_id"/>
+                                    <field name="score" widget="progressbar"/>
+                                    <field name="status" widget="badge"/>
+                                    <field name="reason"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- List views: add product line + consent columns to both the
+             Leads list and the Opportunities (Pipeline) list. -->
+        <record id="crm_lead_view_tree_finsetter" model="ir.ui.view">
+            <field name="name">crm.lead.tree.finsetter.leads</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="product_line_id" optional="show"/>
+                    <field name="call_consent_status" optional="show" widget="badge"
+                           decoration-success="call_consent_status == 'granted'"
+                           decoration-danger="call_consent_status in ('declined', 'withdrawn')"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="crm_lead_view_tree_oppor_finsetter" model="ir.ui.view">
+            <field name="name">crm.lead.tree.finsetter.oppor</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="product_line_id" optional="show"/>
+                    <field name="call_consent_status" optional="show" widget="badge"
+                           decoration-success="call_consent_status == 'granted'"
+                           decoration-danger="call_consent_status in ('declined', 'withdrawn')"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search view: filters & group-by for product line / consent -->
+        <record id="crm_lead_view_search_finsetter" model="ir.ui.view">
+            <field name="name">crm.lead.search.finsetter</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter string="Call Consent Missing" name="finsetter_consent_missing"
+                            domain="[('call_consent_status', '=', 'unknown')]"/>
+                    <filter string="NRI Leads" name="finsetter_nri" domain="[('is_nri', '=', True)]"/>
+                        <filter string="Product Line" name="finsetter_groupby_product_line"
+                            context="{'group_by': 'product_line_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

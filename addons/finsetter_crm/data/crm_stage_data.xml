@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <!-- Finsetter's own "Learn → Plan → Grow" process, mapped onto the
+             CRM pipeline stages, plus the usual qualify/proposal/won steps. -->
+        <record id="crm_stage_learn" model="crm.stage">
+            <field name="name">Learn (New Inquiry)</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="crm_stage_plan" model="crm.stage">
+            <field name="name">Plan (Needs Analysis)</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="crm_stage_proposal" model="crm.stage">
+            <field name="name">Proposal Shared</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="crm_stage_kyc" model="crm.stage">
+            <field name="name">KYC &amp; Consent Pending</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="crm_stage_grow" model="crm.stage">
+            <field name="name">Grow (Policy Issued)</field>
+            <field name="sequence">5</field>
+            <field name="is_won">True</field>
+        </record>
+    </data>
+</odoo>

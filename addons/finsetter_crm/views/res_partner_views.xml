@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_partner_view_form_finsetter" model="ir.ui.view">
+            <field name="name">res.partner.form.finsetter</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="action_view_finsetter_policies" type="object"
+                            class="oe_stat_button" icon="fa-file-text-o"
+                            invisible="not finsetter_policy_count">
+                        <field name="finsetter_policy_count" widget="statinfo" string="Policies"/>
+                    </button>
+                    <button name="action_view_finsetter_calls" type="object"
+                            class="oe_stat_button" icon="fa-phone"
+                            invisible="not finsetter_call_count">
+                        <field name="finsetter_call_count" widget="statinfo" string="Calls"/>
+                    </button>
+                    <button name="action_view_finsetter_consent" type="object"
+                            class="oe_stat_button" icon="fa-check-square-o">
+                        <field name="finsetter_consent_count" widget="statinfo" string="Consent"/>
+                    </button>
+                    <button name="action_view_finsetter_claims" type="object"
+                            class="oe_stat_button" icon="fa-medkit"
+                            invisible="not finsetter_claim_count">
+                        <field name="finsetter_claim_count" widget="statinfo" string="Claims"/>
+                    </button>
+                    <button name="action_view_finsetter_appointments" type="object"
+                            class="oe_stat_button" icon="fa-calendar">
+                        <field name="finsetter_appointment_count" widget="statinfo" string="Appointments"/>
+                    </button>
+                    <button name="action_view_finsetter_documents" type="object"
+                            class="oe_stat_button" icon="fa-folder-open">
+                        <field name="finsetter_document_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </xpath>
+
+                <xpath expr="//notebook" position="inside">
+                    <page string="Finsetter CRM" name="finsetter_crm">
+                        <group>
+                            <group string="Consent">
+                                <field name="call_consent_status" widget="badge"
+                                       decoration-success="call_consent_status == 'granted'"
+                                       decoration-danger="call_consent_status in ('declined', 'withdrawn')"
+                                       decoration-warning="call_consent_status == 'unknown'"/>
+                            </group>
+                            <group string="Customer 360">
+                                <field name="finsetter_age"/>
+                                <field name="finsetter_occupation"/>
+                                <field name="finsetter_annual_income"/>
+                                <field name="finsetter_financial_goals"/>
+                            </group>
+                        </group>
+                        <separator string="Policies"/>
+                        <field name="finsetter_policy_ids">
+                            <tree editable="bottom">
+                                <field name="product_line_id"/>
+                                <field name="insurer_name"/>
+                                <field name="policy_number"/>
+                                <field name="premium_amount"/>
+                                <field name="renewal_date"/>
+                                <field name="state" widget="badge"/>
+                            </tree>
+                        </field>
+                        <separator string="Call Log"/>
+                        <field name="finsetter_call_log_ids" readonly="1">
+                            <tree>
+                                <field name="call_datetime"/>
+                                <field name="advisor_id"/>
+                                <field name="outcome" widget="badge"/>
+                                <field name="notes"/>
+                            </tree>
+                        </field>
+                        <separator string="Consent Records"/>
+                        <field name="finsetter_consent_ids" readonly="1">
+                            <tree>
+                                <field name="date_obtained"/>
+                                <field name="consent_type"/>
+                                <field name="channel"/>
+                                <field name="status" widget="badge"/>
+                            </tree>
+                        </field>
+                        <separator string="Claims"/>
+                        <field name="finsetter_claim_ids" readonly="1">
+                            <tree>
+                                <field name="claim_number"/>
+                                <field name="policy_id"/>
+                                <field name="claim_date"/>
+                                <field name="claim_amount"/>
+                                <field name="status" widget="badge"/>
+                            </tree>
+                        </field>
+                        <separator string="Appointments"/>
+                        <field name="finsetter_appointment_ids" readonly="1">
+                            <tree>
+                                <field name="appointment_datetime"/>
+                                <field name="advisor_id"/>
+                                <field name="mode"/>
+                                <field name="status" widget="badge"/>
+                            </tree>
+                        </field>
+                        <separator string="Documents"/>
+                        <field name="finsetter_document_ids" readonly="1">
+                            <tree>
+                                <field name="document_type"/>
+                                <field name="verification_status" widget="badge"/>
+                                <field name="expiry_date"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

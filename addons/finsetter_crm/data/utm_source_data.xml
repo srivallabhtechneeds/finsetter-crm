@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="utm_source_website" model="utm.source">
+            <field name="name">thefinsetter.com Website</field>
+        </record>
+        <record id="utm_source_whatsapp" model="utm.source">
+            <field name="name">WhatsApp Inquiry</field>
+        </record>
+        <record id="utm_source_referral" model="utm.source">
+            <field name="name">Client Referral</field>
+        </record>
+        <record id="utm_source_google_ads" model="utm.source">
+            <field name="name">Google Ads</field>
+        </record>
+        <record id="utm_source_walkin" model="utm.source">
+            <field name="name">Walk-in / Office Visit</field>
+        </record>
+        <record id="utm_source_google_reviews" model="utm.source">
+            <field name="name">Google Reviews</field>
+        </record>
+    </data>
+</odoo>

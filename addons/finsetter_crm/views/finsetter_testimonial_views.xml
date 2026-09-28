@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_testimonial_view_form" model="ir.ui.view">
+            <field name="name">finsetter.testimonial.form</field>
+            <field name="model">finsetter.testimonial</field>
+            <field name="arch" type="xml">
+                <form string="Testimonial">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Customer name"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="role_location"/>
+                                <field name="product_line_id" options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="rating"/>
+                                <field name="source"/>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
+                        <group string="Quote">
+                            <field name="quote" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_testimonial_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.testimonial.tree</field>
+            <field name="model">finsetter.testimonial</field>
+            <field name="arch" type="xml">
+                <tree string="Testimonials">
+                    <field name="name"/>
+                    <field name="role_location"/>
+                    <field name="product_line_id"/>
+                    <field name="quote"/>
+                    <field name="rating" widget="badge"/>
+                    <field name="source"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_testimonial_view_search" model="ir.ui.view">
+            <field name="name">finsetter.testimonial.search</field>
+            <field name="model">finsetter.testimonial</field>
+            <field name="arch" type="xml">
+                <search string="Search Testimonials">
+                    <field name="name"/>
+                    <field name="product_line_id"/>
+                    <filter string="Product Line" name="groupby_product_line" context="{'group_by': 'product_line_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="finsetter_testimonial_action" model="ir.actions.act_window">
+            <field name="name">Client Testimonials</field>
+            <field name="res_model">finsetter.testimonial</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="finsetter_testimonial_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No testimonials yet — real client quotes from thefinsetter.com give
+                    advisors ready-made proof-points to use on calls.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

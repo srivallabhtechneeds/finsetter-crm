@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_company_view_form_finsetter" model="ir.ui.view">
+            <field name="name">res.company.form.finsetter</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Finsetter Website Profile" name="finsetter_website_profile">
+                        <group>
+                            <group string="Brand">
+                                <field name="finsetter_tagline"/>
+                                <field name="finsetter_positioning"/>
+                                <field name="finsetter_source_url" widget="url"/>
+                            </group>
+                            <group string="Founder &amp; Credentials">
+                                <field name="finsetter_founder"/>
+                                <field name="finsetter_founder_title"/>
+                                <field name="finsetter_founded_year"/>
+                                <field name="finsetter_sebi_registration"/>
+                                <field name="finsetter_irdai_license"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Mission &amp; Vision">
+                                <field name="finsetter_mission"/>
+                                <field name="finsetter_vision"/>
+                            </group>
+                            <group string="Public Metrics">
+                                <field name="finsetter_years_experience"/>
+                                <field name="finsetter_families_served"/>
+                                <field name="finsetter_claim_settlement_rate"/>
+                                <field name="finsetter_google_rating"/>
+                                <field name="finsetter_google_reviews"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Audience &amp; Service Areas">
+                                <field name="finsetter_languages"/>
+                                <field name="finsetter_service_areas"/>
+                                <field name="finsetter_consultation_offer"/>
+                            </group>
+                            <group string="Trust &amp; Communications">
+                                <field name="finsetter_trust_principles"/>
+                                <field name="finsetter_social_links"/>
+                                <field name="finsetter_legal_links"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

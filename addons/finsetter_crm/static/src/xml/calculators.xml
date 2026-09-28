@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="finsetter_crm.Calculators">
+        <div class="o_finsetter_calculators">
+            <div class="fs_calc_header">
+                <h1>Financial Calculators</h1>
+                <p class="text-muted">Quick estimates to use on a call — matches the tools on thefinsetter.com/calculators.html.</p>
+            </div>
+
+            <div class="fs_calc_tabs">
+                <button t-foreach="[
+                        ['term','Term Insurance'],
+                        ['health','Health Insurance'],
+                        ['sip','SIP / Investment'],
+                        ['tax','Tax Saving'],
+                        ['retirement','Retirement Planning'],
+                        ['loan','Loan / EMI'],
+                        ['compound','Compound Interest']]"
+                    t-as="tab" t-key="tab[0]"
+                    t-attf-class="btn fs_calc_tab {{ state.activeTab === tab[0] ? 'btn-primary' : 'btn-light' }}"
+                    t-on-click="() => this.setTab(tab[0])">
+                    <t t-esc="tab[1]"/>
+                </button>
+            </div>
+
+            <div class="fs_calc_body">
+
+                <!-- 1. Term Insurance -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'term'">
+                    <div class="fs_calc_inputs">
+                        <label>Age
+                            <input type="number" t-att-value="state.term.age" t-on-input="(ev) => this.onFieldChange('term', 'age', ev)"/>
+                        </label>
+                        <label>Sum Assured (₹)
+                            <input type="number" t-att-value="state.term.sumAssured" t-on-input="(ev) => this.onFieldChange('term', 'sumAssured', ev)"/>
+                        </label>
+                        <label>Term (Years)
+                            <input type="number" t-att-value="state.term.termYears" t-on-input="(ev) => this.onFieldChange('term', 'termYears', ev)"/>
+                        </label>
+                        <label class="fs_calc_checkbox">
+                            <input type="checkbox" t-att-checked="state.term.smoker" t-on-change="(ev) => this.onFieldChange('term', 'smoker', ev, true)"/>
+                            Smoker / Tobacco User
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Estimated Annual Premium</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.term.result.annualPremium)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Estimated Monthly Premium</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.term.result.monthlyPremium)"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Health Insurance -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'health'">
+                    <div class="fs_calc_inputs">
+                        <label>Eldest Member's Age
+                            <input type="number" t-att-value="state.health.age" t-on-input="(ev) => this.onFieldChange('health', 'age', ev)"/>
+                        </label>
+                        <label>Sum Insured (₹)
+                            <input type="number" t-att-value="state.health.sumInsured" t-on-input="(ev) => this.onFieldChange('health', 'sumInsured', ev)"/>
+                        </label>
+                        <label>Family Size
+                            <input type="number" t-att-value="state.health.familySize" t-on-input="(ev) => this.onFieldChange('health', 'familySize', ev)"/>
+                        </label>
+                        <label>City Tier
+                            <select t-on-change="(ev) => this.onSelectChange('health', 'cityTier', ev)">
+                                <option value="1" t-att-selected="state.health.cityTier === '1'">Tier 1 (Metro)</option>
+                                <option value="2" t-att-selected="state.health.cityTier === '2'">Tier 2</option>
+                                <option value="3" t-att-selected="state.health.cityTier === '3'">Tier 3</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Estimated Annual Premium</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.health.result.annualPremium)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Estimated Monthly Premium</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.health.result.monthlyPremium)"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. SIP / Investment -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'sip'">
+                    <div class="fs_calc_inputs">
+                        <label>Monthly SIP Amount (₹)
+                            <input type="number" t-att-value="state.sip.monthlyAmount" t-on-input="(ev) => this.onFieldChange('sip', 'monthlyAmount', ev)"/>
+                        </label>
+                        <label>Expected Annual Return (%)
+                            <input type="number" t-att-value="state.sip.annualReturnPct" t-on-input="(ev) => this.onFieldChange('sip', 'annualReturnPct', ev)"/>
+                        </label>
+                        <label>Duration (Years)
+                            <input type="number" t-att-value="state.sip.years" t-on-input="(ev) => this.onFieldChange('sip', 'years', ev)"/>
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Invested Amount</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.sip.result.investedAmount)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Estimated Returns</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.sip.result.estimatedReturns)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card fs_calc_result_highlight">
+                            <span class="fs_calc_result_label">Future Value</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.sip.result.futureValue)"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Tax Saving -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'tax'">
+                    <div class="fs_calc_inputs">
+                        <label>Investment Amount (₹)
+                            <input type="number" t-att-value="state.tax.investmentAmount" t-on-input="(ev) => this.onFieldChange('tax', 'investmentAmount', ev)"/>
+                        </label>
+                        <label>Your Tax Slab (%)
+                            <select t-on-change="(ev) => this.onSelectChange('tax', 'taxSlabPct', ev)">
+                                <option value="5" t-att-selected="state.tax.taxSlabPct == 5">5%</option>
+                                <option value="20" t-att-selected="state.tax.taxSlabPct == 20">20%</option>
+                                <option value="30" t-att-selected="state.tax.taxSlabPct == 30">30%</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Eligible Amount (80C, capped ₹1.5L)</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.tax.result.eligibleAmount)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card fs_calc_result_highlight">
+                            <span class="fs_calc_result_label">Estimated Tax Saved</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.tax.result.taxSaved)"/></span>
+                        </div>
+                    </div>
+                    <p class="text-muted fs_calc_note">Approximate — excludes cess/surcharge and assumes the old tax regime.</p>
+                </div>
+
+                <!-- 5. Retirement Planning -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'retirement'">
+                    <div class="fs_calc_inputs">
+                        <label>Current Age
+                            <input type="number" t-att-value="state.retirement.currentAge" t-on-input="(ev) => this.onFieldChange('retirement', 'currentAge', ev)"/>
+                        </label>
+                        <label>Retirement Age
+                            <input type="number" t-att-value="state.retirement.retirementAge" t-on-input="(ev) => this.onFieldChange('retirement', 'retirementAge', ev)"/>
+                        </label>
+                        <label>Life Expectancy
+                            <input type="number" t-att-value="state.retirement.lifeExpectancyAge" t-on-input="(ev) => this.onFieldChange('retirement', 'lifeExpectancyAge', ev)"/>
+                        </label>
+                        <label>Monthly Expenses Today (₹)
+                            <input type="number" t-att-value="state.retirement.monthlyExpensesToday" t-on-input="(ev) => this.onFieldChange('retirement', 'monthlyExpensesToday', ev)"/>
+                        </label>
+                        <label>Inflation (%)
+                            <input type="number" t-att-value="state.retirement.inflationPct" t-on-input="(ev) => this.onFieldChange('retirement', 'inflationPct', ev)"/>
+                        </label>
+                        <label>Pre-Retirement Return (%)
+                            <input type="number" t-att-value="state.retirement.preReturnPct" t-on-input="(ev) => this.onFieldChange('retirement', 'preReturnPct', ev)"/>
+                        </label>
+                        <label>Post-Retirement Return (%)
+                            <input type="number" t-att-value="state.retirement.postReturnPct" t-on-input="(ev) => this.onFieldChange('retirement', 'postReturnPct', ev)"/>
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Monthly Expense at Retirement</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.retirement.result.futureMonthlyExpense)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card fs_calc_result_highlight">
+                            <span class="fs_calc_result_label">Retirement Corpus Required</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.retirement.result.corpusRequired)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card fs_calc_result_highlight">
+                            <span class="fs_calc_result_label">Required Monthly SIP</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.retirement.result.requiredMonthlySip)"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Loan / EMI -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'loan'">
+                    <div class="fs_calc_inputs">
+                        <label>Loan Amount (₹)
+                            <input type="number" t-att-value="state.loan.principal" t-on-input="(ev) => this.onFieldChange('loan', 'principal', ev)"/>
+                        </label>
+                        <label>Interest Rate (% p.a.)
+                            <input type="number" t-att-value="state.loan.annualRatePct" t-on-input="(ev) => this.onFieldChange('loan', 'annualRatePct', ev)"/>
+                        </label>
+                        <label>Tenure (Years)
+                            <input type="number" t-att-value="state.loan.tenureYears" t-on-input="(ev) => this.onFieldChange('loan', 'tenureYears', ev)"/>
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card fs_calc_result_highlight">
+                            <span class="fs_calc_result_label">Monthly EMI</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.loan.result.emi)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Total Interest Payable</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.loan.result.totalInterest)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Total Payment</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.loan.result.totalPayment)"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Compound Interest -->
+                <div class="fs_calc_panel" t-if="state.activeTab === 'compound'">
+                    <div class="fs_calc_inputs">
+                        <label>Principal (₹)
+                            <input type="number" t-att-value="state.compound.principal" t-on-input="(ev) => this.onFieldChange('compound', 'principal', ev)"/>
+                        </label>
+                        <label>Interest Rate (% p.a.)
+                            <input type="number" t-att-value="state.compound.annualRatePct" t-on-input="(ev) => this.onFieldChange('compound', 'annualRatePct', ev)"/>
+                        </label>
+                        <label>Compounding Frequency / Year
+                            <select t-on-change="(ev) => this.onSelectChange('compound', 'compoundsPerYear', ev)">
+                                <option value="1" t-att-selected="state.compound.compoundsPerYear == 1">Annually</option>
+                                <option value="2" t-att-selected="state.compound.compoundsPerYear == 2">Half-Yearly</option>
+                                <option value="4" t-att-selected="state.compound.compoundsPerYear == 4">Quarterly</option>
+                                <option value="12" t-att-selected="state.compound.compoundsPerYear == 12">Monthly</option>
+                            </select>
+                        </label>
+                        <label>Duration (Years)
+                            <input type="number" t-att-value="state.compound.years" t-on-input="(ev) => this.onFieldChange('compound', 'years', ev)"/>
+                        </label>
+                    </div>
+                    <div class="fs_calc_results">
+                        <div class="fs_calc_result_card fs_calc_result_highlight">
+                            <span class="fs_calc_result_label">Maturity Amount</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.compound.result.maturityAmount)"/></span>
+                        </div>
+                        <div class="fs_calc_result_card">
+                            <span class="fs_calc_result_label">Interest Earned</span>
+                            <span class="fs_calc_result_value"><t t-esc="formatMoney(state.compound.result.interestEarned)"/></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fs_calc_footer">
+                    <button class="btn btn-outline-primary" t-on-click="onSaveToLead">
+                        <i class="fa fa-save"/> Save Result to Lead
+                    </button>
+                    <p class="text-muted fs_calc_note">All figures are estimates for discussion purposes only — final
+                        premiums, rates and eligibility are set by the insurer/AMC/lender.</p>
+                </div>
+
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="finsetter_campaign_view_form" model="ir.ui.view">
+            <field name="name">finsetter.campaign.form</field>
+            <field name="model">finsetter.campaign</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_build_recipients" type="object" string="Build Recipient List" class="btn-secondary" invisible="state not in ('draft', 'scheduled')"/>
+                        <button name="action_send" type="object" string="Send Now" class="btn-primary" invisible="state not in ('draft', 'scheduled')" confirm="Send this campaign to all recipients now?"/>
+                        <button name="action_cancel" type="object" string="Cancel" invisible="state in ('sent', 'cancelled')"/>
+                        <button name="action_reset_draft" type="object" string="Reset to Draft" invisible="state != 'cancelled'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,scheduled,sending,sent"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" icon="fa-users" disabled="1">
+                                <field name="recipient_count" widget="statinfo" string="Recipients"/>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-paper-plane" disabled="1">
+                                <field name="sent_count" widget="statinfo" string="Sent"/>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-reply" disabled="1">
+                                <field name="responded_count" widget="statinfo" string="Responded"/>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-trophy" disabled="1">
+                                <field name="converted_count" widget="statinfo" string="Converted"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Diwali Term Insurance Push"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_line_id"/>
+                                <field name="channel"/>
+                                <field name="target_domain"/>
+                            </group>
+                            <group>
+                                <field name="scheduled_date"/>
+                                <field name="cost_amount"/>
+                                <field name="revenue_amount"/>
+                                <field name="roi"/>
+                                <field name="response_rate" widget="percentage"/>
+                                <field name="conversion_rate" widget="percentage"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="Message" invisible="channel == 'email'">
+                            <field name="message_template" nolabel="1" placeholder="Hi {{name}}, ..."/>
+                        </group>
+                        <group string="Email Template" invisible="channel != 'email'">
+                            <field name="email_template_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Recipients">
+                                <field name="recipient_ids">
+                                    <tree editable="bottom" decoration-danger="state == 'failed'" decoration-success="state in ('responded', 'converted')">
+                                        <field name="partner_id"/>
+                                        <field name="lead_id"/>
+                                        <field name="phone"/>
+                                        <field name="state" widget="badge"/>
+                                        <field name="sent_date"/>
+                                        <field name="send_error"/>
+                                        <button name="action_mark_responded" type="object" string="Responded" class="btn-link" invisible="state not in ('sent', 'delivered')"/>
+                                        <button name="action_mark_converted" type="object" string="Converted" class="btn-link" invisible="state == 'converted'"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_campaign_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.campaign.tree</field>
+            <field name="model">finsetter.campaign</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="state == 'cancelled'">
+                    <field name="name"/>
+                    <field name="product_line_id"/>
+                    <field name="channel"/>
+                    <field name="recipient_count"/>
+                    <field name="sent_count"/>
+                    <field name="responded_count"/>
+                    <field name="converted_count"/>
+                    <field name="roi" widget="percentage"/>
+                    <field name="state" widget="badge"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_action_campaigns" model="ir.actions.act_window">
+            <field name="name">Campaigns</field>
+            <field name="res_model">finsetter.campaign</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html"><p class="o_view_nocontent_smiling_face">Launch a targeted WhatsApp, SMS, email or call-blitz campaign.</p></field>
+        </record>
+
+    </data>
+</odoo>

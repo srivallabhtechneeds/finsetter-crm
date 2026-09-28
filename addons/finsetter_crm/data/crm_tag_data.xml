@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <data>
+        <record id="crm_tag_nri" model="crm.tag">
+            <field name="name">NRI</field>
+            <field name="color">6</field>
+        </record>
+        <record id="crm_tag_govt_employee" model="crm.tag">
+            <field name="name">Government/PSU Employee</field>
+            <field name="color">2</field>
+        </record>
+        <record id="crm_tag_it_professional" model="crm.tag">
+            <field name="name">IT Professional</field>
+            <field name="color">4</field>
+        </record>
+        <record id="crm_tag_business_owner" model="crm.tag">
+            <field name="name">Business Owner</field>
+            <field name="color">3</field>
+        </record>
+        <record id="crm_tag_high_priority" model="crm.tag">
+            <field name="name">High Priority</field>
+            <field name="color">1</field>
+        </record>
+    </data>
+</odoo>
