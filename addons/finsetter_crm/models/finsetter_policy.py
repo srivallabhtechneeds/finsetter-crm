@@ -33,6 +33,8 @@ class FinsetterPolicy(models.Model):
 
     sum_insured = fields.Monetary(string='Sum Insured / Cover Amount', currency_field='currency_id')
     premium_amount = fields.Monetary(string='Premium Amount', currency_field='currency_id')
+    renewal_quote_amount = fields.Monetary(string='Renewal Quote', currency_field='currency_id')
+    payment_link = fields.Char(string='Payment Link')
     currency_id = fields.Many2one(
         'res.currency', default=lambda self: self.env.company.currency_id)
 
@@ -49,6 +51,8 @@ class FinsetterPolicy(models.Model):
 
     days_to_renewal = fields.Integer(
         string='Days to Renewal', compute='_compute_days_to_renewal', store=True)
+    followup_stopped = fields.Boolean(default=False, copy=False)
+    followup_log_ids = fields.One2many('finsetter.followup.log', 'policy_id', string='Follow-up History')
 
     consent_id = fields.Many2one(
         'finsetter.consent', string='Related Consent Record',
@@ -109,14 +113,84 @@ class FinsetterPolicy(models.Model):
         reopen it as active — used from the renewal reminder activity or the
         policy form's 'Mark Renewed' button."""
         for rec in self:
+            old_renewal_date = rec.renewal_date
             months = rec.product_line_id.renewal_cycle_months or 12
             new_date = (rec.renewal_date or fields.Date.context_today(rec)) + relativedelta(months=months)
+            rec.followup_log_ids.filtered(
+                lambda log: log.status == 'queued' and log.renewal_cycle_date == old_renewal_date
+            ).write({'status': 'cancelled'})
             rec.write({
                 'renewal_date': new_date,
                 'start_date': fields.Date.context_today(rec),
                 'state': 'active',
+                'followup_stopped': False,
             })
             rec.message_post(body="Policy renewed. Next renewal set to %s." % new_date)
+
+    def action_schedule_meeting(self):
+        self.ensure_one()
+        return {
+            'name': 'Schedule Meeting / Call',
+            'type': 'ir.actions.act_window',
+            'res_model': 'finsetter.appointment',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_policy_id': self.id,
+                'default_lead_id': self.lead_id.id,
+                'default_partner_id': self.partner_id.id,
+                'default_product_line_id': self.product_line_id.id,
+                'default_advisor_id': self.advisor_id.id,
+                'default_mode': 'phone',
+            },
+        }
+
+    def action_upgrade_policy(self):
+        self.ensure_one()
+        if not self.lead_id:
+            self.lead_id = self.env['crm.lead'].create({
+                'name': 'Upgrade Review - %s' % self.partner_id.name,
+                'partner_id': self.partner_id.id,
+                'type': 'lead',
+                'lead_relationship': 'existing',
+                'lead_status': 'contacted',
+                'product_line_id': self.product_line_id.id,
+                'user_id': self.advisor_id.id,
+            })
+        Match = self.env['finsetter.lead.product.match']
+        Match.action_generate_matches([self.lead_id.id])
+        matches = Match.search([('lead_id', '=', self.lead_id.id)])
+        matches.write({'current_policy_id': self.id})
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Current vs Recommended Plans',
+            'res_model': 'finsetter.lead.product.match',
+            'view_mode': 'list,form',
+            'domain': [('current_policy_id', '=', self.id)],
+            'context': {'default_lead_id': self.lead_id.id, 'default_current_policy_id': self.id},
+        }
+
+    def action_send_renewal_quote(self):
+        self.ensure_one()
+        template = self.env['finsetter.followup.template'].search([
+            ('purpose', '=', 'renewal'), ('channel', '=', 'email'), ('active', '=', True)], limit=1)
+        log = self.env['finsetter.followup.log'].create({
+            'policy_id': self.id,
+            'lead_id': self.lead_id.id,
+            'partner_id': self.partner_id.id,
+            'purpose': 'renewal',
+            'channel': 'email',
+            'template_id': template.id,
+            'scheduled_at': fields.Datetime.now(),
+        })
+        log.action_send()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Renewal Quote Message',
+            'res_model': 'finsetter.followup.log',
+            'view_mode': 'form',
+            'res_id': log.id,
+        }
 
     def action_mark_lapsed(self):
         self.write({'state': 'lapsed'})

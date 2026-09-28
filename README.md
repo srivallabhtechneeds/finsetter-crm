@@ -4,6 +4,9 @@ A purpose-built Odoo 17 CRM for **Finsetter Financial Services Pvt. Ltd.**
 ("Your Money. Simplified." — SEBI Reg. E667968 · IRDAI Lic. 5854206),
 built on top of Odoo's Sales/CRM app and packaged as a Docker Compose stack.
 
+For task-by-task instructions, setup, roles, automation, and troubleshooting,
+see the [Finsetter CRM User Guide](docs/USER_GUIDE.md).
+
 Content (services, product lines, branding, compliance numbers) was sourced
 from [thefinsetter.com](https://www.thefinsetter.com/index.html).
 
@@ -12,11 +15,18 @@ from [thefinsetter.com](https://www.thefinsetter.com/index.html).
 - **Lead capture & round-robin assignment** by product line (Health, Life,
   Motor, Home, Travel, NRI, Will Writing, Financial Planning) across four
   dedicated sales teams.
+- **New Leads / Existing Leads workspace** — separate prospect and policyholder
+  lists. Prospect lists include source, product line, agent, contact details,
+  CSV import, and qualification status; policyholder lists include premium,
+  renewal date, policy status, meeting, upgrade-comparison, and renewal actions.
+- **Lead profile and communication preferences** — notes/activity timeline,
+  health condition and conditional health problem, consent, and preferred
+  WhatsApp/SMS/email/voice channel flags.
 - **Custom pipeline stages** mapped to Finsetter's own process: *Learn → Plan
   → Proposal Shared → KYC & Consent Pending → Grow (Policy Issued)*.
 - **Policy & renewal tracking** (`finsetter.policy`): insurer, sum insured,
-  premium, renewal date — with a daily cron that raises renewal reminders at
-  30/15/7/1 days out and auto-lapses overdue policies.
+  premium, renewal quote, payment link, renewal date, meetings, claims, and
+  upgrade comparisons.
 - **Consent register** (`finsetter.consent`): auditable call/WhatsApp/email/
   data-processing/marketing consent per customer, for SEBI/IRDAI-style
   compliance.
@@ -92,8 +102,9 @@ from [thefinsetter.com](https://www.thefinsetter.com/index.html).
   any other customer, enforced by record rules on both sides (backend and
   portal). Grant access from a customer's Contacts record → Action →
   "Grant Portal Access".
-- **5 user roles**: Admin (`CRM Administrator`), Manager, Financial
-  Advisor, Sales Executive and Customer (portal) — see "User Roles" below.
+- **7 user roles**: Admin (`CRM Administrator`), Manager, Financial
+  Advisor, Sales Executive and Customer (portal), plus Team Lead and
+  Compliance Officer — see "User Roles" below.
 
 ## Project layout
 
@@ -114,10 +125,10 @@ models/       crm.lead & res.partner extensions, finsetter.policy,
               finsetter.call.log, finsetter.consent, finsetter.claim,
               finsetter.financial.product, finsetter.lead.product.match,
               finsetter.campaign(.recipient), finsetter.appointment,
-              finsetter.document, finsetter.messaging (Twilio), crm.team
-              extension, res.config.settings extension
-controllers/  the customer portal routes (/my/policies, /my/appointments,
-              /my/documents, /my/claims)
+              finsetter.document, finsetter.followup.template/log,
+              finsetter.messaging (Twilio), crm.team extension,
+              res.config.settings extension
+controllers/  customer portal routes and protected Twilio status/reply hooks
 views/        form/list/kanban/calendar/search views + menus, the dashboard
               & calculators client actions, settings & portal templates
 data/         product lines (13 categories), pipeline stages, UTM sources,
@@ -154,26 +165,16 @@ keep the `.bat` files in this folder, next to `docker-compose.yml`.
 **Requirements:** Docker + Docker Compose, and network access to Docker Hub
 to pull the base `odoo:17.0` and `postgres:15` images.
 
-## A note on testing
+## Validation status
 
-> This project was built and statically validated in a sandboxed cloud
-> workspace whose network policy blocks Docker Hub / container registries
-> entirely (`docker pull` is refused before it ever reaches the image), so
-> I could not run `docker compose up` end-to-end from here. Every file was
-> instead checked for correctness by hand and by script: XML well-formedness
-> and Python syntax for the whole module (`scripts/validate.sh`), every new
-> button/method name, view field, menu action, security-group and
-> access-rule reference cross-checked against the model definitions, and
-> every Odoo view id, model field, ORM/OWL API call and XML tag convention
-> this module relies on cross-checked against the actual Odoo 17.0 source on
-> GitHub (including the `ir.cron`/`ir.actions.server` eval context for the
-> new campaign-scheduling cron, the 17.0 Settings `<app>/<block>/<setting>`
-> layout, and the real `portal.CustomerPortal` helpers used by the customer
-> portal routes). What this *can't* catch: runtime issues that only surface
-> once Odoo actually boots the database and renders these views — so run it
-> on your machine (or any host that can reach Docker Hub) with the steps
-> below, and if anything doesn't come up clean, send me the log output
-> (`./scripts/logs.sh`, or `docker compose logs odoo`) and I'll fix it.
+The current local Odoo 17 / PostgreSQL 15 stack has been upgraded with this
+module, the Odoo registry loaded successfully, and the login endpoint returned
+HTTP 200. Static checks parsed all 39 addon XML files and compiled all 23
+Python files; manifest and access-control CSV structure were also checked. A
+rollback-only Odoo smoke test verified the 30-day renewal reminder, duplicate
+prevention, safe handling of a missing email address, and stopping/cancelling
+queued reminders after a reply. External email/Twilio delivery has not been
+tested without customer-owned provider credentials and public webhook setup.
 
 1. **Review `.env`** and change `POSTGRES_PASSWORD` / `ODOO_ADMIN_PASSWD`
    before any real deployment (defaults are placeholders).
@@ -207,9 +208,10 @@ to pull the base `odoo:17.0` and `postgres:15` images.
    -d --build` (the `-v` wipes the empty DB volume so it reinstalls with
    demo data).
 
-5. **Open the app:** the app switcher (grid icon, top-left) now shows a
-   **Finsetter CRM** tile → *Dashboard* is the landing page, with *Sales*
-   (Pipeline / Leads / Product Matches / Appointments), *Customers*
+5. **Open the app:** the app switcher (grid icon, top-left) shows a
+  **Finsetter CRM** tile → *Dashboard* is the landing page, with *Sales*
+  (Pipeline / New Leads / Existing Leads / Product Matches / Appointments /
+  Follow-ups), *Customers*
    (Policies / Claims / Call Logs / Consent Register / Documents & KYC),
    *Marketing* (Campaigns / Testimonials), *Tools* (Financial Calculators)
    and *Reporting* underneath.
@@ -228,8 +230,9 @@ to pull the base `odoo:17.0` and `postgres:15` images.
 ./scripts/validate.sh
 ```
 Checks every XML file is well-formed, every Python file compiles, and the
-manifest has the required keys. No Odoo/Docker needed — safe to run any time.
-See "A note on testing" above for the fuller static-verification picture.
+  manifest has the required keys. No Odoo/Docker needed. The script requires
+  `python3` on PATH; on Windows use Git Bash with a Python installation that
+  provides that command.
 
 ## WhatsApp / SMS Setup (Twilio)
 
@@ -253,6 +256,28 @@ REST API. Nothing sends until you configure it:
 No credentials, no sends — every recipient will just show "Failed: Twilio
 is not configured" until step 3 is done. Nothing else in the module
 depends on Twilio.
+
+## Lead Follow-ups and Renewal Automation
+
+Sales now has separate **New Leads**, **Existing Leads**, and **Follow-ups**
+entries. Existing Leads lists policies and supports appointment scheduling,
+current-vs-recommended upgrade comparisons, renewal quotes, payment links,
+and marking a policy renewed. The daily renewal sequence uses Email at 30
+days, SMS at 15 days, WhatsApp at 7 days, and a Twilio text-to-speech voice
+call at 1 day before expiry. A reply, a booked appointment, or a renewal
+stops reminders for the current policy cycle. Every attempt is recorded in
+Follow-ups with its provider status.
+
+To enable delivery, configure an outgoing mail server in Odoo and set the
+Twilio SID/token, SMS/WhatsApp sender(s), Voice-capable caller ID, public
+HTTPS CRM URL, and webhook secret under **Settings → General Settings →
+Finsetter CRM**. In the Twilio Console, set the inbound messaging webhook
+to `https://<public-crm-host>/finsetter/twilio/inbound?token=<webhook-secret>`
+using HTTP POST. Outbound status callbacks are attached automatically.
+Delivery/read events depend on channel/provider support; email reply detection
+also requires an incoming mail server and Odoo catchall/threading to be set
+up. The current voice channel is Twilio TTS, not a conversational AI agent;
+an AI voice vendor needs its own integration.
 
 ## Google Calendar Setup
 

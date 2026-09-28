@@ -27,6 +27,7 @@
                             <group>
                                 <field name="partner_id"/>
                                 <field name="lead_id"/>
+                                <field name="policy_id"/>
                                 <field name="advisor_id"/>
                                 <field name="product_line_id"/>
                             </group>

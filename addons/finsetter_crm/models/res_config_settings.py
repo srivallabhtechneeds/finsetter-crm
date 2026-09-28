@@ -16,3 +16,11 @@ class ResConfigSettings(models.TransientModel):
     finsetter_twilio_sms_from = fields.Char(
         string='Twilio SMS Sender', config_parameter='finsetter_crm.twilio_sms_from',
         help="Your Twilio SMS-capable phone number, in E.164 format, e.g. +14155551234.")
+    finsetter_twilio_voice_from = fields.Char(
+        string='Twilio Voice Caller ID', config_parameter='finsetter_crm.twilio_voice_from',
+        help='A Twilio number enabled for outbound voice calls, in E.164 format.')
+    finsetter_public_webhook_url = fields.Char(
+        string='Public CRM URL', config_parameter='finsetter_crm.public_webhook_url',
+        help='HTTPS URL reachable by Twilio, without a trailing slash.')
+    finsetter_webhook_token = fields.Char(
+        string='Webhook Secret Token', config_parameter='finsetter_crm.webhook_token')

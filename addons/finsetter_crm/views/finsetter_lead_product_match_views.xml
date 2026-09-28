@@ -8,6 +8,10 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" decoration-success="status == 'converted'" decoration-muted="status == 'rejected'">
                     <field name="lead_id" invisible="context.get('default_lead_id')"/>
+                    <field name="current_policy_id" optional="show"/>
+                    <field name="current_policy_product_line_id" optional="show"/>
+                    <field name="current_policy_currency_id" invisible="1"/>
+                    <field name="current_policy_premium" optional="show"/>
                     <field name="product_id"/>
                     <field name="product_line_id"/>
                     <field name="score" widget="progressbar"/>
@@ -30,13 +34,17 @@
                     </header>
                     <sheet>
                         <group>
-                            <group>
+                            <group string="Current Plan">
                                 <field name="lead_id"/>
                                 <field name="partner_id"/>
+                                <field name="current_policy_id"/>
+                                <field name="current_policy_product_line_id"/>
+                                <field name="current_policy_currency_id" invisible="1"/>
+                                <field name="current_policy_premium"/>
+                            </group>
+                            <group string="Recommended Plan">
                                 <field name="product_id"/>
                                 <field name="product_line_id"/>
-                            </group>
-                            <group>
                                 <field name="score"/>
                                 <field name="advisor_id"/>
                             </group>

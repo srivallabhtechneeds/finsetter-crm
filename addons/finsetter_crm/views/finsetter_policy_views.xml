@@ -14,6 +14,12 @@
                                 invisible="state in ('lapsed', 'cancelled')"/>
                         <button name="action_file_claim" type="object" string="File Claim"
                                 class="btn-secondary"/>
+                        <button name="action_schedule_meeting" type="object" string="Schedule Meeting / Call"
+                            class="btn-secondary" icon="fa-calendar"/>
+                        <button name="action_upgrade_policy" type="object" string="Compare Upgrade Plans"
+                            class="btn-secondary" icon="fa-level-up"/>
+                        <button name="action_send_renewal_quote" type="object" string="Send Renewal Quote"
+                            class="btn-secondary" icon="fa-envelope"/>
                         <field name="state" widget="statusbar"
                                statusbar_visible="active,renewal_due,renewed"/>
                     </header>
@@ -39,6 +45,8 @@
                                 <field name="currency_id" invisible="1"/>
                                 <field name="sum_insured"/>
                                 <field name="premium_amount"/>
+                                <field name="renewal_quote_amount"/>
+                                <field name="payment_link" widget="url"/>
                                 <field name="advisor_id"/>
                             </group>
                         </group>
@@ -53,6 +61,16 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Follow-up History">
+                                <field name="followup_log_ids" readonly="1">
+                                    <tree>
+                                        <field name="sent_at"/>
+                                        <field name="purpose"/>
+                                        <field name="channel"/>
+                                        <field name="status" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Notes" name="notes">
                                 <field name="notes"/>
                             </page>
@@ -74,17 +92,20 @@
                 <tree string="Policies" decoration-danger="state == 'lapsed'"
                       decoration-warning="state == 'renewal_due'" decoration-success="state == 'renewed'">
                     <field name="partner_id"/>
-                    <field name="product_line_id"/>
-                    <field name="insurer_name"/>
                     <field name="policy_number"/>
-                    <field name="advisor_id"/>
-                    <field name="premium_amount" sum="Total Premium"/>
-                    <field name="renewal_date"/>
-                    <field name="days_to_renewal"/>
+                      <field name="product_line_id" string="Policy Type"/>
+                      <field name="premium_amount" sum="Total Premium"/>
+                      <field name="renewal_date" decoration-danger="days_to_renewal &lt;= 7"
+                          decoration-warning="days_to_renewal &lt;= 30"/>
+                          <field name="days_to_renewal" invisible="1"/>
                     <field name="state" widget="badge"
                            decoration-success="state == 'active'"
                            decoration-warning="state == 'renewal_due'"
                            decoration-danger="state == 'lapsed'"/>
+                      <button name="action_schedule_meeting" type="object" string="Schedule Meeting / Call" class="btn-link"/>
+                      <button name="action_upgrade_policy" type="object" string="Upgrade" class="btn-link"/>
+                      <button name="action_mark_renewed" type="object" string="Renew" class="btn-link"
+                        invisible="state in ('renewed', 'cancelled')"/>
                 </tree>
             </field>
         </record>

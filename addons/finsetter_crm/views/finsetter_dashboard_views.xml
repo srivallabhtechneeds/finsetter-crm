@@ -24,13 +24,24 @@
         </record>
 
         <record id="finsetter_action_leads" model="ir.actions.act_window">
-            <field name="name">Leads</field>
+            <field name="name">New Leads</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('type', '=', 'lead')]</field>
-            <field name="context">{'default_type': 'lead'}</field>
+            <field name="domain">[('type', '=', 'lead'), ('lead_relationship', '=', 'new'), ('policy_ids', '=', False)]</field>
+            <field name="context">{'default_type': 'lead', 'default_lead_relationship': 'new'}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">No leads yet — new website/WhatsApp inquiries land here.</p>
+            </field>
+        </record>
+
+        <record id="finsetter_action_existing_leads" model="ir.actions.act_window">
+            <field name="name">Existing Leads</field>
+            <field name="res_model">finsetter.policy</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No existing policyholders yet — record a customer policy to manage renewals, meetings, and upgrades.</p>
             </field>
         </record>
 

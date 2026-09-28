@@ -23,6 +23,22 @@
                             <setting help="Twilio SMS-capable phone number, in E.164 format.">
                                 <field name="finsetter_twilio_sms_from" placeholder="+14155551234"/>
                             </setting>
+                            <setting help="Twilio number with Voice capability, in E.164 format.">
+                                <field name="finsetter_twilio_voice_from" placeholder="+14155551234"/>
+                            </setting>
+                            <setting help="Public HTTPS CRM URL for delivery-status and inbound-reply callbacks.">
+                                <field name="finsetter_public_webhook_url" placeholder="https://crm.example.com"/>
+                            </setting>
+                            <setting help="Shared secret included in Twilio callback URLs.">
+                                <field name="finsetter_webhook_token" password="True"/>
+                            </setting>
+                            <setting>
+                                <div class="text-muted">
+                                    Set Twilio's inbound messaging webhook to the public CRM URL plus
+                                    /finsetter/twilio/inbound?token=&lt;webhook-secret&gt;. Voice follow-ups
+                                    use Twilio text-to-speech, not a conversational AI agent.
+                                </div>
+                            </setting>
                         </block>
                         <block title="Google Calendar">
                             <setting help="Every Finsetter appointment creates a linked calendar event automatically.">

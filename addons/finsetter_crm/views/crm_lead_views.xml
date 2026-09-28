@@ -36,11 +36,22 @@
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="lead_relationship"/>
+                    <field name="lead_status" widget="badge"
+                           decoration-success="lead_status == 'converted'"
+                           decoration-danger="lead_status == 'lost'"
+                           decoration-warning="lead_status in ('interested', 'quote_sent')"/>
                     <field name="product_line_id" options="{'no_create': True}"/>
                     <field name="call_consent_status" widget="badge"
                            decoration-success="call_consent_status == 'granted'"
                            decoration-danger="call_consent_status in ('declined', 'withdrawn')"
                            decoration-warning="call_consent_status == 'unknown'"/>
+                    <group string="Contact Channels">
+                        <field name="channel_whatsapp"/>
+                        <field name="channel_sms"/>
+                        <field name="channel_email"/>
+                        <field name="channel_ai_call"/>
+                    </group>
                     <field name="preferred_language"/>
                     <field name="is_nri"/>
                     <field name="consultation_type"/>
@@ -66,12 +77,32 @@
 
                 <xpath expr="//page[@name='internal_notes']" position="before">
                     <page string="Customer 360" name="finsetter_customer_360">
+                        <group string="Existing Customer Follow-up"
+                               invisible="lead_relationship != 'existing'">
+                            <group>
+                                <button name="action_view_policies" type="object" string="Renewal Options"
+                                        class="btn-secondary" icon="fa-refresh"/>
+                                <button name="action_find_matching_products" type="object"
+                                        string="Find Upgrade Options" class="btn-secondary" icon="fa-level-up"/>
+                            </group>
+                            <group>
+                                <field name="existing_followup_type"/>
+                                <field name="existing_followup_date"/>
+                                <button name="action_schedule_existing_followup" type="object"
+                                        string="Schedule Follow-up" class="btn-primary" icon="fa-calendar"/>
+                            </group>
+                        </group>
                         <group>
                             <group string="Profile">
                                 <field name="finsetter_age"/>
                                 <field name="finsetter_occupation"/>
                                 <field name="finsetter_annual_income"/>
                                 <field name="company_currency" invisible="1"/>
+                            </group>
+                            <group string="Health Condition">
+                                <field name="health_status"/>
+                                <field name="health_problem" invisible="health_status != 'unhealthy'"
+                                       required="health_status == 'unhealthy'"/>
                             </group>
                             <group string="Goals &amp; Requirements">
                                 <field name="finsetter_financial_goals"/>
@@ -103,7 +134,16 @@
             <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="phone" optional="show"/>
+                    <field name="email_from" optional="show"/>
+                    <field name="source_id" optional="show"/>
                     <field name="product_line_id" optional="show"/>
+                    <field name="user_id" optional="show"/>
+                    <field name="lead_status" optional="show" widget="badge"/>
+                    <field name="channel_whatsapp" optional="hide"/>
+                    <field name="channel_sms" optional="hide"/>
+                    <field name="channel_email" optional="hide"/>
+                    <field name="channel_ai_call" optional="hide"/>
                     <field name="call_consent_status" optional="show" widget="badge"
                            decoration-success="call_consent_status == 'granted'"
                            decoration-danger="call_consent_status in ('declined', 'withdrawn')"/>
@@ -117,6 +157,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="product_line_id" optional="show"/>
+                    <field name="channel_whatsapp" optional="hide"/>
+                    <field name="channel_sms" optional="hide"/>
+                    <field name="channel_email" optional="hide"/>
+                    <field name="channel_ai_call" optional="hide"/>
                     <field name="call_consent_status" optional="show" widget="badge"
                            decoration-success="call_consent_status == 'granted'"
                            decoration-danger="call_consent_status in ('declined', 'withdrawn')"/>
@@ -133,6 +177,12 @@
                 <xpath expr="//search" position="inside">
                     <filter string="Call Consent Missing" name="finsetter_consent_missing"
                             domain="[('call_consent_status', '=', 'unknown')]"/>
+                        <filter string="New" name="finsetter_status_new" domain="[('lead_status', '=', 'new')]"/>
+                        <filter string="Contacted" name="finsetter_status_contacted" domain="[('lead_status', '=', 'contacted')]"/>
+                        <filter string="Interested" name="finsetter_status_interested" domain="[('lead_status', '=', 'interested')]"/>
+                        <filter string="Quote Sent" name="finsetter_status_quote_sent" domain="[('lead_status', '=', 'quote_sent')]"/>
+                        <filter string="Converted" name="finsetter_status_converted" domain="[('lead_status', '=', 'converted')]"/>
+                        <filter string="Lost" name="finsetter_status_lost" domain="[('lead_status', '=', 'lost')]"/>
                     <filter string="NRI Leads" name="finsetter_nri" domain="[('is_nri', '=', True)]"/>
                         <filter string="Product Line" name="finsetter_groupby_product_line"
                             context="{'group_by': 'product_line_id'}"/>

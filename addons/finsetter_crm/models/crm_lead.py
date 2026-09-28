@@ -30,6 +30,34 @@ class CrmLead(models.Model):
         ('withdrawn', 'Withdrawn'),
     ], string='Call Consent', default='unknown', tracking=True)
 
+    channel_whatsapp = fields.Boolean(string='WhatsApp', tracking=True)
+    channel_sms = fields.Boolean(string='SMS', tracking=True)
+    channel_email = fields.Boolean(string='Email Channel', tracking=True)
+    channel_ai_call = fields.Boolean(
+        string='AI Call', tracking=True,
+        help='Preferred channel only. An AI calling provider must be integrated separately.')
+
+    lead_relationship = fields.Selection([
+        ('new', 'New Prospect'),
+        ('existing', 'Existing Customer'),
+    ], string='Lead Relationship', required=True, default='new', tracking=True)
+    lead_status = fields.Selection([
+        ('new', 'New'),
+        ('contacted', 'Contacted'),
+        ('interested', 'Interested'),
+        ('quote_sent', 'Quote Sent'),
+        ('converted', 'Converted'),
+        ('lost', 'Lost'),
+    ], string='Lead Status', default='new', required=True, tracking=True)
+    existing_followup_type = fields.Selection([
+        ('renewal', 'Policy Renewal'),
+        ('upgrade', 'Product Upgrade'),
+        ('general', 'General Follow-up'),
+    ], string='Follow-up Reason', default='general')
+    existing_followup_date = fields.Date(
+        string='Follow-up Date', required=True,
+        default=lambda self: fields.Date.context_today(self))
+
     preferred_language = fields.Selection([
         ('en', 'English'),
         ('te', 'Telugu'),
@@ -43,6 +71,12 @@ class CrmLead(models.Model):
     finsetter_annual_income = fields.Monetary(
         string='Annual Income', currency_field='company_currency')
     finsetter_occupation = fields.Char(string='Occupation')
+    health_status = fields.Selection([
+        ('not_assessed', 'Not Assessed'),
+        ('healthy', 'Healthy'),
+        ('unhealthy', 'Unhealthy'),
+    ], string='Health Condition', required=True, default='not_assessed', tracking=True)
+    health_problem = fields.Text(string='Health Problem')
     finsetter_financial_goals = fields.Text(
         string='Financial Goals', help="E.g. child's education, retirement, wealth protection.")
     finsetter_requirements = fields.Text(
@@ -209,6 +243,19 @@ class CrmLead(models.Model):
         self.ensure_one()
         self.env['finsetter.lead.product.match'].action_generate_matches(self.ids)
         return self.action_view_product_matches()
+
+    def action_schedule_existing_followup(self):
+        self.ensure_one()
+        reason = dict(self._fields['existing_followup_type'].selection).get(
+            self.existing_followup_type, 'General Follow-up')
+        self.activity_schedule(
+            'mail.mail_activity_data_todo',
+            date_deadline=self.existing_followup_date,
+            summary='%s: %s' % (reason, self.name),
+            note='Follow up with this existing customer about %s.' % reason.lower(),
+            user_id=self.user_id.id or self.env.uid,
+        )
+        return True
 
     @api.model
     def _cron_assign_leads_round_robin(self):

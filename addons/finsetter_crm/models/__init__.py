@@ -1,4 +1,5 @@
 from . import finsetter_messaging
+from . import finsetter_followup
 from . import finsetter_policy_product_line
 from . import finsetter_testimonial
 from . import finsetter_financial_product

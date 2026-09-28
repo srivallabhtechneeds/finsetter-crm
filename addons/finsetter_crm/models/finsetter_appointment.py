@@ -24,6 +24,7 @@ class FinsetterAppointment(models.Model):
     name = fields.Char(compute='_compute_name', store=True)
 
     lead_id = fields.Many2one('crm.lead', string='Lead / Opportunity', tracking=True)
+    policy_id = fields.Many2one('finsetter.policy', string='Related Policy', tracking=True)
     partner_id = fields.Many2one('res.partner', string='Customer', required=True, tracking=True)
     advisor_id = fields.Many2one('res.users', string='Advisor', default=lambda self: self.env.user, tracking=True)
     product_line_id = fields.Many2one('finsetter.policy.product.line', string='Product Line')
@@ -59,6 +60,8 @@ class FinsetterAppointment(models.Model):
         records = super().create(vals_list)
         for rec in records:
             rec._sync_calendar_event()
+            if rec.status in ('scheduled', 'confirmed'):
+                rec._stop_policy_followups()
         return records
 
     def write(self, vals):
@@ -66,7 +69,22 @@ class FinsetterAppointment(models.Model):
         if any(f in vals for f in ('appointment_datetime', 'duration', 'partner_id', 'advisor_id', 'status', 'mode')):
             for rec in self:
                 rec._sync_calendar_event()
+        if vals.get('status') in ('scheduled', 'confirmed'):
+            for rec in self:
+                rec._stop_policy_followups()
         return res
+
+    def _stop_policy_followups(self):
+        Policy = self.env['finsetter.policy']
+        for appointment in self:
+            policies = appointment.policy_id
+            if not policies and appointment.partner_id:
+                policies = Policy.search([('partner_id', '=', appointment.partner_id.id),
+                                          ('state', 'in', ('active', 'renewal_due'))])
+            policies.write({'followup_stopped': True})
+            for policy in policies:
+                policy.followup_log_ids.filtered(lambda log: log.status == 'queued').write(
+                    {'status': 'cancelled'})
 
     def _sync_calendar_event(self):
         """Create/update the linked calendar.event so the appointment shows

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from html import escape
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -34,9 +35,10 @@ class FinsetterMessagingMixin(models.AbstractModel):
             'auth_token': icp.get_param('finsetter_crm.twilio_auth_token'),
             'whatsapp_from': icp.get_param('finsetter_crm.twilio_whatsapp_from'),
             'sms_from': icp.get_param('finsetter_crm.twilio_sms_from'),
+            'voice_from': icp.get_param('finsetter_crm.twilio_voice_from'),
         }
 
-    def _finsetter_send_message(self, to_number, body, channel='sms'):
+    def _finsetter_send_message(self, to_number, body, channel='sms', status_callback=False):
         """Send a WhatsApp or SMS message via Twilio. Returns (ok, info_str).
 
         Never raises — a messaging failure must not block the caller (a
@@ -63,10 +65,14 @@ class FinsetterMessagingMixin(models.AbstractModel):
             from_addr, to_addr = sender, to_number
 
         url = "%s/Accounts/%s/Messages.json" % (TWILIO_API_BASE, cfg['account_sid'])
+        payload = {'From': from_addr, 'To': to_addr, 'Body': body}
+        if status_callback:
+            payload['StatusCallback'] = status_callback
+            payload['StatusCallbackMethod'] = 'POST'
         try:
             resp = requests.post(
                 url,
-                data={'From': from_addr, 'To': to_addr, 'Body': body},
+                data=payload,
                 auth=HTTPBasicAuth(cfg['account_sid'], cfg['auth_token']),
                 timeout=15,
             )
@@ -78,4 +84,36 @@ class FinsetterMessagingMixin(models.AbstractModel):
             return False, error_msg
         except requests.RequestException as exc:
             _logger.warning("Finsetter CRM: Twilio request error: %s", exc)
+            return False, str(exc)
+
+    def _finsetter_send_voice(self, to_number, body, status_callback=False):
+        cfg = self._finsetter_twilio_config()
+        if not cfg['account_sid'] or not cfg['auth_token']:
+            return False, 'Twilio is not configured (Settings > General Settings > Finsetter CRM).'
+        if not cfg['voice_from']:
+            return False, 'No Twilio Voice-capable caller ID configured.'
+        if not to_number:
+            return False, 'No destination number on file.'
+
+        url = '%s/Accounts/%s/Calls.json' % (TWILIO_API_BASE, cfg['account_sid'])
+        twiml = '<Response><Say>%s</Say></Response>' % escape(body or '')
+        payload = {'From': cfg['voice_from'], 'To': to_number.strip(), 'Twiml': twiml}
+        if status_callback:
+            payload.update({
+                'StatusCallback': status_callback,
+                'StatusCallbackMethod': 'POST',
+                'StatusCallbackEvent': ['initiated', 'ringing', 'answered', 'completed'],
+            })
+        try:
+            response = requests.post(
+                url, data=payload,
+                auth=HTTPBasicAuth(cfg['account_sid'], cfg['auth_token']), timeout=15)
+            result = response.json() if response.content else {}
+            if response.status_code in (200, 201):
+                return True, result.get('sid', 'sent')
+            error = result.get('message') or response.text
+            _logger.warning('Finsetter CRM: Twilio voice call failed (%s): %s', response.status_code, error)
+            return False, error
+        except requests.RequestException as exc:
+            _logger.warning('Finsetter CRM: Twilio voice request error: %s', exc)
             return False, str(exc)

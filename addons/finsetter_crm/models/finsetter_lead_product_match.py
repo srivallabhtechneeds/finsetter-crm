@@ -17,6 +17,14 @@ class FinsetterLeadProductMatch(models.Model):
     display_name = fields.Char(compute='_compute_display_name')
 
     lead_id = fields.Many2one('crm.lead', string='Lead', required=True, ondelete='cascade', tracking=True)
+    current_policy_id = fields.Many2one('finsetter.policy', string='Current Policy', ondelete='set null')
+    current_policy_product_line_id = fields.Many2one(
+        related='current_policy_id.product_line_id', string='Current Plan Type', store=True)
+    current_policy_currency_id = fields.Many2one(
+        related='current_policy_id.currency_id', string='Current Plan Currency', store=True)
+    current_policy_premium = fields.Monetary(
+        related='current_policy_id.premium_amount', string='Current Premium',
+        currency_field='current_policy_currency_id', store=True)
     partner_id = fields.Many2one(related='lead_id.partner_id', string='Customer', store=True)
     product_id = fields.Many2one('finsetter.financial.product', string='Product', required=True, tracking=True)
     product_line_id = fields.Many2one(related='product_id.product_line_id', store=True, string='Category')

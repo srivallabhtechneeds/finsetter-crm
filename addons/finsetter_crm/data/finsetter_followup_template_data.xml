@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="followup_template_scheduling_email" model="finsetter.followup.template">
+            <field name="name">Meeting Scheduling - Email</field><field name="purpose">scheduling</field><field name="channel">email</field>
+            <field name="subject">Let's schedule your Finsetter consultation</field>
+            <field name="body">Hello {customer_name},
+
+Please reply with a convenient time for your insurance consultation. We look forward to speaking with you.
+
+Regards,
+{company_name}</field>
+        </record>
+        <record id="followup_template_scheduling_sms" model="finsetter.followup.template">
+            <field name="name">Meeting Scheduling - SMS</field><field name="purpose">scheduling</field><field name="channel">sms</field>
+            <field name="body">Hello {customer_name}, reply with a convenient time for your Finsetter consultation.</field>
+        </record>
+        <record id="followup_template_scheduling_whatsapp" model="finsetter.followup.template">
+            <field name="name">Meeting Scheduling - WhatsApp</field><field name="purpose">scheduling</field><field name="channel">whatsapp</field>
+            <field name="body">Hello {customer_name}, let us know a convenient time for your Finsetter consultation.</field>
+        </record>
+        <record id="followup_template_scheduling_voice" model="finsetter.followup.template">
+            <field name="name">Meeting Scheduling - Automated Voice</field><field name="purpose">scheduling</field><field name="channel">voice</field>
+            <field name="body">Hello {customer_name}. This is an automated call from {company_name}. Please contact your advisor to schedule your consultation.</field>
+        </record>
+
+        <record id="followup_template_upgrade_email" model="finsetter.followup.template">
+            <field name="name">Policy Upgrade - Email</field><field name="purpose">upgrade</field><field name="channel">email</field>
+            <field name="subject">Review your policy options</field>
+            <field name="body">Hello {customer_name},
+
+We have options to review alongside policy {policy_number}. Please contact your advisor to compare your current cover with available plans.
+
+Regards,
+{company_name}</field>
+        </record>
+        <record id="followup_template_upgrade_sms" model="finsetter.followup.template">
+            <field name="name">Policy Upgrade - SMS</field><field name="purpose">upgrade</field><field name="channel">sms</field>
+            <field name="body">Hello {customer_name}, ask your Finsetter advisor to compare upgrade options for policy {policy_number}.</field>
+        </record>
+        <record id="followup_template_upgrade_whatsapp" model="finsetter.followup.template">
+            <field name="name">Policy Upgrade - WhatsApp</field><field name="purpose">upgrade</field><field name="channel">whatsapp</field>
+            <field name="body">Hello {customer_name}, we can review plan options alongside policy {policy_number}. Reply to speak with your advisor.</field>
+        </record>
+        <record id="followup_template_upgrade_voice" model="finsetter.followup.template">
+            <field name="name">Policy Upgrade - Automated Voice</field><field name="purpose">upgrade</field><field name="channel">voice</field>
+            <field name="body">Hello {customer_name}. Your advisor can help compare available plans with policy {policy_number}. Please contact Finsetter to discuss your options.</field>
+        </record>
+
+        <record id="followup_template_renewal_email" model="finsetter.followup.template">
+            <field name="name">Policy Renewal - Email</field><field name="purpose">renewal</field><field name="channel">email</field>
+            <field name="subject">Renewal reminder for policy {policy_number}</field>
+            <field name="body">Hello {customer_name},
+
+Policy {policy_number} is due for renewal on {renewal_date}. Renewal quote: {premium}.
+Review your renewal and payment details: {payment_link}
+
+Reply to this email or contact your Finsetter advisor for help.
+
+Regards,
+{company_name}</field>
+        </record>
+        <record id="followup_template_renewal_sms" model="finsetter.followup.template">
+            <field name="name">Policy Renewal - SMS</field><field name="purpose">renewal</field><field name="channel">sms</field>
+            <field name="body">Hello {customer_name}, policy {policy_number} is due {renewal_date}. Quote: {premium}. Pay securely: {payment_link}. Reply for help.</field>
+        </record>
+        <record id="followup_template_renewal_whatsapp" model="finsetter.followup.template">
+            <field name="name">Policy Renewal - WhatsApp</field><field name="purpose">renewal</field><field name="channel">whatsapp</field>
+            <field name="body">Hello {customer_name}, a reminder that policy {policy_number} is due for renewal on {renewal_date}. Quote: {premium}. Payment link: {payment_link}. Reply to speak with your advisor.</field>
+        </record>
+        <record id="followup_template_renewal_voice" model="finsetter.followup.template">
+            <field name="name">Policy Renewal - Automated Voice</field><field name="purpose">renewal</field><field name="channel">voice</field>
+            <field name="body">Hello {customer_name}. This is an automated renewal reminder from {company_name}. Policy {policy_number} is due on {renewal_date}. Please contact your advisor to renew or ask questions.</field>
+        </record>
+    </data>
+</odoo>

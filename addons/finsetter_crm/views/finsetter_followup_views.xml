@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="finsetter_followup_log_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.followup.log.tree</field>
+            <field name="model">finsetter.followup.log</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="status == 'failed'" decoration-success="status in ('delivered', 'read', 'replied')">
+                    <field name="sent_at"/>
+                    <field name="partner_id"/>
+                    <field name="policy_id" optional="show"/>
+                    <field name="purpose"/>
+                    <field name="channel"/>
+                    <field name="status" widget="badge"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_followup_log_view_form" model="ir.ui.view">
+            <field name="name">finsetter.followup.log.form</field>
+            <field name="model">finsetter.followup.log</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_send" type="object" string="Send Now" class="btn-primary"
+                                invisible="status not in ('queued', 'failed')"/>
+                        <button name="action_mark_replied" type="object" string="Mark Replied"
+                                invisible="status in ('replied', 'failed')"/>
+                        <field name="status" widget="statusbar" statusbar_visible="queued,sent,delivered,read,replied,failed,cancelled"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="lead_id"/>
+                                <field name="policy_id"/>
+                                <field name="user_id"/>
+                            </group>
+                            <group>
+                                <field name="purpose"/>
+                                <field name="channel"/>
+                                <field name="template_id" domain="[('purpose', '=', purpose), ('channel', '=', channel), ('active', '=', True)]"/>
+                                <field name="scheduled_at"/>
+                                <field name="sent_at" readonly="1"/>
+                                <field name="provider_reference" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Message">
+                            <field name="subject"/>
+                            <field name="body" placeholder="Template variables include {customer_name}, {policy_number}, {renewal_date}, {premium}, and {payment_link}."/>
+                            <field name="error_message" readonly="1" invisible="not error_message"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_followup_log_view_search" model="ir.ui.view">
+            <field name="name">finsetter.followup.log.search</field>
+            <field name="model">finsetter.followup.log</field>
+            <field name="arch" type="xml">
+                <search string="Follow-ups">
+                    <field name="partner_id"/>
+                    <field name="policy_id"/>
+                    <field name="purpose"/>
+                    <field name="channel"/>
+                    <filter string="Failed" name="failed" domain="[('status', '=', 'failed')]"/>
+                    <filter string="Awaiting Reply" name="awaiting_reply" domain="[('status', 'in', ('sent', 'delivered', 'read'))]"/>
+                    <separator/>
+                    <filter string="Channel" name="group_channel" context="{'group_by': 'channel'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="finsetter_followup_log_action" model="ir.actions.act_window">
+            <field name="name">Follow-ups</field>
+            <field name="res_model">finsetter.followup.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="finsetter_followup_log_view_search"/>
+        </record>
+
+        <record id="finsetter_followup_template_view_tree" model="ir.ui.view">
+            <field name="name">finsetter.followup.template.tree</field>
+            <field name="model">finsetter.followup.template</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="purpose"/>
+                    <field name="channel"/>
+                    <field name="subject"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="finsetter_followup_template_view_form" model="ir.ui.view">
+            <field name="name">finsetter.followup.template.form</field>
+            <field name="model">finsetter.followup.template</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="purpose"/>
+                            <field name="channel"/>
+                            <field name="active"/>
+                        </group>
+                        <field name="subject" invisible="channel != 'email'"/>
+                        <field name="body" placeholder="Use {customer_name}, {policy_number}, {renewal_date}, {premium}, {payment_link}, and {company_name}."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="finsetter_followup_template_action" model="ir.actions.act_window">
+            <field name="name">Message Templates</field>
+            <field name="res_model">finsetter.followup.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
