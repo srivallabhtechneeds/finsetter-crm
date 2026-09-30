@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import ast
+from html import escape
 
 from odoo import api, fields, models
+
+WILDIX_COLLABORATION_URL = 'https://neton-pbx.wildixin.com/collaboration/'
 
 
 class FinsetterCampaign(models.Model):
     """Spec section 4: Campaign Management — target a segment of leads,
-    push a bulk WhatsApp/SMS/email/call-blitz campaign, and track
+    push a bulk WhatsApp/SMS/email campaign or prepare a Wildix call list, and track
     responses/conversions/ROI back against the linked opportunities.
     """
     _name = 'finsetter.campaign'
@@ -20,11 +23,12 @@ class FinsetterCampaign(models.Model):
         ('whatsapp', 'WhatsApp'),
         ('sms', 'SMS'),
         ('email', 'Email'),
-        ('call', 'Call Blitz'),
+        ('call', 'Call via Wildix'),
     ], default='whatsapp', required=True, tracking=True)
 
     message_template = fields.Text(
-        string='Message', help="Use {{name}} — replaced with the recipient's name at send time.")
+        string='Message', help="Use {{name}} and {{matched_products}}. Matching approved products are appended if omitted.")
+    email_subject = fields.Char(string='Email Subject')
     email_template_id = fields.Many2one('mail.template', string='Email Template')
 
     target_domain = fields.Char(
@@ -92,15 +96,26 @@ class FinsetterCampaign(models.Model):
         return True
 
     def action_send(self):
-        """Send the campaign now. WhatsApp/SMS go out through Twilio (see
-        finsetter_messaging.py); email uses the standard mail template."""
+        """Send messages or prepare a consent-checked Wildix call worklist."""
+        wildix_action = False
         for camp in self:
             camp.state = 'sending'
             for recipient in camp.recipient_ids.filtered(lambda r: r.state == 'draft'):
                 recipient._send(camp)
             camp.state = 'sent'
-            camp.message_post(body="Campaign sent to %d recipient(s)." % camp.recipient_count)
-        return True
+            if camp.channel == 'call':
+                camp.message_post(body="Wildix call worklist prepared for %d recipient(s)." % camp.recipient_count)
+                wildix_action = camp.action_open_wildix()
+            else:
+                camp.message_post(body="Campaign sent to %d recipient(s)." % camp.recipient_count)
+        return wildix_action or True
+
+    def action_open_wildix(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': WILDIX_COLLABORATION_URL,
+            'target': 'new',
+        }
 
     def action_cancel(self):
         self.write({'state': 'cancelled'})
@@ -122,6 +137,7 @@ class FinsetterCampaignRecipient(models.Model):
 
     state = fields.Selection([
         ('draft', 'Not Sent'),
+        ('call_pending', 'Call Pending'),
         ('sent', 'Sent'),
         ('delivered', 'Delivered'),
         ('responded', 'Responded'),
@@ -130,6 +146,7 @@ class FinsetterCampaignRecipient(models.Model):
     ], default='draft')
     send_error = fields.Char()
     sent_date = fields.Datetime()
+    provider_reference = fields.Char(copy=False)
 
     @api.depends('partner_id', 'lead_id')
     def _compute_phone(self):
@@ -140,23 +157,115 @@ class FinsetterCampaignRecipient(models.Model):
     def _send(self, campaign):
         self.ensure_one()
         recipient_name = self.partner_id.name or self.lead_id.contact_name or self.lead_id.name or 'there'
+        product_details = self._matched_product_details(campaign)
+        if not product_details and (campaign.product_line_id or '{{matched_products}}' in (campaign.message_template or '')):
+            self.write({'state': 'failed', 'send_error': 'No active matched products are available for this lead.'})
+            return True
         body = (campaign.message_template or '').replace('{{name}}', recipient_name)
+        if '{{matched_products}}' in body:
+            body = body.replace('{{matched_products}}', product_details)
+        elif product_details:
+            body = '%s\n\nRecommended options:\n%s' % (body, product_details) if body else product_details
         if campaign.channel in ('whatsapp', 'sms'):
             ok, info = self._finsetter_send_message(self.phone, body, channel=campaign.channel)
             if ok:
-                self.write({'state': 'sent', 'sent_date': fields.Datetime.now(), 'send_error': False})
+                self.write({'state': 'sent', 'sent_date': fields.Datetime.now(),
+                            'send_error': False, 'provider_reference': info})
             else:
                 self.write({'state': 'failed', 'send_error': info})
-        elif campaign.channel == 'email' and self.partner_id.email:
-            if campaign.email_template_id:
-                campaign.email_template_id.send_mail(
-                    self.lead_id.id or self.partner_id.id, force_send=True)
-            self.write({'state': 'sent', 'sent_date': fields.Datetime.now()})
+        elif campaign.channel == 'email':
+            if not self.partner_id.email:
+                self.write({'state': 'failed', 'send_error': 'No email address on file.'})
+            elif campaign.email_template_id:
+                mail_id = campaign.email_template_id.send_mail(
+                    self.lead_id.id or self.partner_id.id, force_send=False)
+                mail = self.env['mail.mail'].sudo().browse(mail_id)
+                if body:
+                    mail.body_html = '%s<hr/><div>%s</div>' % (
+                        mail.body_html or '', escape(body).replace('\n', '<br/>'))
+                mail.send()
+                if mail.state == 'exception':
+                    self.write({'state': 'failed', 'send_error': mail.failure_reason or 'Email delivery failed.'})
+                else:
+                    self.write({'state': 'sent', 'sent_date': fields.Datetime.now(),
+                                'send_error': False, 'provider_reference': str(mail.id)})
+            elif body:
+                mail = self.env['mail.mail'].sudo().create({
+                    'subject': campaign.email_subject or campaign.name,
+                    'body_html': '<div>%s</div>' % escape(body).replace('\n', '<br/>'),
+                    'email_to': self.partner_id.email,
+                    'email_from': self.env.user.email_formatted or self.env.company.email or '',
+                    'model': self._name,
+                    'res_id': self.id,
+                    'auto_delete': False,
+                })
+                mail.send()
+                if mail.state == 'exception':
+                    self.write({'state': 'failed', 'send_error': mail.failure_reason or 'Email delivery failed.'})
+                else:
+                    self.write({'state': 'sent', 'sent_date': fields.Datetime.now(),
+                                'send_error': False, 'provider_reference': str(mail.id)})
+            else:
+                self.write({'state': 'failed', 'send_error': 'Add a message or select an email template.'})
+        elif campaign.channel == 'call':
+            if not self.lead_id or self.lead_id.call_consent_status != 'granted':
+                self.write({'state': 'failed', 'send_error': 'Outbound call skipped: lead call consent is not granted.'})
+            elif not self.phone:
+                self.write({'state': 'failed', 'send_error': 'Outbound call skipped: no phone number is on file.'})
+            else:
+                self.write({
+                    'state': 'call_pending',
+                    'send_error': False,
+                    'provider_reference': 'wildix-manual-call',
+                })
         else:
-            # Call Blitz: no automatic send — logged so advisors have a
-            # worklist; they log the outcome via finsetter.call.log.
-            self.write({'state': 'sent', 'sent_date': fields.Datetime.now()})
+            self.write({'state': 'failed', 'send_error': 'Unsupported campaign channel.'})
         return True
+
+    def _matched_product_details(self, campaign):
+        self.ensure_one()
+        if not self.lead_id:
+            return ''
+
+        Match = self.env['finsetter.lead.product.match']
+        domain = [
+            ('lead_id', '=', self.lead_id.id),
+            ('status', 'in', ('recommended', 'interested', 'pending')),
+            ('product_id.status', '=', 'active'),
+        ]
+        if campaign.product_line_id:
+            domain.append(('product_line_id', '=', campaign.product_line_id.id))
+        matches = Match.search(domain, order='score desc, id desc', limit=3)
+        if not matches:
+            Match.action_generate_matches([self.lead_id.id])
+            matches = Match.search(domain, order='score desc, id desc', limit=3)
+
+        lines = []
+        for match in matches:
+            product = match.product_id
+            details = [product.name]
+            if product.provider:
+                details.append('Provider: %s' % product.provider)
+            if product.eligibility_criteria:
+                details.append('Eligibility: %s' % product.eligibility_criteria)
+            if product.min_amount or product.max_amount:
+                amount_type = dict(product._fields['amount_type'].selection).get(product.amount_type, 'Amount')
+                currency = product.currency_id.symbol or product.currency_id.name
+                low = '%s %s' % (currency, product.min_amount) if product.min_amount else 'No minimum'
+                high = '%s %s' % (currency, product.max_amount) if product.max_amount else 'No maximum'
+                details.append('%s range: %s to %s' % (amount_type, low, high))
+            if product.website_url:
+                details.append('Details: %s' % product.website_url)
+            lines.append(' - '.join(details))
+        return '\n'.join(lines)
+
+    def action_open_wildix(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': WILDIX_COLLABORATION_URL,
+            'target': 'new',
+        }
 
     def action_mark_responded(self):
         self.write({'state': 'responded'})

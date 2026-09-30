@@ -9,6 +9,7 @@
                 <form>
                     <header>
                         <button name="action_build_recipients" type="object" string="Build Recipient List" class="btn-secondary" invisible="state not in ('draft', 'scheduled')"/>
+                        <button name="action_open_wildix" type="object" string="Open Wildix" class="btn-secondary" icon="fa-external-link" invisible="channel != 'call'"/>
                         <button name="action_send" type="object" string="Send Now" class="btn-primary" invisible="state not in ('draft', 'scheduled')" confirm="Send this campaign to all recipients now?"/>
                         <button name="action_cancel" type="object" string="Cancel" invisible="state in ('sent', 'cancelled')"/>
                         <button name="action_reset_draft" type="object" string="Reset to Draft" invisible="state != 'cancelled'"/>
@@ -37,24 +38,22 @@
                             <group>
                                 <field name="product_line_id"/>
                                 <field name="channel"/>
-                                <field name="target_domain"/>
+                                <field name="target_domain" invisible="1"/>
                             </group>
                             <group>
                                 <field name="scheduled_date"/>
                                 <field name="cost_amount"/>
-                                <field name="revenue_amount"/>
-                                <field name="roi"/>
-                                <field name="response_rate" widget="percentage"/>
-                                <field name="conversion_rate" widget="percentage"/>
                                 <field name="currency_id" invisible="1"/>
                             </group>
                         </group>
-                        <group string="Message" invisible="channel == 'email'">
-                            <field name="message_template" nolabel="1" placeholder="Hi {{name}}, ..."/>
-                        </group>
-                        <group string="Email Template" invisible="channel != 'email'">
+                        <group string="Email Delivery" invisible="channel != 'email'">
+                            <field name="email_subject" placeholder="Options selected for you"/>
                             <field name="email_template_id"/>
                         </group>
+                        <div class="fs_campaign_message">
+                            <label for="message_template" string="Message"/>
+                            <field name="message_template" nolabel="1" placeholder="Hi {{name}}, here are options for you: {{matched_products}}"/>
+                        </div>
                         <notebook>
                             <page string="Recipients">
                                 <field name="recipient_ids">
@@ -64,8 +63,10 @@
                                         <field name="phone"/>
                                         <field name="state" widget="badge"/>
                                         <field name="sent_date"/>
+                                        <field name="provider_reference" optional="hide"/>
                                         <field name="send_error"/>
-                                        <button name="action_mark_responded" type="object" string="Responded" class="btn-link" invisible="state not in ('sent', 'delivered')"/>
+                                        <button name="action_open_wildix" type="object" string="Open Wildix" class="btn-link" icon="fa-external-link" invisible="parent.channel != 'call' or state != 'call_pending'"/>
+                                        <button name="action_mark_responded" type="object" string="Responded" class="btn-link" invisible="state not in ('sent', 'delivered', 'call_pending')"/>
                                         <button name="action_mark_converted" type="object" string="Converted" class="btn-link" invisible="state == 'converted'"/>
                                     </tree>
                                 </field>
@@ -93,7 +94,6 @@
                     <field name="sent_count"/>
                     <field name="responded_count"/>
                     <field name="converted_count"/>
-                    <field name="roi" widget="percentage"/>
                     <field name="state" widget="badge"/>
                 </tree>
             </field>
@@ -103,7 +103,7 @@
             <field name="name">Campaigns</field>
             <field name="res_model">finsetter.campaign</field>
             <field name="view_mode">list,form</field>
-            <field name="help" type="html"><p class="o_view_nocontent_smiling_face">Launch a targeted WhatsApp, SMS, email or call-blitz campaign.</p></field>
+            <field name="help" type="html"><p class="o_view_nocontent_smiling_face">Launch a targeted WhatsApp, SMS, email or Wildix call campaign.</p></field>
         </record>
 
     </data>

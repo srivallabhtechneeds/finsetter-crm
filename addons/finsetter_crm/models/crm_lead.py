@@ -244,6 +244,24 @@ class CrmLead(models.Model):
         self.env['finsetter.lead.product.match'].action_generate_matches(self.ids)
         return self.action_view_product_matches()
 
+    def action_create_product_campaign(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Product Recommendation Campaign',
+            'res_model': 'finsetter.campaign',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_name': 'Product recommendations - %s' % self.name,
+                'default_product_line_id': self.product_line_id.id,
+                'default_target_domain': "[('id', '=', %s)]" % self.id,
+                'default_message_template': (
+                    'Hi {{name}}, here are some options selected for you:\n'
+                    '{{matched_products}}\nReply if you would like to speak with an advisor.'),
+            },
+        }
+
     def action_schedule_existing_followup(self):
         self.ensure_one()
         reason = dict(self._fields['existing_followup_type'].selection).get(

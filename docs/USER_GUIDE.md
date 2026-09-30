@@ -153,7 +153,7 @@ A reply, booking an appointment, or renewing the policy stops the current renewa
 - **Consent Register**: customer consent records by purpose and communication channel. Capture appropriate consent before contacting customers.
 - **Claims**: track claims from submission through settlement.
 - **Documents & KYC**: document upload and Pending/Verified/Rejected review.
-- **Campaigns**: build a recipient list and send WhatsApp/SMS through Twilio or email through Odoo mail. Campaign sends are distinct from the renewal follow-up sequence.
+- **Campaigns**: choose **Campaign Matched Products** on a lead to prepare a single-lead campaign, or build a broader recipient list from a lead filter. Send WhatsApp/SMS through Twilio, email through Odoo mail, or prepare a consent-checked Wildix call worklist. Campaigns include each lead's top three active product matches; product-targeted recipients without matches are skipped. Campaign sends are distinct from the renewal follow-up sequence.
 - **Financial Products**: product catalogue, eligibility, ranges, tenure, benefits, and commission. Demo product terms are illustrative and must be replaced with approved real terms.
 - **Financial Calculators**: estimates for insurance, investment, tax, retirement, loans, and compound interest.
 - **Customer Portal**: portal users can view only their own policies, appointments, documents, and claims at `/my`.
@@ -181,6 +181,8 @@ Configure an outgoing mail server in Odoo's General Settings before sending emai
 ### Twilio messaging and voice
 
 Under **Settings → General Settings → Finsetter CRM**, configure the Account SID, Auth Token, SMS sender, WhatsApp sender, Voice-capable caller ID, public CRM URL, and webhook secret as applicable. The SMS/WhatsApp/voice numbers must be provisioned for the chosen Twilio products.
+
+Campaign message content can use `{{name}}` and `{{matched_products}}`. The top three active recommendations for each lead are inserted; if the placeholder is omitted, they are appended automatically. A **Call via Wildix** campaign queues recipients only when they have a phone number and **Call Consent** is **Granted**. **Open Wildix** launches the collaboration portal for the advisor to place each call; the supplied portal URL does not expose a CRM call-control API for automatic dialing.
 
 The CRM attaches outbound status callback URLs using the public URL and secret. In Twilio, set the inbound messaging webhook to:
 

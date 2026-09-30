@@ -46,3 +46,36 @@
 .fs_consent_granted { border-left-color: #0b7a75 !important; }
 .fs_consent_declined, .fs_consent_withdrawn { border-left-color: #c55a4e !important; }
 .fs_consent_expired { border-left-color: #e3a62f !important; }
+
+.fs_campaign_message {
+    width: 100%;
+    margin: 12px 0 20px;
+    padding: 16px;
+    border: 1px solid #d9e3ea;
+    border-left: 3px solid #0b7a75;
+    border-radius: 6px;
+    background: #f7fafb;
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #102a43;
+        font-weight: 600;
+    }
+
+    .o_field_widget {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .o_field_text {
+        min-height: 8rem;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+}

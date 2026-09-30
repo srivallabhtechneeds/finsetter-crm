@@ -71,6 +71,8 @@
                             class="btn-secondary" icon="fa-phone"/>
                     <button name="action_find_matching_products" type="object" string="Find Matching Products"
                             class="btn-secondary" icon="fa-bullseye"/>
+                        <button name="action_create_product_campaign" type="object" string="Campaign Matched Products"
+                            class="btn-secondary" icon="fa-paper-plane"/>
                     <button name="action_open_calculators" type="object" string="Calculators"
                             class="btn-secondary" icon="fa-calculator"/>
                 </xpath>
@@ -110,13 +112,14 @@
                             </group>
                         </group>
                         <group string="Product Matches">
+                            <button name="action_find_matching_products" type="object" string="Match Products"
+                                    class="btn-primary" icon="fa-search"/>
                             <field name="product_match_ids" nolabel="1">
                                 <tree editable="bottom" decoration-success="status == 'converted'" decoration-muted="status == 'rejected'">
-                                    <field name="product_id"/>
-                                    <field name="product_line_id"/>
-                                    <field name="score" widget="progressbar"/>
-                                    <field name="status" widget="badge"/>
-                                    <field name="reason"/>
+                                    <field name="score" string="Score" widget="progressbar"/>
+                                    <field name="product_id" string="Product"/>
+                                    <field name="reason" string="Why"/>
+                                    <field name="status" string="Status" widget="badge"/>
                                 </tree>
                             </field>
                         </group>
