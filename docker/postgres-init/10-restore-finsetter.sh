@@ -17,6 +17,10 @@ if [ ! -f "$DUMP" ]; then
 fi
 
 echo "finsetter: restoring snapshot into database '$DB'..."
+# Recreate the database the way Odoo creates its own (C collation), so list
+# ordering matches the original install exactly.
+dropdb -U "$POSTGRES_USER" --if-exists "$DB"
+createdb -U "$POSTGRES_USER" -T template0 -E UTF8 --lc-collate=C --lc-ctype=en_US.utf8 "$DB"
 pg_restore --no-owner --no-privileges --exit-on-error \
     -U "$POSTGRES_USER" -d "$DB" "$DUMP"
 
