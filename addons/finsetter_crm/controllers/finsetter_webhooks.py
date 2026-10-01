@@ -40,7 +40,7 @@ class FinsetterTwilioWebhooks(http.Controller):
         ], order='sent_at desc, id desc', limit=250)
         for log in logs:
             partner = log.partner_id
-            stored_numbers = [re.sub(r'\D', '', number or '') for number in (partner.mobile, partner.phone)]
+            stored_numbers = [re.sub(r'\D', '', number or '') for number in (partner.phone,)]
             if digits and any(number and (number.endswith(digits) or digits.endswith(number))
                               for number in stored_numbers):
                 log.action_mark_replied()

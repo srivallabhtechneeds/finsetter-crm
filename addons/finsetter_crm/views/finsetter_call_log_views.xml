@@ -31,11 +31,7 @@
                             <field name="notes" nolabel="1"/>
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -44,7 +40,7 @@
             <field name="name">finsetter.call.log.tree</field>
             <field name="model">finsetter.call.log</field>
             <field name="arch" type="xml">
-                <tree string="Call Logs">
+                <list string="Call Logs">
                     <field name="call_datetime"/>
                     <field name="partner_id"/>
                     <field name="advisor_id"/>
@@ -56,7 +52,7 @@
                            decoration-warning="outcome in ('no_answer', 'call_back')"
                            decoration-danger="outcome in ('not_interested', 'wrong_number')"/>
                     <field name="consent_confirmed" widget="boolean_toggle"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -103,7 +99,7 @@
         <record id="finsetter_call_log_action" model="ir.actions.act_window">
             <field name="name">Call Logs</field>
             <field name="res_model">finsetter.call.log</field>
-            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="finsetter_call_log_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

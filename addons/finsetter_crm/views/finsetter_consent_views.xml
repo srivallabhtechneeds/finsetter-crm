@@ -31,11 +31,7 @@
                             <field name="notes" nolabel="1"/>
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -44,7 +40,7 @@
             <field name="name">finsetter.consent.tree</field>
             <field name="model">finsetter.consent</field>
             <field name="arch" type="xml">
-                <tree string="Consent Records" decoration-danger="status in ('declined', 'withdrawn')"
+                <list string="Consent Records" decoration-danger="status in ('declined', 'withdrawn')"
                       decoration-success="status == 'granted'">
                     <field name="partner_id"/>
                     <field name="consent_type"/>
@@ -52,7 +48,7 @@
                     <field name="date_obtained"/>
                     <field name="advisor_id"/>
                     <field name="status" widget="badge"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -68,7 +64,7 @@
                     <field name="advisor_id"/>
                     <field name="status"/>
                     <templates>
-                        <t t-name="kanban-box">
+                        <t t-name="card" class="p-0 border-0">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click fs_consent_card fs_consent_#{record.status.raw_value}">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_title"><field name="partner_id"/></div>
@@ -111,7 +107,7 @@
         <record id="finsetter_consent_action" model="ir.actions.act_window">
             <field name="name">Consent Register</field>
             <field name="res_model">finsetter.consent</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="finsetter_consent_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

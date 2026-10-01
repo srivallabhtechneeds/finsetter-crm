@@ -28,12 +28,12 @@
                         <notebook>
                             <page string="Testimonials" name="testimonials">
                                 <field name="testimonial_ids">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="name"/>
                                         <field name="role_location"/>
                                         <field name="quote"/>
                                         <field name="rating"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -46,13 +46,13 @@
             <field name="name">finsetter.policy.product.line.tree</field>
             <field name="model">finsetter.policy.product.line</field>
             <field name="arch" type="xml">
-                <tree string="Product Lines">
+                <list string="Product Lines">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="renewal_cycle_months"/>
                     <field name="marketing_note"/>
-                </tree>
+                </list>
             </field>
         </record>
 

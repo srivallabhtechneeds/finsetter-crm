@@ -7,19 +7,19 @@
             <field name="name">Mahipal Katha</field>
             <field name="login">mahipal@thefinsetter.com</field>
             <field name="email">mahipal@thefinsetter.com</field>
-            <field name="groups_id" eval="[(4, ref('finsetter_crm.group_finsetter_manager'))]"/>
+            <field name="group_ids" eval="[(4, ref('finsetter_crm.group_finsetter_manager'))]"/>
         </record>
         <record id="demo_user_priya" model="res.users">
             <field name="name">Priya Reddy</field>
             <field name="login">priya@thefinsetter.com</field>
             <field name="email">priya@thefinsetter.com</field>
-            <field name="groups_id" eval="[(4, ref('finsetter_crm.group_finsetter_advisor'))]"/>
+            <field name="group_ids" eval="[(4, ref('finsetter_crm.group_finsetter_advisor'))]"/>
         </record>
         <record id="demo_user_arjun" model="res.users">
             <field name="name">Arjun Rao</field>
             <field name="login">arjun@thefinsetter.com</field>
             <field name="email">arjun@thefinsetter.com</field>
-            <field name="groups_id" eval="[(4, ref('finsetter_crm.group_finsetter_advisor'))]"/>
+            <field name="group_ids" eval="[(4, ref('finsetter_crm.group_finsetter_advisor'))]"/>
         </record>
 
         <record id="demo_crm_team_member_priya" model="crm.team.member">

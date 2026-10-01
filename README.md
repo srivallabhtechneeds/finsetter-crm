@@ -1,6 +1,6 @@
 # Finsetter CRM
 
-A purpose-built Odoo 17 CRM for **Finsetter Financial Services Pvt. Ltd.**
+A purpose-built Odoo 19 CRM for **Finsetter Financial Services Pvt. Ltd.**
 ("Your Money. Simplified." — SEBI Reg. E667968 · IRDAI Lic. 5854206),
 built on top of Odoo's Sales/CRM app and packaged as a Docker Compose stack.
 
@@ -110,7 +110,7 @@ from [thefinsetter.com](https://www.thefinsetter.com/index.html).
 
 ```
 finsetter-crm/
-├── docker-compose.yml       # Odoo 17 + PostgreSQL 15
+├── docker-compose.yml       # Odoo 19 + PostgreSQL 15
 ├── Dockerfile                # bakes the finsetter_crm addon into the Odoo image
 ├── config/odoo.conf          # server config (db, addons path, workers, proxy_mode)
 ├── .env                      # ports, credentials, company info (change before prod!)
@@ -163,11 +163,11 @@ keep the `.bat` files in this folder, next to `docker-compose.yml`.
 ## Running it (macOS/Linux, or Windows via WSL)
 
 **Requirements:** Docker + Docker Compose, and network access to Docker Hub
-to pull the base `odoo:17.0` and `postgres:15` images.
+to pull the base `odoo:19.0` and `postgres:15` images.
 
 ## Validation status
 
-The current local Odoo 17 / PostgreSQL 15 stack has been upgraded with this
+The current local Odoo 19 / PostgreSQL 15 stack (migrated from Odoo 17 on 2026-10-01; the 17 database is kept as `finsetter_crm_v17`) has been upgraded with this
 module, the Odoo registry loaded successfully, and the login endpoint returned
 HTTP 200. Static checks parsed all 39 addon XML files and compiled all 23
 Python files; manifest and access-control CSV structure were also checked. A

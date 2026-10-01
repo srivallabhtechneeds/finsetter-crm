@@ -34,14 +34,14 @@
             <field name="name">finsetter.testimonial.tree</field>
             <field name="model">finsetter.testimonial</field>
             <field name="arch" type="xml">
-                <tree string="Testimonials">
+                <list string="Testimonials">
                     <field name="name"/>
                     <field name="role_location"/>
                     <field name="product_line_id"/>
                     <field name="quote"/>
                     <field name="rating" widget="badge"/>
                     <field name="source"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -60,7 +60,7 @@
         <record id="finsetter_testimonial_action" model="ir.actions.act_window">
             <field name="name">Client Testimonials</field>
             <field name="res_model">finsetter.testimonial</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="finsetter_testimonial_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        ODOO_VERSION: ${ODOO_VERSION:-17.0}
+        ODOO_VERSION: ${ODOO_VERSION:-19.0}
     container_name: finsetter_crm_odoo
     restart: unless-stopped
     depends_on:

@@ -41,11 +41,7 @@
                             <field name="notes" nolabel="1"/>
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -54,7 +50,7 @@
             <field name="name">finsetter.claim.tree</field>
             <field name="model">finsetter.claim</field>
             <field name="arch" type="xml">
-                <tree decoration-success="status == 'settled'" decoration-danger="status == 'rejected'">
+                <list decoration-success="status == 'settled'" decoration-danger="status == 'rejected'">
                     <field name="claim_number"/>
                     <field name="partner_id"/>
                     <field name="policy_id"/>
@@ -62,7 +58,7 @@
                     <field name="claim_amount"/>
                     <field name="approved_amount"/>
                     <field name="status" widget="badge"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -80,7 +76,7 @@
                     <field name="currency_id"/>
                     <field name="status"/>
                     <templates>
-                        <t t-name="kanban-box">
+                        <t t-name="card" class="p-0 border-0">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click fs_claim_card fs_claim_#{record.status.raw_value}">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_title"><field name="claim_number"/></div>
@@ -140,7 +136,7 @@
                     <field name="partner_id"/>
                     <field name="policy_id"/>
                     <filter string="Open" name="open_claims" domain="[('status', 'not in', ('settled', 'rejected'))]"/>
-                    <group expand="0" string="Group By">
+                    <group>
                         <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
                         <filter string="Product Line" name="group_line" context="{'group_by': 'product_line_id'}"/>
                     </group>

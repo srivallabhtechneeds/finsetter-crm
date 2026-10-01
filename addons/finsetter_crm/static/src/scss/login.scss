@@ -12,6 +12,11 @@
         radial-gradient(circle at 85% 80%, rgba(248, 201, 91, .14), transparent 45%),
         linear-gradient(135deg, #0b1f33 0%, #102a43 55%, #0b3b38 100%);
     padding: 40px 16px !important;
+    // The layout wraps the form in a Bootstrap .container; let the brand
+    // gradient run edge to edge instead of leaving white side gutters.
+    max-width: none !important;
+    width: 100%;
+    margin: 0 !important;
 
     .fs_login_card,
     &.card,
@@ -52,6 +57,21 @@
 
     a {
         color: #0b7a75;
+        text-decoration: none;
+
+        &:hover { color: #102a43; text-decoration: underline; }
+    }
+
+    // "Don't have an account?" / "Reset Password" sit in one flex row —
+    // give them breathing room so they don't run together.
+    .justify-content-between {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .form-control:focus {
+        border-color: #0b7a75;
+        box-shadow: 0 0 0 3px rgba(11, 122, 117, .15);
     }
 }
 

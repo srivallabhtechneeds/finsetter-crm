@@ -2,6 +2,17 @@
 // Consent Register, using the same navy/teal/gold brand palette as the
 // dashboard so every screen feels like one product.
 
+// Top navbar in brand navy instead of Odoo's stock purple, so the chrome
+// matches the dashboard hero and login page.
+.o_main_navbar {
+    --NavBar-entry-backgroundColor: #102a43;
+    --NavBar-entry-backgroundColor--hover: #1b3a5a;
+    --NavBar-entry-backgroundColor--focus: #1b3a5a;
+    --NavBar-entry-backgroundColor--active: #0b7a75;
+    background: #102a43;
+    border-bottom-color: #0b1f33;
+}
+
 .fs_claim_kanban, .fs_consent_kanban {
     background: #eef4f7;
 
@@ -77,5 +88,41 @@
         min-height: 8rem;
         white-space: pre-wrap;
         overflow-wrap: anywhere;
+    }
+}
+
+// Form section header with an action on the right (e.g. Customer 360 >
+// Product Matches): matches the look of Odoo's own group separators.
+.fs_section_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 24px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--o-border-color, #dee2e6);
+
+    .fs_section_title {
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #102a43;
+    }
+}
+
+// Product match lists: keep every cell vertically centred and let the
+// "Why" explanation wrap neatly instead of pushing columns around.
+.fs_match_list {
+    td {
+        vertical-align: middle !important;
+    }
+
+    .o_list_table td[name="reason"] {
+        white-space: normal;
+        color: #526579;
+        line-height: 1.4;
+    }
+
+    .o_progressbar {
+        align-items: center;
     }
 }

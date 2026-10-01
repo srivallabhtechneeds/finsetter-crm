@@ -6,9 +6,9 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     finsetter_twilio_account_sid = fields.Char(
-        string='Twilio Account SID', config_parameter='finsetter_crm.twilio_account_sid')
+        string='Finsetter Twilio Account SID', config_parameter='finsetter_crm.twilio_account_sid')
     finsetter_twilio_auth_token = fields.Char(
-        string='Twilio Auth Token', config_parameter='finsetter_crm.twilio_auth_token')
+        string='Finsetter Twilio Auth Token', config_parameter='finsetter_crm.twilio_auth_token')
     finsetter_twilio_whatsapp_from = fields.Char(
         string='Twilio WhatsApp Sender', config_parameter='finsetter_crm.twilio_whatsapp_from',
         help="E.g. whatsapp:+14155238886 (Twilio sandbox number) or your approved "

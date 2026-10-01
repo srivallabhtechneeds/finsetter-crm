@@ -28,24 +28,38 @@ class FinsetterMessagingMixin(models.AbstractModel):
     _name = 'finsetter.messaging.mixin'
     _description = 'Finsetter Messaging (Twilio) Mixin'
 
-    def _finsetter_twilio_config(self):
+    def _finsetter_twilio_config(self, sender_user=None):
         icp = self.env['ir.config_parameter'].sudo()
-        return {
+        cfg = {
             'account_sid': icp.get_param('finsetter_crm.twilio_account_sid'),
             'auth_token': icp.get_param('finsetter_crm.twilio_auth_token'),
             'whatsapp_from': icp.get_param('finsetter_crm.twilio_whatsapp_from'),
             'sms_from': icp.get_param('finsetter_crm.twilio_sms_from'),
             'voice_from': icp.get_param('finsetter_crm.twilio_voice_from'),
         }
+        if sender_user:
+            # A user's own sender (Users > Communication Channels) wins; a
+            # blank one keeps the company's shared sender.
+            cfg.update({k: v for k, v in sender_user._fs_message_senders().items() if v})
+        return cfg
 
-    def _finsetter_send_message(self, to_number, body, channel='sms', status_callback=False):
+    def _finsetter_send_message(self, to_number, body, channel='sms', status_callback=False,
+                                sender_user=None):
         """Send a WhatsApp or SMS message via Twilio. Returns (ok, info_str).
 
         Never raises — a messaging failure must not block the caller (a
         campaign send loop, a reminder cron); the error is logged and
         handed back for the caller to record on its own record.
+
+        `sender_user` is the user the message goes out on behalf of: their
+        personal sender is used, and nothing is sent if they have that
+        channel switched off.
         """
-        cfg = self._finsetter_twilio_config()
+        if sender_user:
+            blocked = sender_user._fs_channel_block_reason(channel)
+            if blocked:
+                return False, blocked
+        cfg = self._finsetter_twilio_config(sender_user)
         if not cfg['account_sid'] or not cfg['auth_token']:
             return False, "Twilio is not configured (Settings > General Settings > Finsetter CRM)."
         if not to_number:
@@ -86,8 +100,12 @@ class FinsetterMessagingMixin(models.AbstractModel):
             _logger.warning("Finsetter CRM: Twilio request error: %s", exc)
             return False, str(exc)
 
-    def _finsetter_send_voice(self, to_number, body, status_callback=False):
-        cfg = self._finsetter_twilio_config()
+    def _finsetter_send_voice(self, to_number, body, status_callback=False, sender_user=None):
+        if sender_user:
+            blocked = sender_user._fs_channel_block_reason('voice')
+            if blocked:
+                return False, blocked
+        cfg = self._finsetter_twilio_config(sender_user)
         if not cfg['account_sid'] or not cfg['auth_token']:
             return False, 'Twilio is not configured (Settings > General Settings > Finsetter CRM).'
         if not cfg['voice_from']:

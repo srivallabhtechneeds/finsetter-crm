@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Finsetter CRM',
-    'version': '17.0.2.0.0',
+    'version': '19.0.2.0.0',
     'category': 'Sales/CRM',
     'summary': 'Full financial-services CRM for Finsetter — leads, products, campaigns, '
                'policies, claims, appointments, calculators, compliance & a customer portal.',
@@ -82,6 +82,7 @@ Highlights
         'data/res_company_data.xml',
         'views/crm_lead_views.xml',
         'views/res_partner_views.xml',
+        'views/res_users_views.xml',
         'views/res_company_views.xml',
         'views/finsetter_policy_views.xml',
         'views/finsetter_call_log_views.xml',
@@ -108,6 +109,7 @@ Highlights
     ],
     'assets': {
         'web.assets_backend': [
+            'finsetter_crm/static/src/js/fs_chart.js',
             'finsetter_crm/static/src/js/dashboard.js',
             'finsetter_crm/static/src/xml/dashboard.xml',
             'finsetter_crm/static/src/scss/dashboard.scss',

@@ -35,35 +35,41 @@
                             invisible="sla_status != 'breached'"/>
                 </xpath>
 
-                <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="lead_relationship"/>
-                    <field name="lead_status" widget="badge"
-                           decoration-success="lead_status == 'converted'"
-                           decoration-danger="lead_status == 'lost'"
-                           decoration-warning="lead_status in ('interested', 'quote_sent')"/>
-                    <field name="product_line_id" options="{'no_create': True}"/>
-                    <field name="call_consent_status" widget="badge"
-                           decoration-success="call_consent_status == 'granted'"
-                           decoration-danger="call_consent_status in ('declined', 'withdrawn')"
-                           decoration-warning="call_consent_status == 'unknown'"/>
-                    <group string="Contact Channels">
-                        <field name="channel_whatsapp"/>
-                        <field name="channel_sms"/>
-                        <field name="channel_email"/>
-                        <field name="channel_ai_call"/>
+                <!-- Odoo 19: the partner group renders without field labels, so the
+                     Finsetter fields get their own labelled section below it. -->
+                <xpath expr="//group[@name='lead_partner']/.." position="after">
+                    <group name="finsetter_lead_info">
+                        <group string="Finsetter Profile">
+                            <field name="lead_relationship"/>
+                            <field name="lead_status" widget="badge"
+                                   decoration-success="lead_status == 'converted'"
+                                   decoration-danger="lead_status == 'lost'"
+                                   decoration-warning="lead_status in ('interested', 'quote_sent')"/>
+                            <field name="product_line_id" options="{'no_create': True}"/>
+                            <field name="product_line_talking_point" invisible="not product_line_talking_point"/>
+                            <field name="product_line_website_url" widget="url" string="Service Page"
+                                   invisible="not product_line_website_url"/>
+                            <field name="campaign_source_id"/>
+                            <field name="is_nri"/>
+                            <field name="preferred_language"/>
+                            <field name="consultation_type"/>
+                        </group>
+                        <group string="Consent &amp; Response">
+                            <field name="call_consent_status" widget="badge"
+                                   decoration-success="call_consent_status == 'granted'"
+                                   decoration-danger="call_consent_status in ('declined', 'withdrawn')"
+                                   decoration-warning="call_consent_status == 'unknown'"/>
+                            <field name="sla_deadline"/>
+                            <field name="sla_status" widget="badge"
+                                   decoration-success="sla_status == 'met'"
+                                   decoration-danger="sla_status == 'breached'"
+                                   decoration-warning="sla_status == 'pending'"/>
+                            <field name="channel_whatsapp"/>
+                            <field name="channel_sms"/>
+                            <field name="channel_email"/>
+                            <field name="channel_ai_call"/>
+                        </group>
                     </group>
-                    <field name="preferred_language"/>
-                    <field name="is_nri"/>
-                    <field name="consultation_type"/>
-                    <field name="sla_deadline"/>
-                    <field name="sla_status" widget="badge"
-                           decoration-success="sla_status == 'met'"
-                           decoration-danger="sla_status == 'breached'"
-                           decoration-warning="sla_status == 'pending'"/>
-                    <field name="product_line_talking_point" invisible="not product_line_talking_point"/>
-                    <field name="product_line_website_url" widget="url" string="Service Page"
-                           invisible="not product_line_website_url"/>
-                    <field name="campaign_source_id"/>
                 </xpath>
 
                 <xpath expr="//button[@name='action_view_calls']" position="after">
@@ -106,23 +112,43 @@
                                 <field name="health_problem" invisible="health_status != 'unhealthy'"
                                        required="health_status == 'unhealthy'"/>
                             </group>
-                            <group string="Goals &amp; Requirements">
-                                <field name="finsetter_financial_goals"/>
-                                <field name="finsetter_requirements"/>
-                            </group>
                         </group>
-                        <group string="Product Matches">
+                        <group string="Goals &amp; Requirements">
+                            <field name="finsetter_financial_goals" placeholder="e.g. Child's education in 2035, retire at 55..."/>
+                            <field name="finsetter_requirements" placeholder="Anything the advisor should know before recommending..."/>
+                        </group>
+
+                        <!-- Header row: section title on the left, action on the
+                             right, then the matches table at full width. -->
+                        <div class="fs_section_header">
+                            <span class="fs_section_title">Product Matches</span>
                             <button name="action_find_matching_products" type="object" string="Match Products"
-                                    class="btn-primary" icon="fa-search"/>
-                            <field name="product_match_ids" nolabel="1">
-                                <tree editable="bottom" decoration-success="status == 'converted'" decoration-muted="status == 'rejected'">
-                                    <field name="score" string="Score" widget="progressbar"/>
-                                    <field name="product_id" string="Product"/>
-                                    <field name="reason" string="Why"/>
-                                    <field name="status" string="Status" widget="badge"/>
-                                </tree>
-                            </field>
-                        </group>
+                                    class="btn btn-secondary btn-sm" icon="fa-search"/>
+                        </div>
+                        <field name="product_match_ids" nolabel="1" class="fs_match_list"
+                               context="{'default_lead_id': id}">
+                            <list editable="bottom" decoration-muted="status == 'rejected'">
+                                <field name="product_id" string="Product"/>
+                                <field name="product_line_id" optional="show"/>
+                                <field name="score" string="Score" widget="progressbar" width="140px"/>
+                                <field name="reason" string="Why"/>
+                                <field name="status" string="Status" widget="badge"
+                                       decoration-info="status == 'recommended'"
+                                       decoration-primary="status == 'interested'"
+                                       decoration-warning="status == 'pending'"
+                                       decoration-danger="status == 'rejected'"
+                                       decoration-success="status == 'converted'"/>
+                                <button name="action_mark_interested" type="object" title="Interested"
+                                        icon="fa-thumbs-o-up" class="text-primary"
+                                        invisible="status != 'recommended'"/>
+                                <button name="action_mark_converted" type="object" title="Converted"
+                                        icon="fa-check" class="text-success"
+                                        invisible="status in ('converted', 'rejected')"/>
+                                <button name="action_mark_rejected" type="object" title="Reject"
+                                        icon="fa-times" class="text-danger"
+                                        invisible="status in ('rejected', 'converted')"/>
+                            </list>
+                        </field>
                     </page>
                 </xpath>
 

@@ -1,6 +1,18 @@
 // Finsetter CRM — Dashboard styling
 // Brand palette: midnight navy, saffron, emerald and a cool paper canvas.
 
+// Client-action shell: paints the brand canvas edge to edge (not just the
+// centred 1500px column) and scrolls smoothly inside Odoo's action manager.
+.fs_client_action > .o_content {
+    background: #eef4f7;
+    scroll-behavior: smooth;
+}
+
+@keyframes fs-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
 .o_finsetter_dashboard {
     --fs-ink: #102a43;
     --fs-muted: #526579;
@@ -12,9 +24,12 @@
     padding: 28px clamp(18px, 3vw, 42px);
     max-width: 1500px;
     margin: 0 auto;
-    min-height: 100%;
-    background: var(--fs-paper);
     color: var(--fs-ink);
+
+    > * { animation: fs-fade-up .35s ease both; }
+    > :nth-child(2) { animation-delay: .04s; }
+    > :nth-child(3) { animation-delay: .08s; }
+    > :nth-child(4) { animation-delay: .12s; }
 
     .btn { border-radius: 6px; font-weight: 700; }
 
@@ -101,10 +116,15 @@
         margin-bottom: 22px;
 
         @media (max-width: 1100px) {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 600px) {
+            grid-template-columns: minmax(0, 1fr);
         }
 
         .fs_kpi_card {
+            min-width: 0;
             background: var(--fs-card);
             border: 1px solid var(--fs-line);
             border-radius: 8px;
@@ -113,12 +133,15 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: box-shadow .15s ease, transform .15s ease;
+            transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
 
             &:hover {
                 box-shadow: 0 7px 18px rgba(18, 37, 63, .1);
+                border-color: #bcd0dc;
                 transform: translateY(-2px);
             }
+
+            &:active { transform: translateY(0); }
 
             .fs_kpi_icon {
                 width: 44px;
@@ -137,9 +160,141 @@
             .fs_icon_red { background: #c55a4e; }
             .fs_icon_purple { background: #58658b; }
 
-            .fs_kpi_value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+            .fs_kpi_body { min-width: 0; }
+            .fs_kpi_value { font-size: 22px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
             .fs_kpi_label { font-size: 10px; color: var(--fs-muted); font-weight: 800; text-transform: uppercase; letter-spacing: .6px; }
-            .fs_kpi_sub { font-size: 12px; color: #3f4b5c; margin-top: 3px; }
+            .fs_kpi_sub { font-size: 12px; color: #3f4b5c; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        }
+    }
+
+    .fs_analytics {
+        margin-bottom: 22px;
+
+        .fs_section_title_row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 4px 16px;
+            margin: 0 2px 12px;
+
+            h3 { margin: 0; font-size: 16px; font-weight: 800; }
+            .fs_panel_subtitle { font-size: 12px; color: var(--fs-muted); }
+        }
+    }
+
+    .fs_chart_grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+
+        @media (max-width: 1200px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        @media (max-width: 760px) { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .fs_chart_card {
+        background: var(--fs-card);
+        border: 1px solid var(--fs-line);
+        border-radius: 8px;
+        padding: 16px 18px 14px;
+        box-shadow: 0 3px 12px rgba(18, 37, 63, .04);
+        min-width: 0;
+
+        &.fs_span_2 {
+            grid-column: span 2;
+            @media (max-width: 760px) { grid-column: span 1; }
+        }
+
+        .fs_chart_head {
+            margin-bottom: 10px;
+
+            h4 { margin: 0; font-size: 14px; font-weight: 800; color: var(--fs-ink); }
+            span { font-size: 12px; color: var(--fs-muted); }
+        }
+
+        .fs_chart_canvas {
+            position: relative;
+            width: 100%;
+        }
+    }
+
+    .fs_status_wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .fs_status_donut {
+            position: relative;
+            width: 170px;
+            margin: 0 auto;
+        }
+
+        .fs_status_center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+
+            .fs_status_total { font-size: 26px; font-weight: 800; line-height: 1; color: var(--fs-ink); }
+            .fs_status_sub { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--fs-muted); margin-top: 2px; }
+        }
+    }
+
+    .fs_legend {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 14px;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--fs-ink);
+            min-width: 0;
+        }
+
+        .fs_legend_swatch { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 3px; }
+        .fs_legend_label { flex: 1 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .fs_legend_value { font-weight: 700; font-variant-numeric: tabular-nums; small { font-weight: 400; color: var(--fs-muted); } }
+    }
+
+    .fs_meter_list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding-top: 8px;
+    }
+
+    .fs_meter {
+        .fs_meter_label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--fs-ink);
+            margin-bottom: 6px;
+        }
+
+        .fs_meter_value { font-variant-numeric: tabular-nums; small { font-weight: 400; color: var(--fs-muted); } }
+
+        .fs_meter_track {
+            height: 8px;
+            border-radius: 4px;
+            background: #eef0f4;
+            overflow: hidden;
+        }
+
+        .fs_meter_fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .4s ease;
         }
     }
 
@@ -175,12 +330,15 @@
             border-radius: 8px;
             padding: 12px;
             cursor: pointer;
-            transition: box-shadow .15s ease, transform .15s ease;
+            transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
 
             &:hover {
                 box-shadow: 0 7px 18px rgba(18, 37, 63, .1);
+                border-color: #bcd0dc;
                 transform: translateY(-2px);
             }
+
+            .fs_insurance_body { min-width: 0; }
 
             .fs_insurance_icon {
                 width: 40px;
@@ -207,9 +365,10 @@
             grid-template-columns: 1fr;
         }
 
-        .fs_panel_wide { grid-column: span 1; }
+        .fs_panel_full { grid-column: 1 / -1; }
 
         .fs_panel {
+            min-width: 0;
             background: var(--fs-card);
             border: 1px solid var(--fs-line);
             border-radius: 8px;
@@ -223,6 +382,11 @@
                 margin-bottom: 12px;
 
                 h3 { margin: 0; font-size: 14px; font-weight: 800; letter-spacing: .1px; }
+            }
+
+            .fs_table_wrap {
+                overflow-x: auto;
+                margin: 0 -4px;
             }
 
             .fs_table {
@@ -241,7 +405,10 @@
                 td {
                     padding: 8px;
                     border-bottom: 1px solid #f1f2f6;
+                    vertical-align: middle;
+                    transition: background-color .12s ease;
                 }
+                tr:last-child td { border-bottom: none; }
                 tr:hover td { background: #f2f7f6; }
             }
 
@@ -298,6 +465,7 @@
                 .fs_bar_label {
                     display: flex;
                     justify-content: space-between;
+                    gap: 8px;
                     font-size: 12px;
                     margin-bottom: 4px;
                     color: #374151;
@@ -312,6 +480,7 @@
                     background: #2868a8;
                     height: 100%;
                     border-radius: 6px;
+                    transition: width .4s ease;
                 }
                 .fs_bar_fill_green { background: var(--fs-teal); }
             }
@@ -340,5 +509,13 @@
                 }
             }
         }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .o_finsetter_dashboard *,
+    .o_finsetter_calculators * {
+        animation: none !important;
+        transition: none !important;
     }
 }

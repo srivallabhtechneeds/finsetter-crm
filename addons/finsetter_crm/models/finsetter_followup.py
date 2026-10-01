@@ -29,10 +29,10 @@ class FinsetterFollowupTemplate(models.Model):
     body = fields.Text(required=True)
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ('purpose_channel_unique', 'unique(purpose, channel)',
-         'Only one active template slot is allowed per purpose and channel.'),
-    ]
+    _purpose_channel_unique = models.Constraint(
+        'unique(purpose, channel)',
+        'Only one active template slot is allowed per purpose and channel.',
+    )
 
 
 class FinsetterFollowupLog(models.Model):
@@ -131,6 +131,11 @@ class FinsetterFollowupLog(models.Model):
             values = {'template_id': template.id, 'subject': subject, 'body': body}
             destination = log.partner_id.email or ''
             reference = False
+            sender = log.user_id or self.env.user
+            blocked = sender._fs_channel_block_reason(log.channel)
+            if blocked:
+                log.write({**values, 'status': 'failed', 'error_message': blocked})
+                continue
             if log.channel == 'email':
                 if not destination:
                     log.write({'status': 'failed', 'error_message': 'Customer has no email address.'})
@@ -139,7 +144,7 @@ class FinsetterFollowupLog(models.Model):
                     'subject': subject or log.name,
                     'body_html': '<div>%s</div>' % escape(body).replace('\n', '<br/>'),
                     'email_to': destination,
-                    'email_from': self.env.user.email_formatted or self.env.company.email or '',
+                    **sender._fs_email_values(),
                     'model': log._name,
                     'res_id': log.id,
                     'auto_delete': False,
@@ -152,18 +157,18 @@ class FinsetterFollowupLog(models.Model):
                 reference = str(mail.id)
                 values['mail_id'] = mail.id
             elif log.channel in ('sms', 'whatsapp'):
-                phone = log.partner_id.mobile or log.partner_id.phone
+                phone = log.partner_id.phone
                 callback = log._callback_url('/finsetter/twilio/status')
                 ok, info = log._finsetter_send_message(
-                    phone, body, channel=log.channel, status_callback=callback)
+                    phone, body, channel=log.channel, status_callback=callback, sender_user=sender)
                 if not ok:
                     log.write({**values, 'status': 'failed', 'error_message': info})
                     continue
                 reference = info
             else:
-                phone = log.partner_id.mobile or log.partner_id.phone
+                phone = log.partner_id.phone
                 callback = log._callback_url('/finsetter/twilio/status')
-                ok, info = log._finsetter_send_voice(phone, body, status_callback=callback)
+                ok, info = log._finsetter_send_voice(phone, body, status_callback=callback, sender_user=sender)
                 if not ok:
                     log.write({**values, 'status': 'failed', 'error_message': info})
                     continue

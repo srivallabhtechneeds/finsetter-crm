@@ -151,8 +151,8 @@ class FinsetterCampaignRecipient(models.Model):
     @api.depends('partner_id', 'lead_id')
     def _compute_phone(self):
         for rec in self:
-            rec.phone = (rec.lead_id.mobile or rec.lead_id.phone
-                         or rec.partner_id.mobile or rec.partner_id.phone or '')
+            rec.phone = (rec.lead_id.phone
+                         or rec.partner_id.phone or '')
 
     def _send(self, campaign):
         self.ensure_one()
@@ -166,20 +166,29 @@ class FinsetterCampaignRecipient(models.Model):
             body = body.replace('{{matched_products}}', product_details)
         elif product_details:
             body = '%s\n\nRecommended options:\n%s' % (body, product_details) if body else product_details
+        # Scheduled sends run as the superuser — send on behalf of the
+        # campaign's author then; manual sends go out as whoever clicked Send.
+        sender = campaign.create_uid if self.env.su else self.env.user
         if campaign.channel in ('whatsapp', 'sms'):
-            ok, info = self._finsetter_send_message(self.phone, body, channel=campaign.channel)
+            ok, info = self._finsetter_send_message(
+                self.phone, body, channel=campaign.channel, sender_user=sender)
             if ok:
                 self.write({'state': 'sent', 'sent_date': fields.Datetime.now(),
                             'send_error': False, 'provider_reference': info})
             else:
                 self.write({'state': 'failed', 'send_error': info})
         elif campaign.channel == 'email':
-            if not self.partner_id.email:
+            blocked = sender._fs_channel_block_reason('email')
+            if blocked:
+                self.write({'state': 'failed', 'send_error': blocked})
+            elif not self.partner_id.email:
                 self.write({'state': 'failed', 'send_error': 'No email address on file.'})
             elif campaign.email_template_id:
                 mail_id = campaign.email_template_id.send_mail(
                     self.lead_id.id or self.partner_id.id, force_send=False)
                 mail = self.env['mail.mail'].sudo().browse(mail_id)
+                if sender._fs_has_personal_details('email'):
+                    mail.write(sender._fs_email_values())
                 if body:
                     mail.body_html = '%s<hr/><div>%s</div>' % (
                         mail.body_html or '', escape(body).replace('\n', '<br/>'))
@@ -194,7 +203,7 @@ class FinsetterCampaignRecipient(models.Model):
                     'subject': campaign.email_subject or campaign.name,
                     'body_html': '<div>%s</div>' % escape(body).replace('\n', '<br/>'),
                     'email_to': self.partner_id.email,
-                    'email_from': self.env.user.email_formatted or self.env.company.email or '',
+                    **sender._fs_email_values(),
                     'model': self._name,
                     'res_id': self.id,
                     'auto_delete': False,

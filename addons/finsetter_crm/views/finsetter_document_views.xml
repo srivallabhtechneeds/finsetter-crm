@@ -32,11 +32,7 @@
                             <field name="attachment_name" invisible="1"/>
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -45,12 +41,12 @@
             <field name="name">finsetter.document.tree</field>
             <field name="model">finsetter.document</field>
             <field name="arch" type="xml">
-                <tree decoration-success="verification_status == 'verified'" decoration-danger="verification_status == 'rejected'">
+                <list decoration-success="verification_status == 'verified'" decoration-danger="verification_status == 'rejected'">
                     <field name="partner_id"/>
                     <field name="document_type"/>
                     <field name="verification_status" widget="badge"/>
                     <field name="expiry_date"/>
-                </tree>
+                </list>
             </field>
         </record>
 

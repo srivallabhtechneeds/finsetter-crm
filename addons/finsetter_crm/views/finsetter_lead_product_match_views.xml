@@ -6,22 +6,31 @@
             <field name="name">finsetter.lead.product.match.tree</field>
             <field name="model">finsetter.lead.product.match</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-success="status == 'converted'" decoration-muted="status == 'rejected'">
+                <list class="fs_match_list" decoration-muted="status == 'rejected'">
                     <field name="lead_id" invisible="context.get('default_lead_id')"/>
-                    <field name="score" string="Score" widget="progressbar"/>
+                    <field name="partner_id" optional="hide"/>
                     <field name="product_id" string="Product"/>
+                    <field name="product_line_id" optional="show"/>
+                    <field name="score" string="Score" widget="progressbar" width="140px"/>
                     <field name="reason" string="Why"/>
-                    <field name="status" string="Status" widget="badge"/>
+                    <field name="status" string="Status" widget="badge"
+                           decoration-info="status == 'recommended'"
+                           decoration-primary="status == 'interested'"
+                           decoration-warning="status == 'pending'"
+                           decoration-danger="status == 'rejected'"
+                           decoration-success="status == 'converted'"/>
+                    <field name="advisor_id" optional="show" widget="many2one_avatar_user"/>
                     <field name="current_policy_id" optional="hide"/>
                     <field name="current_policy_product_line_id" optional="hide"/>
-                    <field name="current_policy_currency_id" invisible="1"/>
+                    <field name="current_policy_currency_id" column_invisible="True"/>
                     <field name="current_policy_premium" optional="hide"/>
-                    <field name="product_line_id" optional="hide"/>
-                    <field name="advisor_id" optional="hide"/>
-                    <button name="action_mark_interested" type="object" string="Interested" class="btn-link" invisible="status != 'recommended'"/>
-                    <button name="action_mark_rejected" type="object" string="Reject" class="btn-link" invisible="status in ('rejected', 'converted')"/>
-                    <button name="action_mark_converted" type="object" string="Converted" class="btn-link" invisible="status == 'converted'"/>
-                </tree>
+                    <button name="action_mark_interested" type="object" string="Interested" icon="fa-thumbs-o-up"
+                            class="btn-link text-primary" invisible="status != 'recommended'"/>
+                    <button name="action_mark_converted" type="object" string="Converted" icon="fa-check"
+                            class="btn-link text-success" invisible="status in ('converted', 'rejected')"/>
+                    <button name="action_mark_rejected" type="object" string="Reject" icon="fa-times"
+                            class="btn-link text-danger" invisible="status in ('rejected', 'converted')"/>
+                </list>
             </field>
         </record>
 
@@ -31,9 +40,21 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="action_mark_interested" type="object" string="Interested"
+                                class="btn-primary" invisible="status != 'recommended'"/>
+                        <button name="action_mark_pending" type="object" string="Pending Decision"
+                                invisible="status not in ('recommended', 'interested')"/>
+                        <button name="action_mark_converted" type="object" string="Converted"
+                                class="btn-success" invisible="status in ('converted', 'rejected')"/>
+                        <button name="action_mark_rejected" type="object" string="Reject"
+                                invisible="status in ('rejected', 'converted')"/>
                         <field name="status" widget="statusbar" statusbar_visible="recommended,interested,pending,converted"/>
                     </header>
                     <sheet>
+                        <div class="oe_title">
+                            <label for="product_id" string="Recommended Product"/>
+                            <h1><field name="product_id" class="w-100" placeholder="Product..."/></h1>
+                        </div>
                         <group>
                             <group string="Current Plan">
                                 <field name="lead_id"/>
@@ -44,12 +65,12 @@
                                 <field name="current_policy_premium"/>
                             </group>
                             <group string="Recommended Plan">
-                                <field name="product_id"/>
                                 <field name="product_line_id"/>
-                                <field name="score"/>
-                                <field name="advisor_id"/>
+                                <field name="score" widget="progressbar"/>
+                                <field name="advisor_id" widget="many2one_avatar_user"/>
                             </group>
                         </group>
+                        <separator string="Why This Match"/>
                         <field name="reason" placeholder="Why this product was recommended..."/>
                     </sheet>
                 </form>
@@ -60,6 +81,10 @@
             <field name="name">Lead / Product Matches</field>
             <field name="res_model">finsetter.lead.product.match</field>
             <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No product matches yet</p>
+                <p>Open a lead and click <b>Find Matching Products</b> to score it against the catalog.</p>
+            </field>
         </record>
 
     </data>

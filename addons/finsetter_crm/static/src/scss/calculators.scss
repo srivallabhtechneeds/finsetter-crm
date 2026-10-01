@@ -1,13 +1,17 @@
 // Finsetter CRM — Financial Calculators styling
+// Same navy / teal / gold palette as the dashboard.
 
 .o_finsetter_calculators {
-    padding: 24px;
+    padding: 28px clamp(18px, 3vw, 42px);
     max-width: 1100px;
     margin: 0 auto;
+    color: #102a43;
+    animation: fs-fade-up .35s ease both;
 
     .fs_calc_header {
         margin-bottom: 20px;
-        h1 { font-weight: 700; font-size: 24px; margin-bottom: 4px; }
+        h1 { font-weight: 800; font-size: 26px; margin-bottom: 4px; color: #102a43; }
+        p { margin: 0; color: #526579; }
     }
 
     .fs_calc_tabs {
@@ -21,20 +25,38 @@
             font-weight: 600;
             font-size: 13px;
             padding: 6px 16px;
+            transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease;
+
+            &.btn-light {
+                background: #ffffff;
+                border: 1px solid #d9e3ea;
+                color: #102a43;
+
+                &:hover { border-color: #0b7a75; color: #0b7a75; }
+            }
+
+            &.btn-primary {
+                background: #102a43;
+                border-color: #102a43;
+                color: #ffffff;
+                box-shadow: 0 4px 12px rgba(16, 42, 67, .2);
+            }
         }
     }
 
     .fs_calc_body {
         background: #fff;
-        border: 1px solid #e6e9ef;
-        border-radius: 12px;
+        border: 1px solid #d9e3ea;
+        border-radius: 10px;
         padding: 24px;
+        box-shadow: 0 3px 12px rgba(18, 37, 63, .04);
     }
 
     .fs_calc_panel {
         display: flex;
         flex-wrap: wrap;
         gap: 32px;
+        animation: fs-fade-up .25s ease both;
     }
 
     .fs_calc_inputs {
@@ -50,6 +72,7 @@
             font-size: 13px;
             font-weight: 600;
             color: #374151;
+            margin: 0;
         }
 
         input[type="number"], select {
@@ -58,14 +81,24 @@
             padding: 8px 10px;
             border: 1px solid #d7dbe3;
             border-radius: 8px;
+            background: #ffffff;
+            color: #102a43;
+            transition: border-color .15s ease, box-shadow .15s ease;
+
+            &:focus {
+                outline: none;
+                border-color: #0b7a75;
+                box-shadow: 0 0 0 3px rgba(11, 122, 117, .15);
+            }
         }
 
         .fs_calc_checkbox {
             flex-direction: row;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
 
-            input[type="checkbox"] { width: auto; }
+            input[type="checkbox"] { width: auto; accent-color: #0b7a75; }
         }
     }
 
@@ -76,8 +109,8 @@
         gap: 12px;
 
         .fs_calc_result_card {
-            background: #f9fafc;
-            border: 1px solid #eef0f4;
+            background: #f7fafb;
+            border: 1px solid #e3ebf0;
             border-radius: 10px;
             padding: 14px 16px;
             display: flex;
@@ -85,13 +118,15 @@
             gap: 2px;
 
             &.fs_calc_result_highlight {
-                background: linear-gradient(135deg, #0b2447 0%, #19376d 100%);
+                background: linear-gradient(135deg, #102a43 0%, #0b3b38 100%);
                 color: #fff;
                 border: none;
+
+                .fs_calc_result_value { color: #f8c95b; }
             }
 
             .fs_calc_result_label { font-size: 12px; text-transform: uppercase; letter-spacing: .3px; opacity: .8; }
-            .fs_calc_result_value { font-size: 22px; font-weight: 700; }
+            .fs_calc_result_value { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
         }
     }
 
@@ -99,8 +134,19 @@
 
     .fs_calc_footer {
         flex-basis: 100%;
-        margin-top: 12px;
+        margin-top: 20px;
         padding-top: 16px;
         border-top: 1px solid #eef0f4;
+
+        .btn-outline-primary {
+            color: #0b7a75;
+            border-color: #0b7a75;
+
+            &:hover, &:focus {
+                color: #ffffff;
+                background: #0b7a75;
+                border-color: #0b7a75;
+            }
+        }
     }
 }

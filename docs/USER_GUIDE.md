@@ -1,6 +1,6 @@
 # Finsetter CRM User Guide
 
-This guide describes the Finsetter CRM Odoo 17 application, its daily workflows, configuration, and operational limits. The CRM is an Odoo addon served locally through Docker Compose with PostgreSQL.
+This guide describes the Finsetter CRM Odoo 19 application, its daily workflows, configuration, and operational limits. The CRM is an Odoo addon served locally through Docker Compose with PostgreSQL.
 
 ## Contents
 

@@ -1,9 +1,9 @@
 # ---------------------------------------------------------------------------
 # Finsetter CRM — Odoo image
-# Builds on the official Odoo 17 image and bakes in the finsetter_crm addon
+# Builds on the official Odoo 19 image and bakes in the finsetter_crm addon
 # plus its Python dependencies.
 # ---------------------------------------------------------------------------
-ARG ODOO_VERSION=17.0
+ARG ODOO_VERSION=19.0
 FROM odoo:${ODOO_VERSION}
 
 LABEL maintainer="Finsetter Financial Services" \

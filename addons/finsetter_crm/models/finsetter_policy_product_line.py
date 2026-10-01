@@ -30,6 +30,4 @@ class FinsetterPolicyProductLine(models.Model):
                                       "e.g. '₹1 crore term cover for under ₹1,000/month'.")
     testimonial_ids = fields.One2many('finsetter.testimonial', 'product_line_id', string='Testimonials')
 
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)', 'Product line code must be unique.'),
-    ]
+    _code_uniq = models.Constraint('unique(code)', 'Product line code must be unique.')

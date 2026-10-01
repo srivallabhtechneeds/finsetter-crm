@@ -61,7 +61,9 @@ class FinsetterCalculators extends Component {
 
     onFieldChange(section, field, ev, isCheckbox) {
         const raw = isCheckbox ? ev.target.checked : ev.target.value;
-        this.state[section][field] = isCheckbox ? raw : (raw === "" ? 0 : Number(raw));
+        // Keep an emptied field empty (the formulas treat "" as 0) instead of
+        // writing 0 back into the input while the user is still typing.
+        this.state[section][field] = isCheckbox || raw === "" ? raw : Number(raw);
         this["compute" + section.charAt(0).toUpperCase() + section.slice(1)]();
     }
 

@@ -2,14 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="finsetter_crm.Dashboard">
+        <!-- o_action + o_content give the dashboard Odoo's own scroll
+             container; without it the action manager clips everything
+             below the first screen. -->
+        <div class="o_action fs_client_action">
+        <div class="o_content">
         <div class="o_finsetter_dashboard">
 
             <div class="fs_hero">
                 <div class="fs_hero_copy">
                     <div class="fs_eyebrow">FINSETTER FINANCIAL SERVICES · HYDERABAD</div>
                     <div class="fs_hero_brand">
-                    <h1>Finsetter CRM</h1>
-                    <p class="fs_tagline">Your Money. Simplified.</p>
+                        <h1>Finsetter CRM</h1>
+                        <p class="fs_tagline">Your Money. Simplified.</p>
                     </div>
                     <p class="fs_hero_intro">Protect today. Build tomorrow. Keep every family conversation, policy and opportunity moving in one place.</p>
                 </div>
@@ -50,7 +55,7 @@
                         <div class="fs_kpi_sub"><t t-esc="formatMoney(state.pipelineValue)"/> in pipeline</div>
                     </div>
                 </div>
-                <div class="fs_kpi_card">
+                <div class="fs_kpi_card" t-on-click="onOpenWon">
                     <div class="fs_kpi_icon fs_icon_green"><i class="fa fa-trophy"/></div>
                     <div class="fs_kpi_body">
                         <div class="fs_kpi_value"><t t-esc="state.wonMonthCount"/></div>
@@ -74,11 +79,12 @@
                         <div class="fs_kpi_sub">Compliance risk</div>
                     </div>
                 </div>
-                <div class="fs_kpi_card">
+                <div class="fs_kpi_card" t-on-click="onOpenCalls">
                     <div class="fs_kpi_icon fs_icon_purple"><i class="fa fa-phone"/></div>
                     <div class="fs_kpi_body">
                         <div class="fs_kpi_value"><t t-esc="state.callsTodayCount"/></div>
                         <div class="fs_kpi_label">Calls Logged Today</div>
+                        <div class="fs_kpi_sub">Every conversation on record</div>
                     </div>
                 </div>
                 <div class="fs_kpi_card" t-on-click="onOpenSlaBreaches">
@@ -91,6 +97,106 @@
                 </div>
             </div>
 
+            <div class="fs_analytics" t-if="state.charts">
+                <div class="fs_section_title_row">
+                    <h3>Lead Analytics</h3>
+                    <span class="fs_panel_subtitle">Every lead, including won and lost · last 6 months for trends</span>
+                </div>
+                <t t-set="c" t-value="state.charts"/>
+                <div class="fs_chart_grid">
+
+                    <div class="fs_chart_card fs_span_2">
+                        <div class="fs_chart_head">
+                            <h4>Lead inflow &amp; deals won</h4>
+                            <span>Leads created vs deals closed won, per month</span>
+                        </div>
+                        <FsChart config="c.trend" height="260" ariaLabel="'Leads created and deals won per month'"/>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>Lead status mix</h4>
+                            <span>Where every lead stands today</span>
+                        </div>
+                        <div class="fs_status_wrap">
+                            <div class="fs_status_donut">
+                                <FsChart config="c.status" height="170" ariaLabel="'Lead status breakdown'"/>
+                                <div class="fs_status_center">
+                                    <div class="fs_status_total"><t t-esc="c.statusTotal"/></div>
+                                    <div class="fs_status_sub">Leads</div>
+                                </div>
+                            </div>
+                            <ul class="fs_legend">
+                                <li t-foreach="c.statusLegend" t-as="row" t-key="row.key">
+                                    <span class="fs_legend_swatch" t-attf-style="background: {{ row.color }};"/>
+                                    <span class="fs_legend_label"><t t-esc="row.label"/></span>
+                                    <span class="fs_legend_value"><t t-esc="row.count"/> <small>(<t t-esc="row.pct"/>%)</small></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>Pipeline by stage</h4>
+                            <span>Open deals per stage · hover for value</span>
+                        </div>
+                        <FsChart config="c.funnel" height="c.funnelHeight" ariaLabel="'Open deals per pipeline stage'"/>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>Leads by source</h4>
+                            <span>Which channels bring customers in</span>
+                        </div>
+                        <FsChart config="c.sources" height="c.sourceHeight" ariaLabel="'Leads per source'"/>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>Demand by product line</h4>
+                            <span>New prospects vs existing customers</span>
+                        </div>
+                        <FsChart config="c.productDemand" height="c.productHeight" ariaLabel="'Leads per product line split by new and existing customers'"/>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>Customer age profile</h4>
+                            <span>Leads by age band</span>
+                        </div>
+                        <FsChart config="c.ages" height="220" ariaLabel="'Leads by customer age band'"/>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>Preferred contact channels</h4>
+                            <span>Open leads opted in per channel</span>
+                        </div>
+                        <FsChart config="c.channels" height="220" ariaLabel="'Open leads per preferred contact channel'"/>
+                    </div>
+
+                    <div class="fs_chart_card">
+                        <div class="fs_chart_head">
+                            <h4>4-hour response SLA</h4>
+                            <span>First response on open leads</span>
+                        </div>
+                        <div class="fs_meter_list">
+                            <div class="fs_meter" t-foreach="c.sla" t-as="row" t-key="row.key">
+                                <div class="fs_meter_label">
+                                    <span><i t-attf-class="fa {{ row.icon }} me-2" t-attf-style="color: {{ row.color }};"/><t t-esc="row.label"/></span>
+                                    <span class="fs_meter_value"><t t-esc="row.count"/> <small>(<t t-esc="row.pct"/>%)</small></span>
+                                </div>
+                                <div class="fs_meter_track">
+                                    <div class="fs_meter_fill" t-attf-style="width: {{ row.pct }}%; background: {{ row.color }};"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="fs_insurance_section">
                 <div class="fs_panel_header">
                     <h3>Insurances</h3>
@@ -98,14 +204,14 @@
                 </div>
                 <div class="fs_insurance_grid">
                     <div class="fs_insurance_card" t-foreach="state.insurances" t-as="line" t-key="line.id"
-                         t-on-click="() => this.onOpenInsuranceLine(line.id)">
+                         t-on-click="() => this.onOpenInsuranceLine(line)">
                         <div class="fs_insurance_icon" t-attf-style="background: {{ line.color }}22; color: {{ line.color }};">
                             <i t-attf-class="fa {{ line.icon }}"/>
                         </div>
                         <div class="fs_insurance_body">
                             <div class="fs_insurance_name"><t t-esc="line.name"/></div>
                             <div class="fs_insurance_meta">
-                                <t t-esc="line.count"/> policies · <t t-esc="formatMoney(line.premium)"/>
+                                <t t-esc="line.count"/> <t t-esc="line.count === 1 ? 'policy' : 'policies'"/> · <t t-esc="formatMoney(line.premium)"/>
                             </div>
                         </div>
                     </div>
@@ -119,7 +225,8 @@
                         <h3>Renewals Due Soon</h3>
                         <button class="btn btn-link" t-on-click="onOpenRenewals">View All</button>
                     </div>
-                    <table class="fs_table" t-if="state.renewals.length">
+                    <div class="fs_table_wrap" t-if="state.renewals.length">
+                    <table class="fs_table">
                         <thead>
                             <tr>
                                 <th>Customer</th>
@@ -135,23 +242,26 @@
                             <tr t-foreach="state.renewals" t-as="policy" t-key="policy.id">
                                 <td><t t-esc="policy.partner_id and policy.partner_id[1]"/></td>
                                 <td><t t-esc="policy.product_line_id and policy.product_line_id[1]"/></td>
-                                <td><t t-esc="policy.renewal_date"/></td>
+                                <td class="text-nowrap"><t t-esc="formatDate(policy.renewal_date)"/></td>
                                 <td>
                                     <span t-attf-class="fs_pill {{ policy.days_to_renewal &lt;= 7 ? 'fs_pill_red' : 'fs_pill_amber' }}">
                                         <t t-esc="policy.days_to_renewal"/> d
                                     </span>
                                 </td>
                                 <td><t t-esc="policy.advisor_id and policy.advisor_id[1]"/></td>
-                                <td><t t-esc="formatMoney(policy.premium_amount)"/></td>
+                                <td class="text-nowrap"><t t-esc="formatMoney(policy.premium_amount)"/></td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-success"
+                                    <button class="btn btn-sm btn-outline-success text-nowrap"
+                                            t-att-disabled="state.busyPolicyId"
                                             t-on-click="(ev) => this.onMarkRenewed(policy.id, ev)">
+                                        <i t-if="state.busyPolicyId === policy.id" class="fa fa-circle-o-notch fa-spin me-1"/>
                                         Mark Renewed
                                     </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                     <div class="fs_empty" t-else="">No renewals due in the next 30 days. 🎉</div>
                 </div>
 
@@ -203,7 +313,7 @@
                     <div class="fs_empty" t-if="!state.leaderboard.length">No deals won yet this month.</div>
                 </div>
 
-                <div class="fs_panel fs_panel_wide" t-if="state.testimonial">
+                <div class="fs_panel fs_panel_full" t-if="state.testimonial">
                     <div class="fs_panel_header">
                         <h3>Client Proof Point</h3>
                         <button class="btn btn-link" t-on-click="onNewTestimonial">Add Testimonial</button>
@@ -222,6 +332,14 @@
 
             </div>
 
+        </div>
+        </div>
+        </div>
+    </t>
+
+    <t t-name="finsetter_crm.FsChart">
+        <div class="fs_chart_canvas" t-attf-style="height: {{ props.height || 240 }}px;">
+            <canvas t-ref="canvas" role="img" t-att-aria-label="props.ariaLabel"/>
         </div>
     </t>
 

@@ -46,11 +46,7 @@
                             Google Calendar automatically.
                         </div>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -59,14 +55,14 @@
             <field name="name">finsetter.appointment.tree</field>
             <field name="model">finsetter.appointment</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="status in ('cancelled', 'no_show')" decoration-success="status == 'completed'">
+                <list decoration-muted="status in ('cancelled', 'no_show')" decoration-success="status == 'completed'">
                     <field name="appointment_datetime"/>
                     <field name="partner_id"/>
                     <field name="advisor_id"/>
                     <field name="product_line_id"/>
                     <field name="mode"/>
                     <field name="status" widget="badge"/>
-                </tree>
+                </list>
             </field>
         </record>
 

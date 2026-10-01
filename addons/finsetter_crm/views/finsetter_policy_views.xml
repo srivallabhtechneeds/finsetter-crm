@@ -63,12 +63,12 @@
                         <notebook>
                             <page string="Follow-up History">
                                 <field name="followup_log_ids" readonly="1">
-                                    <tree>
+                                    <list>
                                         <field name="sent_at"/>
                                         <field name="purpose"/>
                                         <field name="channel"/>
                                         <field name="status" widget="badge"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                             <page string="Notes" name="notes">
@@ -76,11 +76,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -89,7 +85,7 @@
             <field name="name">finsetter.policy.tree</field>
             <field name="model">finsetter.policy</field>
             <field name="arch" type="xml">
-                <tree string="Policies" decoration-danger="state == 'lapsed'"
+                <list string="Policies" decoration-danger="state == 'lapsed'"
                       decoration-warning="state == 'renewal_due'" decoration-success="state == 'renewed'">
                     <field name="partner_id"/>
                     <field name="policy_number"/>
@@ -106,7 +102,7 @@
                       <button name="action_upgrade_policy" type="object" string="Upgrade" class="btn-link"/>
                       <button name="action_mark_renewed" type="object" string="Renew" class="btn-link"
                         invisible="state in ('renewed', 'cancelled')"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -158,7 +154,7 @@
         <record id="finsetter_policy_action" model="ir.actions.act_window">
             <field name="name">Policies</field>
             <field name="res_model">finsetter.policy</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="finsetter_policy_view_search"/>
             <field name="context">{'search_default_renewal_due': 0}</field>
             <field name="help" type="html">

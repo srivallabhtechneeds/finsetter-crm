@@ -57,7 +57,7 @@
                         <notebook>
                             <page string="Recipients">
                                 <field name="recipient_ids">
-                                    <tree editable="bottom" decoration-danger="state == 'failed'" decoration-success="state in ('responded', 'converted')">
+                                    <list editable="bottom" decoration-danger="state == 'failed'" decoration-success="state in ('responded', 'converted')">
                                         <field name="partner_id"/>
                                         <field name="lead_id"/>
                                         <field name="phone"/>
@@ -68,16 +68,12 @@
                                         <button name="action_open_wildix" type="object" string="Open Wildix" class="btn-link" icon="fa-external-link" invisible="parent.channel != 'call' or state != 'call_pending'"/>
                                         <button name="action_mark_responded" type="object" string="Responded" class="btn-link" invisible="state not in ('sent', 'delivered', 'call_pending')"/>
                                         <button name="action_mark_converted" type="object" string="Converted" class="btn-link" invisible="state == 'converted'"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -86,7 +82,7 @@
             <field name="name">finsetter.campaign.tree</field>
             <field name="model">finsetter.campaign</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancelled'">
+                <list decoration-muted="state == 'cancelled'">
                     <field name="name"/>
                     <field name="product_line_id"/>
                     <field name="channel"/>
@@ -95,7 +91,7 @@
                     <field name="responded_count"/>
                     <field name="converted_count"/>
                     <field name="state" widget="badge"/>
-                </tree>
+                </list>
             </field>
         </record>
 
