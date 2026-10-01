@@ -25,6 +25,15 @@ COPY ./config/odoo.conf /etc/odoo/odoo.conf
 RUN chown -R odoo:odoo /mnt/extra-addons /etc/odoo && \
     mkdir -p /var/log/odoo && chown -R odoo:odoo /var/log/odoo
 
+# First-start helper: unpacks the shared filestore snapshot (db/), then runs
+# the stock Odoo entrypoint.
+COPY ./docker/odoo-entrypoint.sh /usr/local/bin/finsetter-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/finsetter-entrypoint.sh && \
+    chmod +x /usr/local/bin/finsetter-entrypoint.sh
+
 USER odoo
 
 EXPOSE 8069 8072
+
+ENTRYPOINT ["/usr/local/bin/finsetter-entrypoint.sh"]
+CMD ["odoo"]

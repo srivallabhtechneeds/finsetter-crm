@@ -1,0 +1,7 @@
+# Shell scripts run inside Linux containers: always LF, even on Windows.
+*.sh text eol=lf
+# Windows launchers
+*.bat text eol=crlf
+# Database snapshot (db/) is binary
+*.dump binary
+*.tar.gz binary

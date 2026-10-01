@@ -160,6 +160,32 @@ If Docker Desktop is installed and running, just double-click:
 These call the same `docker compose` commands as the shell scripts below —
 keep the `.bat` files in this folder, next to `docker-compose.yml`.
 
+## Shared database snapshot (`db/`)
+
+The repository carries a snapshot of the CRM data so every clone starts
+with the same database:
+
+| File | Contents |
+|---|---|
+| `db/finsetter_crm.dump` | PostgreSQL dump of the `finsetter_crm` database |
+| `db/filestore.tar.gz` | Odoo filestore (company logo, documents, images) |
+
+- **Fresh clone / new machine:** nothing to do. On the first
+  `docker compose up`, `docker/postgres-init/10-restore-finsetter.sh` loads
+  the dump and `docker/odoo-entrypoint.sh` unpacks the filestore. Each copy
+  gets its own `database.secret` / `database.uuid`.
+- **Existing install:** never overwritten automatically — Postgres only runs
+  the restore when its data volume is brand new.
+- **Share your latest data:** run `Export-Database.bat` (or
+  `./scripts/export_db.sh`) while the CRM is running, then commit and push
+  `db/`.
+- **Reset this machine to the shared data:** `Restore-Database.bat` (or
+  `./scripts/restore_db.sh`). This deletes the local database first.
+
+The snapshot holds everything in the CRM, including user logins
+(`admin` / `admin`) and customer contact details. Keep the repository
+private if it ever contains real customer data.
+
 ## Running it (macOS/Linux, or Windows via WSL)
 
 **Requirements:** Docker + Docker Compose, and network access to Docker Hub
@@ -185,9 +211,10 @@ tested without customer-owned provider credentials and public webhook setup.
    # or directly:
    docker compose up -d --build
    ```
-   First boot creates the `finsetter_crm` database and installs the module
-   (and its dependencies: base, mail, crm, contacts, sales_team, resource,
-   calendar, portal) — this can take a couple of minutes. Watch it with:
+   First boot loads the shared database snapshot from `db/` (see
+   *Shared database snapshot* below), so a fresh clone starts with the same
+   customers, leads, policies and settings as the repository — this can take
+   a couple of minutes. Watch it with:
    ```bash
    ./scripts/logs.sh
    ```
@@ -197,16 +224,10 @@ tested without customer-owned provider credentials and public webhook setup.
    (Odoo's default for a freshly CLI-created database) — **change it
    immediately** under the user menu → *My Profile* → *Preferences*.
 
-4. **Want it pre-populated?** Demo data (5 sample customers, 5 leads across
-   the pipeline, 4 policies including ones renewing in 1/7/15 days, sample
-   calls, consent records, financial products across all 13 categories, a
-   lead-product match, an appointment, a claim and a draft campaign) ships
-   across `demo/*.xml` but is skipped by default (`--without-demo=all` in
-   `docker-compose.yml`, for a clean production-style install). To load it
-   instead: remove `--without-demo=all` from the `command:` in
-   `docker-compose.yml`, then `docker compose down -v && docker compose up
-   -d --build` (the `-v` wipes the empty DB volume so it reinstalls with
-   demo data).
+4. **Already pre-populated:** the snapshot in `db/` contains the full
+   working data set (customers, leads across the pipeline, policies,
+   calls, consent records, product matches and the Finsetter company
+   settings). See the next section to update or reset it.
 
 5. **Open the app:** the app switcher (grid icon, top-left) shows a
   **Finsetter CRM** tile → *Dashboard* is the landing page, with *Sales*
